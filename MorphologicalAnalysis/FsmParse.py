@@ -118,9 +118,11 @@ class FsmParse(MorphologicalParse):
     """
 
     def setAgreement(self, transitionName: str):
-        if transitionName == "A1SG" or transitionName == "A2SG" or transitionName == "A3SG" or transitionName == "A1PL" or transitionName == "A2PL" or transitionName == "A3PL":
+        if transitionName == "A1SG" or transitionName == "A2SG" or transitionName == "A3SG" or transitionName == "A1PL"\
+                or transitionName == "A2PL" or transitionName == "A3PL":
             self.__verbAgreement = transitionName
-        if transitionName == "PNON" or transitionName == "P1SG" or transitionName == "P2SG" or transitionName == "P3SG" or transitionName == "P1PL" or transitionName == "P2PL" or transitionName == "P3PL":
+        if transitionName == "PNON" or transitionName == "P1SG" or transitionName == "P2SG" or transitionName == "P3SG"\
+                or transitionName == "P1PL" or transitionName == "P2PL" or transitionName == "P3PL":
             self.__possesiveAgreement = transitionName
 
     """
@@ -212,7 +214,7 @@ class FsmParse(MorphologicalParse):
         The form variable.
     """
 
-    def getSurfaceform(self) -> str:
+    def getSurfaceForm(self) -> str:
         return self.__form
 
     """
@@ -341,10 +343,10 @@ class FsmParse(MorphologicalParse):
         elif self.__formList[0] == "hep" or self.__formList[0] == "öbür" or self.__formList[0] == "topu" \
                 or self.__formList[0] == "öteki" or self.__formList[0] == "kimse" or self.__formList[0] == "hiçbiri" \
                 or self.__formList[0] == "tümü" or self.__formList[0] == "çoğu" or self.__formList[0] == "hepsi" \
-                or self.__formList[0] == "herkes" or self.__formList[0] == "başkası" or self.__formList[0] == "birçoğu" \
+                or self.__formList[0] == "herkes" or self.__formList[0] == "başkası" or self.__formList[0] == "birçoğu"\
                 or self.__formList[0] == "birçokları" or self.__formList[0] == "birbiri" \
                 or self.__formList[0] == "birbirleri" or self.__formList[0] == "biri" \
-                or self.__formList[0] == "birkaçı" or self.__formList[0] == "böylesi" or self.__formList[0] == "diğeri" \
+                or self.__formList[0] == "birkaçı" or self.__formList[0] == "böylesi" or self.__formList[0] == "diğeri"\
                 or self.__formList[0] == "cümlesi" or self.__formList[0] == "bazı" or self.__formList[0] == "kimi":
             return self.__formList[0] + "+PRON+QUANTP"
         elif (self.__formList[0] == "o" and self.__suffixList[0].getName() == "PronounRoot(DEMONS)") \
@@ -472,11 +474,13 @@ class FsmParse(MorphologicalParse):
     str
         str result accumulated with items of formList.
     """
+
     def transitionList(self) -> str:
         result = ""
-        if self.__suffixList[0].getName() == "NominalRoot" or self.__suffixList[0].getName() == "NominalRootNoPossesive" \
-                or self.__suffixList[0].getName() == "CompoundNounRoot" or self.__suffixList[
-            0].getName() == "NominalRootPlural":
+        if self.__suffixList[0].getName() == "NominalRoot" \
+                or self.__suffixList[0].getName() == "NominalRootNoPossesive" \
+                or self.__suffixList[0].getName() == "CompoundNounRoot" \
+                or self.__suffixList[0].getName() == "NominalRootPlural":
             result = self.__formList[0] + "+NOUN"
         elif self.__suffixList[0].getName().startswith("VerbalRoot") or self.__suffixList[0].getName() == "PassiveHn":
             result = self.__formList[0] + "+VERB"
