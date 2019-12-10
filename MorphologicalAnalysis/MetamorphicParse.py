@@ -201,6 +201,17 @@ class MetamorphicParse:
         return result
 
     """
+    The getter method for Private Word root.
+
+    RETURNS
+    -------
+    Word
+        Word type root.
+    """
+    def getWord(self) -> Word:
+        return self.__root
+
+    """
     getMetaMorphemeTagForParse method which also takes parse as an input. It also checks the morphotactic tags.
 
     PARAMETERS

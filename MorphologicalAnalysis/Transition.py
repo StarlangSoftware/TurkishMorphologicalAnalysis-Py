@@ -103,7 +103,7 @@ class Transition:
         return True
 
     """
-    The transitionPossibleParse method takes a FsmParse currentFsmParse as an input. It then checks some special cases;
+    The transitionPossibleForParse method takes a FsmParse currentFsmParse as an input. It then checks some special cases;
 
     PARAMETERS
     ----------
@@ -116,7 +116,7 @@ class Transition:
         True if transition is possible False otherwise
     """
 
-    def transitionPossibleParse(self, currentFsmParse: FsmParse) -> bool:
+    def transitionPossibleForParse(self, currentFsmParse: FsmParse) -> bool:
         if self.__with == "Ar" and currentFsmParse.getSurfaceForm().endswith("l") and \
                 currentFsmParse.getWord().getName() != currentFsmParse.getSurfaceForm():
             return False
@@ -130,7 +130,7 @@ class Transition:
                 return False
         return True
 
-    def transitionPossibleWord(self, root: TxtWord, fromState: State) -> bool:
+    def transitionPossibleForWord(self, root: TxtWord, fromState: State) -> bool:
         if root.isAdjective() and ((root.isNominal() and not root.isExceptional()) or root.isPronoun()) \
                 and self.__toState.getName() == "NominalRoot(ADJ)" and self.__with == "0":
             return False
