@@ -14,8 +14,8 @@ class FsmParse(MorphologicalParse):
     __initialPos: str
     __pos: str
     __form: str
-    __verbAgreement: str
-    __possesiveAgreement: str
+    __verbAgreement: str = None
+    __possesiveAgreement: str = None
 
     """
     Another constructor of FsmParse class which takes a TxtWord root and a State as inputs.
@@ -78,7 +78,7 @@ class FsmParse(MorphologicalParse):
             parse = parse[parse.index("^DB+") + 4:]
         iGs.append(parse)
         self.inflectionalGroups = []
-        self.inflectionalGroups.append(InflectionalGroup(iGs[0][iGs[0].index("+") + 1]))
+        self.inflectionalGroups.append(InflectionalGroup(iGs[0][iGs[0].index("+") + 1:]))
         for i in range(1, len(iGs)):
             self.inflectionalGroups.append(InflectionalGroup(iGs[i]))
 
@@ -278,7 +278,7 @@ class FsmParse(MorphologicalParse):
     """
 
     def getFinalSuffix(self) -> State:
-        return self.__suffixList.pop()
+        return self.__suffixList[len(self.__suffixList) - 1]
 
     """
     The headerTransition method gets the first item of formList and checks for cases;
@@ -554,7 +554,7 @@ class FsmParse(MorphologicalParse):
             result = self.__formList[0] + "+ADJ"
         for transition in self.__transitionList:
             if transition is not None:
-                if transition.startswith("^"):
+                if not transition.startswith("^"):
                     result = result + "+" + transition
                 else:
                     result = result + transition

@@ -193,7 +193,7 @@ class MetamorphicParse:
     def getMetaMorphemeTag(self, tag: str) -> list:
         result = []
         s = tag[0]
-        if Word.isPunctuation(s):
+        if Word.isPunctuationSymbol(s):
             tag = tag[1:]
         for j in range(len(MetamorphicParse.metaMorphemes)):
             if tag == self.metaMorphemes[j]:

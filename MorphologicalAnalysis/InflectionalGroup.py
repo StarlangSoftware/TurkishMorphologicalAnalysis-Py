@@ -186,7 +186,7 @@ class InflectionalGroup:
     def __str__(self) -> str:
         result = InflectionalGroup.getTagString(self.__IG[0])
         for i in range(1, len(self.__IG)):
-            result = result + InflectionalGroup.getTagString(self.__IG[i])
+            result = result + "+" + InflectionalGroup.getTagString(self.__IG[i])
         return result
 
     """

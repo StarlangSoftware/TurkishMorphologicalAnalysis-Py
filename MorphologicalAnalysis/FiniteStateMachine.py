@@ -49,20 +49,20 @@ class FiniteStateMachine:
                 state = self.getState(stateName)
                 for transitionNode in stateNode:
                     stateName = transitionNode.attrib["name"]
-                    if "transitionname" in transitionNode:
+                    if "transitionname" in transitionNode.attrib:
                         withName = transitionNode.attrib["transitionname"]
                     else:
                         withName = None
-                    if "topos" in transitionNode:
+                    if "topos" in transitionNode.attrib:
                         rootToPos = transitionNode.attrib["topos"]
                     else:
                         rootToPos = None
                     toState = self.getState(stateName)
                     if toState is not None:
                         for withNode in transitionNode:
-                            if "name" in withNode:
+                            if "name" in withNode.attrib:
                                 withName = withNode.attrib["name"]
-                                if "topos" in withNode:
+                                if "topos" in withNode.attrib:
                                     toPos = withNode.attrib["topos"]
                                 else:
                                     toPos = None
