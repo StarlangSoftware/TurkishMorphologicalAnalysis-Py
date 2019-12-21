@@ -406,7 +406,7 @@ class FsmMorphologicalAnalyzer:
                     fsmParse.append(currentFsmParse)
                 if root.getName() == "öbür" or root.getName() == "öteki" or root.getName() == "hep" or \
                         root.getName() == "kimse" or root.getName() == "diğeri" or root.getName() == "hiçbiri" or \
-                        root.getName() == "böylesi" or root.getName() == "birbiri" or root.getName() == "birbirleri" or\
+                        root.getName() == "böylesi" or root.getName() == "birbiri" or root.getName() == "birbirleri" or \
                         root.getName() == "biri" or root.getName() == "başkası" or root.getName() == "bazı" or \
                         root.getName() == "kimi":
                     currentFsmParse = FsmParse(root, self.__finiteStateMachine.getState("PronounRoot(QUANT)"))
@@ -527,6 +527,9 @@ class FsmMorphologicalAnalyzer:
         return initialFsmParse
 
     """
+    The addNewParsesFromCurrentParseSurfaceForm method initially gets the final suffixes from input currentFsmParse 
+    called as currentState, and by using the currentState information it gets the currentSurfaceForm. Then loops 
+    through each currentState's transition. If the currentTransition is possible, it makes the transition.
     The addNewParsesFromCurrentParseMaxLength method initially gets the final suffixes from input currentFsmParse 
     called as currentState, and by using the currentState information it gets the new analysis. Then loops through each 
     currentState's transition. If the currentTransition is possible, it makes the transition.
@@ -539,62 +542,47 @@ class FsmMorphologicalAnalyzer:
         List of FsmParse.
     maxLength : int    
         Maximum length of the parse.
-    root : TxtWord           
-        TxtWord used to make transition.
-    """
-
-    def addNewParsesFromCurrentParseMaxLength(self, currentFsmParse: FsmParse, fsmParse: list, maxLength: int,
-                                              root: TxtWord):
-        currentState = currentFsmParse.getFinalSuffix()
-        currentSurfaceForm = currentFsmParse.getSurfaceForm()
-        for currentTransition in self.__finiteStateMachine.getTransitions(currentState):
-            if currentTransition.transitionPossibleForParse(currentFsmParse) \
-                    and (currentSurfaceForm != root.getName()
-                         or (currentSurfaceForm == root.getName() and
-                             currentTransition.transitionPossibleWord(root, currentState))):
-                tmp = currentTransition.makeTransition(root, currentSurfaceForm, currentFsmParse.getStartState())
-                if len(tmp) <= maxLength:
-                    newFsmParse = copy.deepcopy(currentFsmParse)
-                    newFsmParse.addSuffix(currentTransition.toState(), tmp, currentTransition.withName(),
-                                          currentTransition.__str__(), currentTransition.toPos())
-                    newFsmParse.setAgreement(currentTransition.withName())
-                    fsmParse.append(newFsmParse)
-
-    """
-    The addNewParsesFromCurrentParseSurfaceForm method initially gets the final suffixes from input currentFsmParse 
-    called as currentState, and by using the currentState information it gets the currentSurfaceForm. Then loops 
-    through each currentState's transition. If the currentTransition is possible, it makes the transition.
-
-    PARAMETERS
-    ----------
-    currentFsmParse : FsmParse
-        FsmParse type input.
-    fsmParse : list       
-        List of FsmParse.
     surfaceForm : str    
         String to use during transition.
     root : TxtWord           
         TxtWord used to make transition.
     """
 
-    def addNewParsesFromCurrentParseSurfaceForm(self, currentFsmParse: FsmParse, fsmParse: list, surfaceForm: str,
-                                                root: TxtWord):
+    def addNewParsesFromCurrentParse(self, currentFsmParse: FsmParse, fsmParse: list, maxLengthOrSurfaceForm,
+                                     root: TxtWord):
         currentState = currentFsmParse.getFinalSuffix()
         currentSurfaceForm = currentFsmParse.getSurfaceForm()
-        for currentTransition in self.__finiteStateMachine.getTransitions(currentState):
-            if currentTransition.transitionPossibleForString(currentFsmParse.getSurfaceForm(), surfaceForm) and \
-                    currentTransition.transitionPossibleForParse(currentFsmParse) and (
-                    currentSurfaceForm != root.getName()
-                    or (currentSurfaceForm == root.getName() and
-                        currentTransition.transitionPossibleForWord(root, currentState))):
-                tmp = currentTransition.makeTransition(root, currentSurfaceForm, currentFsmParse.getStartState())
-                if (len(tmp) < len(surfaceForm) and self.isPossibleSubstring(tmp, surfaceForm, root)) or \
-                        (len(tmp) == len(surfaceForm) and (root.lastIdropsDuringSuffixation() or tmp == surfaceForm)):
-                    newFsmParse = copy.deepcopy(currentFsmParse)
-                    newFsmParse.addSuffix(currentTransition.toState(), tmp, currentTransition.withName(),
-                                          currentTransition.__str__(), currentTransition.toPos())
-                    newFsmParse.setAgreement(currentTransition.withName())
-                    fsmParse.append(newFsmParse)
+        if isinstance(maxLengthOrSurfaceForm, int):
+            maxLength = maxLengthOrSurfaceForm
+            for currentTransition in self.__finiteStateMachine.getTransitions(currentState):
+                if currentTransition.transitionPossibleForParse(currentFsmParse) \
+                        and (currentSurfaceForm != root.getName()
+                             or (currentSurfaceForm == root.getName() and
+                                 currentTransition.transitionPossibleWord(root, currentState))):
+                    tmp = currentTransition.makeTransition(root, currentSurfaceForm, currentFsmParse.getStartState())
+                    if len(tmp) <= maxLength:
+                        newFsmParse = copy.deepcopy(currentFsmParse)
+                        newFsmParse.addSuffix(currentTransition.toState(), tmp, currentTransition.withName(),
+                                              currentTransition.__str__(), currentTransition.toPos())
+                        newFsmParse.setAgreement(currentTransition.withName())
+                        fsmParse.append(newFsmParse)
+        elif isinstance(maxLengthOrSurfaceForm, str):
+            surfaceForm = maxLengthOrSurfaceForm
+            for currentTransition in self.__finiteStateMachine.getTransitions(currentState):
+                if currentTransition.transitionPossibleForString(currentFsmParse.getSurfaceForm(), surfaceForm) and \
+                        currentTransition.transitionPossibleForParse(currentFsmParse) and (
+                        currentSurfaceForm != root.getName()
+                        or (currentSurfaceForm == root.getName() and
+                            currentTransition.transitionPossibleForWord(root, currentState))):
+                    tmp = currentTransition.makeTransition(root, currentSurfaceForm, currentFsmParse.getStartState())
+                    if (len(tmp) < len(surfaceForm) and self.isPossibleSubstring(tmp, surfaceForm, root)) or \
+                            (len(tmp) == len(surfaceForm) and (
+                                    root.lastIdropsDuringSuffixation() or tmp == surfaceForm)):
+                        newFsmParse = copy.deepcopy(currentFsmParse)
+                        newFsmParse.addSuffix(currentTransition.toState(), tmp, currentTransition.withName(),
+                                              currentTransition.__str__(), currentTransition.toPos())
+                        newFsmParse.setAgreement(currentTransition.withName())
+                        fsmParse.append(newFsmParse)
 
     """
     The parseExists method is used to check the existence of the parse.
@@ -620,10 +608,12 @@ class FsmMorphologicalAnalyzer:
             currentSurfaceForm = currentFsmParse.getSurfaceForm()
             if currentState.isEndState() and currentSurfaceForm == surfaceForm:
                 return True
-            self.addNewParsesFromCurrentParseSurfaceForm(currentFsmParse, fsmParse, surfaceForm, root)
+            self.addNewParsesFromCurrentParse(currentFsmParse, fsmParse, surfaceForm, root)
         return False
 
     """
+    The parseWordSurfaceForm method is used to parse a given fsmParse. It simply adds new parses to the current parse by
+    using addNewParsesFromCurrentParse method.
     The parseWordMaxLength method is used to parse a given fsmParse. It simply adds new parses to the current parse by
     using addNewParsesFromCurrentParse method.
 
@@ -633,40 +623,6 @@ class FsmMorphologicalAnalyzer:
         a list of FsmParse
     maxLength : int
         maximum length of the surfaceform.
-        
-    RETURNS
-    -------
-    list
-        Result list which has the currentFsmParse.
-    """
-
-    def parseWordMaxLength(self, fsmParse: list, maxLength: int) -> list:
-        result = []
-        while len(fsmParse) > 0:
-            currentFsmParse = fsmParse.pop(0)
-            root = currentFsmParse.getWord()
-            currentState = currentFsmParse.getFinalSuffix()
-            currentSurfaceForm = currentFsmParse.getSurfaceForm()
-            if currentState.isEndState() and len(currentSurfaceForm) <= maxLength:
-                exists = False
-                for i in range(len(result)):
-                    if currentFsmParse.suffixList() == result[i].suffixList():
-                        exists = True
-                        break
-                if not exists:
-                    result.append(currentFsmParse)
-                    currentFsmParse.constructInflectionalGroups()
-            self.addNewParsesFromCurrentParseMaxLength(currentFsmParse, fsmParse, maxLength, root)
-        return result
-
-    """
-    The parseWordSurfaceForm method is used to parse a given fsmParse. It simply adds new parses to the current parse by
-    using addNewParsesFromCurrentParse method.
-
-    PARAMETERS
-    ----------
-    fsmParse : list
-        List of FsmParse
     surfaceForm : str
         String to use during transition.
         
@@ -675,24 +631,42 @@ class FsmMorphologicalAnalyzer:
     list
         Result list which has the currentFsmParse.
     """
-
-    def parseWordSurfaceForm(self, fsmParse: list, surfaceForm: str) -> list:
+    def parseWord(self, fsmParse: list, maxLengthOrSurfaceForm) -> list:
         result = []
-        while len(fsmParse) > 0:
-            currentFsmParse = fsmParse.pop(0)
-            root = currentFsmParse.getWord()
-            currentState = currentFsmParse.getFinalSuffix()
-            currentSurfaceForm = currentFsmParse.getSurfaceForm()
-            if currentState.isEndState() and currentSurfaceForm == surfaceForm:
-                exists = False
-                for i in range(len(result)):
-                    if currentFsmParse.suffixList() == result[i].suffixList():
-                        exists = True
-                        break
-                if not exists:
-                    result.append(currentFsmParse)
-                    currentFsmParse.constructInflectionalGroups()
-            self.addNewParsesFromCurrentParseSurfaceForm(currentFsmParse, fsmParse, surfaceForm, root)
+        if isinstance(maxLengthOrSurfaceForm, int):
+            maxLength = maxLengthOrSurfaceForm
+            while len(fsmParse) > 0:
+                currentFsmParse = fsmParse.pop(0)
+                root = currentFsmParse.getWord()
+                currentState = currentFsmParse.getFinalSuffix()
+                currentSurfaceForm = currentFsmParse.getSurfaceForm()
+                if currentState.isEndState() and len(currentSurfaceForm) <= maxLength:
+                    exists = False
+                    for i in range(len(result)):
+                        if currentFsmParse.suffixList() == result[i].suffixList():
+                            exists = True
+                            break
+                    if not exists:
+                        result.append(currentFsmParse)
+                        currentFsmParse.constructInflectionalGroups()
+                self.addNewParsesFromCurrentParse(currentFsmParse, fsmParse, maxLength, root)
+        elif isinstance(maxLengthOrSurfaceForm, str):
+            surfaceForm = maxLengthOrSurfaceForm
+            while len(fsmParse) > 0:
+                currentFsmParse = fsmParse.pop(0)
+                root = currentFsmParse.getWord()
+                currentState = currentFsmParse.getFinalSuffix()
+                currentSurfaceForm = currentFsmParse.getSurfaceForm()
+                if currentState.isEndState() and currentSurfaceForm == surfaceForm:
+                    exists = False
+                    for i in range(len(result)):
+                        if currentFsmParse.suffixList() == result[i].suffixList():
+                            exists = True
+                            break
+                    if not exists:
+                        result.append(currentFsmParse)
+                        currentFsmParse.constructInflectionalGroups()
+                self.addNewParsesFromCurrentParse(currentFsmParse, fsmParse, surfaceForm, root)
         return result
 
     """
@@ -711,7 +685,7 @@ class FsmMorphologicalAnalyzer:
     RETURNS
     -------
     list
-        parseWordSurfaceForm method with newly populated FsmParse ArrayList and input surfaceForm.
+        parseWord method with newly populated FsmParse ArrayList and input surfaceForm.
     """
 
     def morphologicalAnalysisRoot(self, surfaceForm: str, root: TxtWord, state=None) -> list:
@@ -720,7 +694,7 @@ class FsmMorphologicalAnalyzer:
             self.initializeParseListFromRoot(initialFsmParse, root, self.isProperNoun(surfaceForm))
         else:
             initialFsmParse = [FsmParse(root, self.__finiteStateMachine.getState(state))]
-        return self.parseWordSurfaceForm(initialFsmParse, surfaceForm)
+        return self.parseWord(initialFsmParse, surfaceForm)
 
     """
     The generateAllParses with 2 inputs is used to generate all parses with given root. Then it calls 
@@ -744,7 +718,7 @@ class FsmMorphologicalAnalyzer:
         if root.isProperNoun():
             self.initializeParseListFromRoot(initialFsmParse, root, True)
         self.initializeParseListFromRoot(initialFsmParse, root, False)
-        return self.parseWordMaxLength(initialFsmParse, maxLength)
+        return self.parseWord(initialFsmParse, maxLength)
 
     """
     The analysisExists method checks several cases. If the given surfaceForm is a punctuation or double then it
@@ -886,7 +860,7 @@ class FsmMorphologicalAnalyzer:
             initialFsmParse.append(fsmParse)
             return initialFsmParse
         initialFsmParse = self.initializeParseListFromSurfaceForm(surfaceForm, isProper)
-        return self.parseWordSurfaceForm(initialFsmParse, surfaceForm)
+        return self.parseWord(initialFsmParse, surfaceForm)
 
     def patternMatches(self, expr: str, value: str) -> bool:
         if expr in self.__mostUsedPatterns:
@@ -918,63 +892,110 @@ class FsmMorphologicalAnalyzer:
                or surfaceForm[0] == "Ü" or surfaceForm[0] == "Ş" or surfaceForm[0] == "İ"
 
     """
+    The morphologicalAnalysis method is used to analyse a FsmParseList by comparing with the regex.
+    It creates a list fsmParse to hold the result of the analysis method. For each surfaceForm input,
+    it gets a substring and considers it as a possibleRoot. Then compares with the regex.
+
+    If the surfaceForm input string matches with Turkish chars like Ç, Ş, İ, Ü, Ö, it adds the surfaceForm to Trie with 
+    IS_OA tag.
+    If the possibleRoot contains /, then it is added to the Trie with IS_KESIR tag.
+    If the possibleRoot contains \\d\\d|\\d)/(\\d\\d|\\d)/\\d+, then it is added to the Trie with IS_DATE tag.
+    If the possibleRoot contains \\d\\d|\\d, then it is added to the Trie with IS_PERCENT tag.
+    If the possibleRoot contains \\d\\d|\\d):(\\d\\d|\\d):(\\d\\d|\\d), then it is added to the Trie with IS_ZAMAN tag.
+    If the possibleRoot contains \\d+-\\d+, then it is added to the Trie with IS_RANGE tag.
+    If the possibleRoot is an Integer, then it is added to the Trie with IS_SAYI tag.
+    If the possibleRoot is a Double, then it is added to the Trie with IS_REELSAYI tag.
+
+    PARAMETERS
+    ----------
+    sentenceOrSurfaceForm : str
+        String or Sentence to analyse.
+
+    RETURNS
+    -------
+    list
+        list which folds the analysis
+    FsmParseList
+        fsmParseList which holds the analysis.
+    """
+
+    def morphologicalAnalysis(self, sentenceOrSurfaceForm):
+        if isinstance(sentenceOrSurfaceForm, Sentence):
+            sentence = sentenceOrSurfaceForm
+            result = []
+            for i in range(sentence.wordCount()):
+                originalForm = sentence.getWord(i).getName()
+                spellCorrectedForm = self.__dictionary.getCorrectForm(originalForm)
+                if len(spellCorrectedForm) == 0:
+                    spellCorrectedForm = originalForm
+                wordFsmParseList = self.morphologicalAnalysis(spellCorrectedForm)
+                result.append(wordFsmParseList)
+            return result
+        elif isinstance(sentenceOrSurfaceForm, str):
+            surfaceForm = sentenceOrSurfaceForm
+            if self.__cache.contains(surfaceForm):
+                return self.__cache.get(surfaceForm)
+            if self.patternMatches("(\\w|Ç|Ş|İ|Ü|Ö)\\.", surfaceForm):
+                self.__dictionaryTrie.addWord(self.toLower(surfaceForm), TxtWord(self.toLower(surfaceForm), "IS_OA"))
+            defaultFsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
+            if len(defaultFsmParse) > 0:
+                fsmParseList = FsmParseList(defaultFsmParse)
+                self.__cache.add(surfaceForm, fsmParseList)
+                return fsmParseList
+            fsmParse = []
+            if "'" in surfaceForm:
+                possibleRoot = surfaceForm[:surfaceForm.index('\'')]
+                if len(possibleRoot) > 0:
+                    if "/" in possibleRoot or "\\/" in possibleRoot:
+                        self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_KESIR"))
+                        fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
+                    elif self.patternMatches("(\\d\\d|\\d)/(\\d\\d|\\d)/\\d+", possibleRoot) or \
+                            self.patternMatches("(\\d\\d|\\d)\\.(\\d\\d|\\d)\\.\\d+", possibleRoot):
+                        self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_DATE"))
+                        fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
+                    elif self.patternMatches("\\d+/\\d+", possibleRoot):
+                        self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_KESIR"))
+                        fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
+                    elif self.patternMatches("%(\\d\\d|\\d)", possibleRoot) or \
+                            self.patternMatches("%(\\d\\d|\\d)\\.\\d+", possibleRoot):
+                        self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_PERCENT"))
+                        fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
+                    elif self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d):(\\d\\d|\\d)", possibleRoot) or \
+                            self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d)", possibleRoot):
+                        self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_ZAMAN"))
+                        fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
+                    elif self.patternMatches("\\d+-\\d+", possibleRoot) or \
+                            self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d)-(\\d\\d|\\d):(\\d\\d|\\d)", possibleRoot) or \
+                            self.patternMatches("(\\d\\d|\\d)\\.(\\d\\d|\\d)-(\\d\\d|\\d)\\.(\\d\\d|\\d)",
+                                                possibleRoot):
+                        self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_RANGE"))
+                        fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
+                    elif self.isInteger(possibleRoot):
+                        self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_SAYI"))
+                        fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
+                    elif self.isDouble(possibleRoot):
+                        self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_REELSAYI"))
+                        fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
+                    elif Word.isCapital(possibleRoot):
+                        newWord = None
+                        if self.__dictionary.getWord(self.toLower(possibleRoot)) is not None:
+                            self.__dictionary.getWord(self.toLower(possibleRoot)).addFlag("IS_OA")
+                        else:
+                            newWord = TxtWord(self.toLower(possibleRoot), "IS_OA")
+                            self.__dictionaryTrie.addWord(self.toLower(possibleRoot), newWord)
+                        fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
+                        if len(fsmParse) == 0 and newWord is not None:
+                            newWord.addFlag("IS_KIS")
+                            fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
+            fsmParseList = FsmParseList(fsmParse)
+            self.__cache.add(surfaceForm, fsmParseList)
+            return fsmParseList
+
+    """
     The robustMorphologicalAnalysis is used to analyse surfaceForm String. First it gets the currentParse of the 
     surfaceForm then, if the size of the currentParse is 0, and given surfaceForm is a proper noun, it adds the 
     surfaceForm whose state name is ProperRoot to an list, of it is not a proper noon, it adds the surfaceForm
     whose state name is NominalRoot to the list.
-
-    PARAMETERS
-    ----------
-    surfaceForm : str
-        String to analyse.
-        
-    RETURNS
-    -------
-    FsmParseList
-        FsmParseList type currentParse which holds morphological analysis of the surfaceForm.
-    """
-
-    def robustMorphologicalAnalysisSurfaceForm(self, surfaceForm: str) -> FsmParseList:
-        if surfaceForm is None or len(surfaceForm) == 0:
-            return FsmParseList([])
-        currentParse = self.morphologicalAnalysisSurfaceForm(surfaceForm)
-        if currentParse.size() == 0:
-            fsmParse = []
-            if self.isProperNoun(surfaceForm):
-                fsmParse.append(FsmParse(surfaceForm, self.__finiteStateMachine.getState("ProperRoot")))
-                return FsmParseList(self.parseWordSurfaceForm(fsmParse, surfaceForm))
-            else:
-                fsmParse.append(FsmParse(surfaceForm, self.__finiteStateMachine.getState("NominalRoot")))
-                return FsmParseList(self.parseWordSurfaceForm(fsmParse, surfaceForm))
-        else:
-            return currentParse
-
-    """
-    The morphologicalAnalysis is used for debug purposes.
-
-    PARAMETERS
-    ----------
-    sentence : Sentence 
-        to get word from.
-        
-    RETURNS
-    -------
-    list
-        FsmParseList type result.
-    """
-
-    def morphologicalAnalysis(self, sentence: Sentence) -> list:
-        result = []
-        for i in range(sentence.wordCount()):
-            originalForm = sentence.getWord(i).getName()
-            spellCorrectedForm = self.__dictionary.getCorrectForm(originalForm)
-            if len(spellCorrectedForm) == 0:
-                spellCorrectedForm = originalForm
-            wordFsmParseList = self.morphologicalAnalysisSurfaceForm(spellCorrectedForm)
-            result.append(wordFsmParseList)
-        return result
-
-    """
     The robustMorphologicalAnalysis method takes just one argument as an input. It gets the name of the words from
     input sentence then calls robustMorphologicalAnalysis with surfaceForm.
 
@@ -982,23 +1003,44 @@ class FsmMorphologicalAnalyzer:
     ----------
     sentence : Sentence
         Sentence type input used to get surfaceForm.
+    surfaceForm : str
+        String to analyse.
         
     RETURNS
     -------
     list
         FsmParseList array which holds the result of the analysis.
+    FsmParseList
+        FsmParseList type currentParse which holds morphological analysis of the surfaceForm.
     """
 
-    def robustMorphologicalAnalysis(self, sentence: Sentence) -> list:
-        result = []
-        for i in range(sentence.wordCount()):
-            originalForm = sentence.getWord(i).getName()
-            spellCorrectedForm = self.__dictionary.getCorrectForm(originalForm)
-            if len(spellCorrectedForm) == 0:
-                spellCorrectedForm = originalForm
-            wordFsmParseList = self.robustMorphologicalAnalysisSurfaceForm(spellCorrectedForm)
-            result.append(wordFsmParseList)
-        return result
+    def robustMorphologicalAnalysis(self, sentenceOrSurfaceForm):
+        if isinstance(sentenceOrSurfaceForm, Sentence):
+            sentence = sentenceOrSurfaceForm
+            result = []
+            for i in range(sentence.wordCount()):
+                originalForm = sentence.getWord(i).getName()
+                spellCorrectedForm = self.__dictionary.getCorrectForm(originalForm)
+                if len(spellCorrectedForm) == 0:
+                    spellCorrectedForm = originalForm
+                wordFsmParseList = self.robustMorphologicalAnalysis(spellCorrectedForm)
+                result.append(wordFsmParseList)
+            return result
+        elif isinstance(sentenceOrSurfaceForm, str):
+            surfaceForm = sentenceOrSurfaceForm
+            if surfaceForm is None or len(surfaceForm) == 0:
+                return FsmParseList([])
+            currentParse = self.morphologicalAnalysis(surfaceForm)
+            if currentParse.size() == 0:
+                fsmParse = []
+                if self.isProperNoun(surfaceForm):
+                    fsmParse.append(FsmParse(surfaceForm, self.__finiteStateMachine.getState("ProperRoot")))
+                    return FsmParseList(self.parseWord(fsmParse, surfaceForm))
+                else:
+                    fsmParse.append(FsmParse(surfaceForm, self.__finiteStateMachine.getState("NominalRoot")))
+                    return FsmParseList(self.parseWord(fsmParse, surfaceForm))
+            else:
+                return currentParse
 
     """
     The isInteger method compares input surfaceForm with given regex and returns the result.
@@ -1090,89 +1132,6 @@ class FsmMorphologicalAnalyzer:
             return surfaceForm.lower()
 
     """
-    The morphologicalAnalysis method is used to analyse a FsmParseList by comparing with the regex.
-    It creates a list fsmParse to hold the result of the analysis method. For each surfaceForm input,
-    it gets a substring and considers it as a possibleRoot. Then compares with the regex.
-
-    If the surfaceForm input string matches with Turkish chars like Ç, Ş, İ, Ü, Ö, it adds the surfaceForm to Trie with 
-    IS_OA tag.
-    If the possibleRoot contains /, then it is added to the Trie with IS_KESIR tag.
-    If the possibleRoot contains \\d\\d|\\d)/(\\d\\d|\\d)/\\d+, then it is added to the Trie with IS_DATE tag.
-    If the possibleRoot contains \\d\\d|\\d, then it is added to the Trie with IS_PERCENT tag.
-    If the possibleRoot contains \\d\\d|\\d):(\\d\\d|\\d):(\\d\\d|\\d), then it is added to the Trie with IS_ZAMAN tag.
-    If the possibleRoot contains \\d+-\\d+, then it is added to the Trie with IS_RANGE tag.
-    If the possibleRoot is an Integer, then it is added to the Trie with IS_SAYI tag.
-    If the possibleRoot is a Double, then it is added to the Trie with IS_REELSAYI tag.
-
-    PARAMETERS
-    ----------
-    surfaceForm : str
-        String to analyse.
-        
-    RETURNS
-    -------
-    FsmParseList
-        fsmParseList which holds the analysis.
-    """
-    def morphologicalAnalysisSurfaceForm(self, surfaceForm: str) -> FsmParseList:
-        if self.__cache.contains(surfaceForm):
-            return self.__cache.get(surfaceForm)
-        if self.patternMatches("(\\w|Ç|Ş|İ|Ü|Ö)\\.", surfaceForm):
-            self.__dictionaryTrie.addWord(self.toLower(surfaceForm), TxtWord(self.toLower(surfaceForm), "IS_OA"))
-        defaultFsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
-        if len(defaultFsmParse) > 0:
-            fsmParseList = FsmParseList(defaultFsmParse)
-            self.__cache.add(surfaceForm, fsmParseList)
-            return fsmParseList
-        fsmParse = []
-        if "'" in surfaceForm:
-            possibleRoot = surfaceForm[:surfaceForm.index('\'')]
-            if len(possibleRoot) > 0:
-                if "/" in possibleRoot or "\\/" in possibleRoot:
-                    self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_KESIR"))
-                    fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
-                elif self.patternMatches("(\\d\\d|\\d)/(\\d\\d|\\d)/\\d+", possibleRoot) or \
-                        self.patternMatches("(\\d\\d|\\d)\\.(\\d\\d|\\d)\\.\\d+", possibleRoot):
-                    self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_DATE"))
-                    fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
-                elif self.patternMatches("\\d+/\\d+", possibleRoot):
-                    self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_KESIR"))
-                    fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
-                elif self.patternMatches("%(\\d\\d|\\d)", possibleRoot) or \
-                        self.patternMatches("%(\\d\\d|\\d)\\.\\d+", possibleRoot):
-                    self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_PERCENT"))
-                    fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
-                elif self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d):(\\d\\d|\\d)", possibleRoot) or \
-                        self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d)", possibleRoot):
-                    self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_ZAMAN"))
-                    fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
-                elif self.patternMatches("\\d+-\\d+", possibleRoot) or \
-                        self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d)-(\\d\\d|\\d):(\\d\\d|\\d)", possibleRoot) or \
-                        self.patternMatches("(\\d\\d|\\d)\\.(\\d\\d|\\d)-(\\d\\d|\\d)\\.(\\d\\d|\\d)", possibleRoot):
-                    self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_RANGE"))
-                    fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
-                elif self.isInteger(possibleRoot):
-                    self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_SAYI"))
-                    fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
-                elif self.isDouble(possibleRoot):
-                    self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_REELSAYI"))
-                    fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
-                elif Word.isCapital(possibleRoot):
-                    newWord = None
-                    if self.__dictionary.getWord(self.toLower(possibleRoot)) is not None:
-                        self.__dictionary.getWord(self.toLower(possibleRoot)).addFlag("IS_OA")
-                    else:
-                        newWord = TxtWord(self.toLower(possibleRoot), "IS_OA")
-                        self.__dictionaryTrie.addWord(self.toLower(possibleRoot), newWord)
-                    fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
-                    if len(fsmParse) == 0 and newWord is not None:
-                        newWord.addFlag("IS_KIS")
-                        fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
-        fsmParseList = FsmParseList(fsmParse)
-        self.__cache.add(surfaceForm, fsmParseList)
-        return fsmParseList
-
-    """
     The morphologicalAnalysisExists method calls analysisExists to check the existence of the analysis with given
     root and surfaceForm.
 
@@ -1188,5 +1147,6 @@ class FsmMorphologicalAnalyzer:
     bool
         True an analysis exists, otherwise return False.
     """
+
     def morphologicalAnalysisExists(self, rootWord: TxtWord, surfaceForm: str) -> bool:
         return self.analysisExists(rootWord, self.toLower(surfaceForm), True)

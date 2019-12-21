@@ -2,11 +2,12 @@ from setuptools import setup
 
 setup(
     name='NlpToolkit-MorphologicalAnalysis',
-    version='1.0.1',
+    version='1.0.3',
     packages=['MorphologicalAnalysis'],
     url='https://github.com/olcaytaner/TurkishMorphologicalAnalysis-Py',
     license='',
     author='olcaytaner',
     author_email='olcaytaner@isikun.edu.tr',
-    description='Turkish Morphological Analysis'
+    description='Turkish Morphological Analysis',
+    install_requires=['NlpToolkit-Dictionary']
 )

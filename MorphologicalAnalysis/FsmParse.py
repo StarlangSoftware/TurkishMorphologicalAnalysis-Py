@@ -546,7 +546,7 @@ class FsmParse(MorphologicalParse):
                 result = self.__formList[0] + "+POSTP+PCACC"
             else:
                 result = self.__formList[0] + "+POSTP+PCNOM"
-        elif self.__suffixList[0].getName() == "PronounRoot":
+        elif self.__suffixList[0].getName().startswith("PronounRoot"):
             result = self.pronounTransition()
         elif self.__suffixList[0].getName() == "OrdinalRoot":
             result = self.__formList[0] + "+NUM+ORD"
