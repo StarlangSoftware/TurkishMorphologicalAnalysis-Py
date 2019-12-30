@@ -14,8 +14,8 @@ class FsmParse(MorphologicalParse):
     __initialPos: str
     __pos: str
     __form: str
-    __verbAgreement: str = None
-    __possesiveAgreement: str = None
+    __verbAgreement: str
+    __possesiveAgreement: str
 
     """
     Another constructor of FsmParse class which takes a TxtWord root and a State as inputs.
@@ -52,6 +52,8 @@ class FsmParse(MorphologicalParse):
             self.__formList.append(self.__form)
             self.__transitionList = []
             self.__withList = []
+        self.__verbAgreement = None
+        self.__possesiveAgreement = None
 
     def __eq__(self, other):
         return self.transitionList() == other.transitionList()
