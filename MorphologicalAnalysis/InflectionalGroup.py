@@ -3,32 +3,32 @@ from MorphologicalAnalysis.MorphologicalTag import MorphologicalTag
 
 class InflectionalGroup:
     __IG: list
-    tags = ["Noun", "Adv", "Adj", "Verb", "A1sg",
-            "A2sg", "A3sg", "A1Pl", "A2pl", "A3pl",
-            "P1sg", "P2sg", "P3sg", "P1Pl", "P2pl",
-            "P3pl", "Prop", "Pnon", "Nom", "With",
-            "Without", "Acc", "Dat", "Gen", "Abl",
-            "Zero", "Able", "Neg", "Past",
-            "Conj", "Det", "Dup", "Interj", "Num",
-            "PostP", "Punc", "Ques", "Agt", "ByDoingSo",
-            "Card", "Caus", "DemonsP", "Distrib", "FitFor",
-            "FutPart", "Inf", "Ness", "Ord", "Pass",
-            "PastPart", "PresPart", "QuesP", "QuantP", "Range",
-            "Ratio", "Real", "Recip", "Reflex", "ReflexP",
-            "Time", "When", "While", "WithoutHavingDoneSo", "PCAbl",
-            "PCAcc", "PCDat", "PCGen", "PCIns", "PCNom",
-            "Acquire", "ActOf", "AfterDoingSo", "Almost", "As",
-            "AsIf", "Become", "EverSince", "FeelLike", "Hastily",
-            "InBetween", "JustLike", "Ly", "NotAbleState", "Related",
-            "Repeat", "Since", "SinceDoingSo", "Start", "Stay",
-            "Equ", "Ins", "Aor", "Desr", "Fut",
-            "Imp", "Narr", "Neces", "Opt", "Past",
-            "Pres", "Prog1", "Prog2", "Cond", "Cop",
-            "Pos", "Pron", "Loc", "Rel", "Demons",
-            "Inf2", "Inf3", "BSTag", "ESTag", "BTTag",
-            "ETTag", "BDTag", "EDTag", "Inf1", "AsLongAs",
-            "Dist", "Adamantly", "Percent", "WithoutBeingAbleToHaveDoneSo", "Dim",
-            "Pers", "Fraction", "Hashtag", "Email", "Date"]
+    tags = ["NOUN", "ADV", "ADJ", "VERB", "A1SG",
+            "A2SG", "A3SG", "A1PL", "A2PL", "A3PL",
+            "P1SG", "P2SG", "P3SG", "P1PL", "P2PL",
+            "P3PL", "PROP", "PNON", "NOM", "WITH",
+            "WITHOUT", "ACC", "DAT", "GEN", "ABL",
+            "ZERO", "ABLE", "NEG", "PAST",
+            "CONJ", "DET", "DUP", "INTERJ", "NUM",
+            "POSTP", "PUNC", "QUES", "AGT", "BYDOINGSO",
+            "CARD", "CAUS", "DEMONSP", "DISTRIB", "FITFOR",
+            "FUTPART", "INF", "NESS", "ORD", "PASS",
+            "PASTPART", "PRESPART", "QUESP", "QUANTP", "RANGE",
+            "RATIO", "REAL", "RECIP", "REFLEX", "REFLEXP",
+            "TIME", "WHEN", "WHILE", "WITHOUTHAVINGDONESO", "PCABL",
+            "PCACC", "PCDAT", "PCGEN", "PCINS", "PCNOM",
+            "ACQUIRE", "ACTOF", "AFTERDOINGSO", "ALMOST", "AS",
+            "ASIF", "BECOME", "EVERSINCE", "FEELLIKE", "HASTILY",
+            "INBETWEEN", "JUSTLIKE", "LY", "NOTABLESTATE", "RELATED",
+            "REPEAT", "SINCE", "SINCEDOINGSO", "START", "STAY",
+            "EQU", "INS", "AOR", "DESR", "FUT",
+            "IMP", "NARR", "NECES", "OPT", "PAST",
+            "PRES", "PROG1", "PROG2", "COND", "COP",
+            "POS", "PRON", "LOC", "REL", "DEMONS",
+            "INF2", "INF3", "BSTAG", "ESTAG", "BTTAG",
+            "ETTAG", "BDTAG", "EDTAG", "INF1", "ASLONGAS",
+            "DIST", "ADAMANTLY", "PERCENT", "WITHOUTBEINGABLETOHAVEDONESO", "DIM",
+            "PERS", "FRACTION", "HASHTAG", "EMAIL", "DATE"]
     morphotags = [MorphologicalTag.NOUN, MorphologicalTag.ADVERB, MorphologicalTag.ADJECTIVE,
                   MorphologicalTag.VERB, MorphologicalTag.A1SG, MorphologicalTag.A2SG, MorphologicalTag.A3SG,
                   MorphologicalTag.A1PL,
@@ -125,7 +125,7 @@ class InflectionalGroup:
     """
     def getMorphologicalTag(tag: str) -> MorphologicalTag:
         for j in range(len(InflectionalGroup.tags)):
-            if tag.upper() == InflectionalGroup.tags[j].upper():
+            if tag == InflectionalGroup.tags[j]:
                 return InflectionalGroup.morphotags[j]
         return None
 
@@ -145,7 +145,7 @@ class InflectionalGroup:
     def getTagString(tag: MorphologicalTag) -> str:
         for j in range(len(InflectionalGroup.morphotags)):
             if tag == InflectionalGroup.morphotags[j]:
-                return InflectionalGroup.tags[j].upper()
+                return InflectionalGroup.tags[j]
         return None
 
     """
