@@ -594,5 +594,5 @@ class MorphologicalParse:
     def __str__(self):
         result = self.root.getName() + "+" + self.inflectionalGroups[0].__str__()
         for i in range(1, len(self.inflectionalGroups)):
-            result = result + "^^B+" + self.inflectionalGroups[i].__str__()
+            result = result + "^DB+" + self.inflectionalGroups[i].__str__()
         return result
