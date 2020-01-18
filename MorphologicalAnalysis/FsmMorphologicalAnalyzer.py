@@ -406,7 +406,7 @@ class FsmMorphologicalAnalyzer:
                     fsmParse.append(currentFsmParse)
                 if root.getName() == "öbür" or root.getName() == "öteki" or root.getName() == "hep" or \
                         root.getName() == "kimse" or root.getName() == "diğeri" or root.getName() == "hiçbiri" or \
-                        root.getName() == "böylesi" or root.getName() == "birbiri" or root.getName() == "birbirleri" or \
+                        root.getName() == "böylesi" or root.getName() == "birbiri" or root.getName() == "birbirleri" or\
                         root.getName() == "biri" or root.getName() == "başkası" or root.getName() == "bazı" or \
                         root.getName() == "kimi":
                     currentFsmParse = FsmParse(root, self.__finiteStateMachine.getState("PronounRoot(QUANT)"))
@@ -965,7 +965,7 @@ class FsmMorphologicalAnalyzer:
                         self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_ZAMAN"))
                         fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
                     elif self.patternMatches("\\d+-\\d+", possibleRoot) or \
-                            self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d)-(\\d\\d|\\d):(\\d\\d|\\d)", possibleRoot) or \
+                            self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d)-(\\d\\d|\\d):(\\d\\d|\\d)", possibleRoot) or\
                             self.patternMatches("(\\d\\d|\\d)\\.(\\d\\d|\\d)-(\\d\\d|\\d)\\.(\\d\\d|\\d)",
                                                 possibleRoot):
                         self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_RANGE"))
@@ -978,8 +978,9 @@ class FsmMorphologicalAnalyzer:
                         fsmParse = self.analysis(self.toLower(surfaceForm), self.isProperNoun(surfaceForm))
                     elif Word.isCapital(possibleRoot):
                         newWord = None
-                        if self.__dictionary.getWord(self.toLower(possibleRoot)) is not None:
-                            self.__dictionary.getWord(self.toLower(possibleRoot)).addFlag("IS_OA")
+                        word = self.__dictionary.getWord(self.toLower(possibleRoot))
+                        if word is not None and isinstance(word, TxtWord):
+                            word.addFlag("IS_OA")
                         else:
                             newWord = TxtWord(self.toLower(possibleRoot), "IS_OA")
                             self.__dictionaryTrie.addWord(self.toLower(possibleRoot), newWord)
