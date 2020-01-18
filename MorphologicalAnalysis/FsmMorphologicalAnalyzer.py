@@ -864,11 +864,11 @@ class FsmMorphologicalAnalyzer:
 
     def patternMatches(self, expr: str, value: str) -> bool:
         if expr in self.__mostUsedPatterns:
-            return self.__mostUsedPatterns[expr].match(value) is not None
+            return self.__mostUsedPatterns[expr].fullmatch(value) is not None
         else:
             compiledExpression = re.compile(expr)
             self.__mostUsedPatterns[expr] = compiledExpression
-            return compiledExpression.match(value) is not None
+            return compiledExpression.fullmatch(value) is not None
 
     """
     The isProperNoun method takes surfaceForm String as input and checks its each char whether they are in the range
