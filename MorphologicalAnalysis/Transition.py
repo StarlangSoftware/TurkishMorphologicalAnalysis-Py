@@ -523,16 +523,16 @@ class Transition:
                     if TurkishLanguage.isBackRoundedVowel(self.beforeLastVowel(self.__formationToCheck)):
                         return formation[:len(formation) - 1] + 'u'
                     if TurkishLanguage.isBackUnroundedVowel(self.beforeLastVowel(self.__formationToCheck)):
-                        return formation[len(formation) - 1] + 'ı'
+                        return formation[:len(formation) - 1] + 'ı'
             if TurkishLanguage.isVowel(self.lastPhoneme(self.__formationToCheck)):
                 if TurkishLanguage.isFrontRoundedVowel(self.beforeLastVowel(self.__formationToCheck)):
-                    return formation[len(formation) - 1] + 'ü'
+                    return formation[:len(formation) - 1] + 'ü'
                 if TurkishLanguage.isFrontUnroundedVowel(self.beforeLastVowel(self.__formationToCheck)):
-                    return formation[len(formation) - 1] + 'i'
+                    return formation[:len(formation) - 1] + 'i'
                 if TurkishLanguage.isBackRoundedVowel(self.beforeLastVowel(self.__formationToCheck)):
-                    return formation[len(formation) - 1] + 'u'
+                    return formation[:len(formation) - 1] + 'u'
                 if TurkishLanguage.isBackUnroundedVowel(self.beforeLastVowel(self.__formationToCheck)):
-                    return formation[len(formation) - 1] + 'ı'
+                    return formation[:len(formation) - 1] + 'ı'
         if TurkishLanguage.isFrontRoundedVowel(self.lastVowel(self.__formationToCheck)) or \
                 (TurkishLanguage.isBackRoundedVowel(self.lastVowel(self.__formationToCheck))
                  and root.notObeysVowelHarmonyDuringAgglutination()):

@@ -494,7 +494,7 @@ class FsmMorphologicalAnalyzer:
             newRoot.removeFlag("IS_ST")
             newRoot.removeFlag("IS_STT")
             self.initializeParseList(parseList, newRoot, isProper)
-        if root.endingKChangesIntoG():
+        if root.endingKChangesIntoG() and root.containsFlag("IS_OA"):
             newRoot = copy.deepcopy(root)
             newRoot.removeFlag("IS_OA")
             self.initializeParseList(parseList, newRoot, isProper)
