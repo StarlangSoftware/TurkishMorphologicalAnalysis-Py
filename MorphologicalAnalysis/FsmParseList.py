@@ -57,9 +57,9 @@ class FsmParseList:
         return self.__fsmParses[index]
 
     """
-    The rootWords method gets the first item's root of fsmParses {@link ArrayList} and uses it as currentRoot. Then loops through
-    the fsmParses, if the current item's root does not equal to the currentRoot, it then assigns it as the currentRoot and
-    accumulates root words in a {@link String} result.
+    The rootWords method gets the first item's root of fsmParses list and uses it as currentRoot. Then loops through
+    the fsmParses, if the current item's root does not equal to the currentRoot, it then assigns it as the currentRoot 
+    andaccumulates root words in a string result.
 
     RETURNS
     -------
@@ -227,15 +227,13 @@ class FsmParseList:
         i = 0
         while i < len(self.__fsmParses):
             if i == 0:
-                initial = []
-                initial.append(self.__fsmParses[i])
+                initial = [self.__fsmParses[i]]
                 result.append(FsmParseList(initial))
             else:
                 if self.__fsmParses[i].getWordWithPos() == self.__fsmParses[i - 1].getWordWithPos():
                     result[len(result) - 1].__fsmParses.append(self.__fsmParses[i])
                 else:
-                    initial = []
-                    initial.append(self.__fsmParses[i])
+                    initial = [self.__fsmParses[i]]
                     result.append(FsmParseList(initial))
             i = i + 1
         return result

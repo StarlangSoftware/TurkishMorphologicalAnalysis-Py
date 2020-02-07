@@ -123,6 +123,7 @@ class InflectionalGroup:
     MorphologicalTag
         morphoTags if found, None otherwise.
     """
+    @staticmethod
     def getMorphologicalTag(tag: str) -> MorphologicalTag:
         for j in range(len(InflectionalGroup.tags)):
             if tag == InflectionalGroup.tags[j]:
@@ -142,6 +143,7 @@ class InflectionalGroup:
     str
         Tag if found, None otherwise.
     """
+    @staticmethod
     def getTagString(tag: MorphologicalTag) -> str:
         for j in range(len(InflectionalGroup.morphotags)):
             if tag == InflectionalGroup.morphotags[j]:

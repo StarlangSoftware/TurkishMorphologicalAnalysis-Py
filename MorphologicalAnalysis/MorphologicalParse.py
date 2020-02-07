@@ -38,7 +38,7 @@ class MorphologicalParse:
     parse : str
         String input.
     """
-    def __init__(self, parse:None):
+    def __init__(self, parse=None):
         if parse is not None:
             if isinstance(parse, str):
                 iGs = []

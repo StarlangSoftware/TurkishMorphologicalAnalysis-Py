@@ -149,7 +149,8 @@ class Transition:
             else:
                 return root.takesSuffixDIRAsFactitive()
         if self.__with == "Hr" and (
-                self.__toState.getName() == "AdjectiveRoot(VERB)" or self.__toState.getName() == "OtherTense" or self.__toState.getName() == "OtherTense2"):
+                self.__toState.getName() == "AdjectiveRoot(VERB)" or self.__toState.getName() == "OtherTense" or
+                self.__toState.getName() == "OtherTense2"):
             return root.takesSuffixIRAsAorist()
         return True
 

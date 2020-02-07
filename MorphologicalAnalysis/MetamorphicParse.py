@@ -164,7 +164,7 @@ class MetamorphicParse:
     parse : str
         String to parse.
     """
-    def __init__(self, parse:None):
+    def __init__(self, parse=None):
         if parse is not None:
             self.__metaMorphemeList = []
             if parse == "+":
@@ -229,7 +229,7 @@ class MetamorphicParse:
     def getMetaMorphemeTagForParse(self, parse: MorphologicalParse, tag: str) -> list:
         result = []
         s = tag[0]
-        if Word.isPunctuation(s):
+        if Word.isPunctuationSymbol(s):
             tag = tag[1:]
         for j in range(len(MetamorphicParse.metaMorphemes)):
             if tag == self.metaMorphemes[j] and parse.containsTag(MetamorphicParse.morphotacticTags[j]):
