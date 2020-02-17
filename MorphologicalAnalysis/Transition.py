@@ -253,7 +253,8 @@ class Transition:
         if TurkishLanguage.isConsonantDrop(self.__withFirstChar()) and self.__with != "ylA" and self.__with != "ysA" \
                 and self.__with != "ymHs" and self.__with != "yDH" and self.__with != "yken":
             return True
-        if self.__withFirstChar() == "A" or self.__withFirstChar() == "H" or TurkishLanguage.isVowel(self.__withFirstChar()):
+        if self.__withFirstChar() == "A" or self.__withFirstChar() == "H" or \
+                TurkishLanguage.isVowel(self.__withFirstChar()):
             return True
         return False
 
@@ -363,20 +364,20 @@ class Transition:
                             self.__formationToCheck = stem
                         else:
                             if self.__lastPhoneme(stem) == "p":
-                                if self.__startWithVowelorConsonantDrops() and rootWord and self.softenDuringSuffixation(
-                                        root):
+                                if self.__startWithVowelorConsonantDrops() and rootWord and \
+                                        self.softenDuringSuffixation(root):
                                     formation = stem[:len(stem) - 1] + 'b'
                             elif self.__lastPhoneme(stem) == "t":
-                                if self.__startWithVowelorConsonantDrops() and rootWord and self.softenDuringSuffixation(
-                                        root):
+                                if self.__startWithVowelorConsonantDrops() and rootWord and \
+                                        self.softenDuringSuffixation(root):
                                     formation = stem[:len(stem) - 1] + 'd'
                             elif self.__lastPhoneme(stem) == "ç":
-                                if self.__startWithVowelorConsonantDrops() and rootWord and self.softenDuringSuffixation(
-                                        root):
+                                if self.__startWithVowelorConsonantDrops() and rootWord and \
+                                        self.softenDuringSuffixation(root):
                                     formation = stem[:len(stem) - 1] + 'c'
                             elif self.__lastPhoneme(stem) == "g":
-                                if self.__startWithVowelorConsonantDrops() and rootWord and self.softenDuringSuffixation(
-                                        root):
+                                if self.__startWithVowelorConsonantDrops() and rootWord and \
+                                        self.softenDuringSuffixation(root):
                                     formation = stem[:len(stem) - 1] + 'ğ'
                             elif self.__lastPhoneme(stem) == "k":
                                 if self.__startWithVowelorConsonantDrops() and rootWord and root.endingKChangesIntoG() \
@@ -388,7 +389,7 @@ class Transition:
                                             not root.isProperNoun() or startState.__str__() != "ProperRoot"))):
                                         formation = stem[:len(stem) - 1] + 'ğ'
                             self.__formationToCheck = formation
-        if TurkishLanguage.isConsonantDrop(self.__withFirstChar()) and not TurkishLanguage.isVowel(stem[len(stem) - 1]) \
+        if TurkishLanguage.isConsonantDrop(self.__withFirstChar()) and not TurkishLanguage.isVowel(stem[len(stem) - 1])\
                 and (root.isNumeral() or root.isReal() or root.isFraction() or root.isTime() or root.isDate()
                      or root.isPercent() or root.isRange()) \
                 and (root.getName().endswith("1") or root.getName().endswith("3") or root.getName().endswith("4")
@@ -441,7 +442,7 @@ class Transition:
         if root.isAbbreviation():
             return formation + 'd'
         if "0" <= self.__lastPhoneme(self.__formationToCheck) <= "9":
-            if self.__lastPhoneme(self.__formationToCheck) == "3" or self.__lastPhoneme(self.__formationToCheck) == "4" \
+            if self.__lastPhoneme(self.__formationToCheck) == "3" or self.__lastPhoneme(self.__formationToCheck) == "4"\
                     or self.__lastPhoneme(self.__formationToCheck) == "5":
                 return formation + 't'
             elif self.__lastPhoneme(self.__formationToCheck) == "0":
