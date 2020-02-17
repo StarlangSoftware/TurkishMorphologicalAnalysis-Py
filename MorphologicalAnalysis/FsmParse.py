@@ -17,21 +17,20 @@ class FsmParse(MorphologicalParse):
     __verbAgreement: str
     __possesiveAgreement: str
 
-    """
-    Another constructor of FsmParse class which takes a TxtWord root and a State as inputs.
-    First, initializes root variable with this TxtWord. It also initializes form with root's name, pos and
-    initialPos with given State's POS, creates 4 new list suffixList, formList, transitionList
-    and withList and adds given State to suffixList, form to formList.
-
-    PARAMETERS
-    ----------
-    root : TxtWord
-        TxtWord input.
-    startState : State
-        State input.
-    """
-
     def __init__(self, root, startState=None):
+        """
+        Another constructor of FsmParse class which takes a TxtWord root and a State as inputs.
+        First, initializes root variable with this TxtWord. It also initializes form with root's name, pos and
+        initialPos with given State's POS, creates 4 new list suffixList, formList, transitionList
+        and withList and adds given State to suffixList, form to formList.
+
+        PARAMETERS
+        ----------
+        root : TxtWord
+            TxtWord input.
+        startState : State
+            State input.
+        """
         if isinstance(root, Word):
             self.root = root
         elif isinstance(root, int):
@@ -64,15 +63,14 @@ class FsmParse(MorphologicalParse):
     def __gt__(self, other):
         return self.transitionList() > other.transitionList()
 
-    """
-    The constructInflectionalGroups method initially calls the transitionList method and assigns the resulting str
-    to the parse variable and creates a new list as iGs. If parse str contains a derivational boundary
-    it adds the substring starting from the 0 to the index of derivational boundary to the iGs. If it does not contain a 
-    DB, it directly adds parse to the iGs. Then, creates and initializes new list as inflectionalGroups and fills with
-    the items of iGs.
-    """
-
     def constructInflectionalGroups(self):
+        """
+        The constructInflectionalGroups method initially calls the transitionList method and assigns the resulting str
+        to the parse variable and creates a new list as iGs. If parse str contains a derivational boundary
+        it adds the substring starting from the 0 to the index of derivational boundary to the iGs. If it does not
+        contain a DB, it directly adds parse to the iGs. Then, creates and initializes new list as inflectionalGroups
+        and fills with the items of iGs.
+        """
         parse = self.transitionList()
         iGs = []
         while "^DB+" in parse:
@@ -84,42 +82,39 @@ class FsmParse(MorphologicalParse):
         for i in range(1, len(iGs)):
             self.inflectionalGroups.append(InflectionalGroup(iGs[i]))
 
-    """
-    Getter for the verbAgreement variable.
-
-    RETURNS
-    -------
-    str
-        The verbAgreement variable.
-    """
-
     def getVerbAgreement(self) -> str:
+        """
+        Getter for the verbAgreement variable.
+
+        RETURNS
+        -------
+        str
+            The verbAgreement variable.
+        """
         return self.__verbAgreement
 
-    """
-    Getter for the possesiveAgreement variable.
-    
-    RETURNS
-    -------
-    str
-        The possesiveAgreement variable.
-    """
-
     def getPossesiveAgreement(self) -> str:
+        """
+        Getter for the possesiveAgreement variable.
+
+        RETURNS
+        -------
+        str
+            The possesiveAgreement variable.
+        """
         return self.__possesiveAgreement
 
-    """
-    The setAgreement method takes a str transitionName as an input and if it is one of the A1SG, A2SG, A3SG,
-    A1PL, A2PL or A3PL it assigns transitionName input to the verbAgreement variable. Or if it is ine of the PNON, P1SG, 
-    P2SG,P3SG, P1PL, P2PL or P3PL it assigns transitionName input to the possesiveAgreement variable.
-
-    PARAMETERS
-    ----------
-    transitionName : str
-        String input.
-    """
-
     def setAgreement(self, transitionName: str):
+        """
+        The setAgreement method takes a str transitionName as an input and if it is one of the A1SG, A2SG, A3SG,
+        A1PL, A2PL or A3PL it assigns transitionName input to the verbAgreement variable. Or if it is ine of the PNON,
+        P1SG, P2SG,P3SG, P1PL, P2PL or P3PL it assigns transitionName input to the possesiveAgreement variable.
+
+        PARAMETERS
+        ----------
+        transitionName : str
+            String input.
+        """
         if transitionName == "A1SG" or transitionName == "A2SG" or transitionName == "A3SG" or transitionName == "A1PL"\
                 or transitionName == "A2PL" or transitionName == "A3PL":
             self.__verbAgreement = transitionName
@@ -127,24 +122,23 @@ class FsmParse(MorphologicalParse):
                 or transitionName == "P1PL" or transitionName == "P2PL" or transitionName == "P3PL":
             self.__possesiveAgreement = transitionName
 
-    """
-    The getLastLemmaWithTag method takes a String input pos as an input. If given pos is an initial pos then it assigns
-    root to the lemma, and assign null otherwise. Then, it loops i times where i ranges from 1 to size of the formList,
-    if the item at i-1 of transitionList is not null and contains a derivational boundary with pos but not with ZERO,
-    it assigns the ith item of formList to lemma.
-
-    PARAMETERS
-    ----------
-    pos : str
-        String input.
-        
-    RETURNS
-    -------
-    str
-        String output lemma.
-    """
-
     def getLastLemmaWithTag(self, pos: str) -> str:
+        """
+        The getLastLemmaWithTag method takes a String input pos as an input. If given pos is an initial pos then it
+        assigns root to the lemma, and assign null otherwise. Then, it loops i times where i ranges from 1 to size of
+        the formList, if the item at i-1 of transitionList is not null and contains a derivational boundary with pos but
+        not with ZERO, it assigns the ith item of formList to lemma.
+
+        PARAMETERS
+        ----------
+        pos : str
+            String input.
+
+        RETURNS
+        -------
+        str
+            String output lemma.
+        """
         if self.__initialPos is not None and self.__initialPos == pos:
             lemma = self.root.getName()
         else:
@@ -155,46 +149,44 @@ class FsmParse(MorphologicalParse):
                 lemma = self.__formList[i]
         return lemma
 
-    """
-    The getLastLemma method initially assigns root as lemma. Then, it loops i times where i ranges from 1 to size of 
-    the formList, if the item at i-1 of transitionList is not null and contains a derivational boundary, it assigns the 
-    ith item of formList to lemma.
-
-    RETURNS
-    -------
-    str
-        String output lemma.
-    """
-
     def getLastLemma(self) -> str:
+        """
+        The getLastLemma method initially assigns root as lemma. Then, it loops i times where i ranges from 1 to size of
+        the formList, if the item at i-1 of transitionList is not null and contains a derivational boundary, it assigns
+        the ith item of formList to lemma.
+
+        RETURNS
+        -------
+        str
+            String output lemma.
+        """
         lemma = self.root.getName()
         for i in range(1, len(self.__formList)):
             if self.__transitionList[i - 1] is not None and "^DB+" in self.__transitionList[i - 1]:
                 lemma = self.__formList[i]
         return lemma
 
-    """
-    The addSuffix method takes 5 different inputs; State suffix, str form, transition, with and toPos.
-    If the pos of given input suffix is not None, it then assigns it to the pos variable. If the pos of the given suffix
-    is None but given toPos is not None than it assigns toPos to pos variable. At the end, it adds suffix to the 
-    suffixList, form to the formList, transition to the transitionList and if given with is not 0, it is also added to 
-    withList.
-
-    PARAMETERS
-    ----------
-    suffix : State    
-        State input.
-    form : str
-        String input.
-    transition : str
-        String input.
-    withName : str
-        String input.
-    toPos : str
-        String input.
-    """
-
     def addSuffix(self, suffix: State, form: str, transition: str, withName: str, toPos: str):
+        """
+        The addSuffix method takes 5 different inputs; State suffix, str form, transition, with and toPos.
+        If the pos of given input suffix is not None, it then assigns it to the pos variable. If the pos of the given
+        suffix is None but given toPos is not None than it assigns toPos to pos variable. At the end, it adds suffix to
+        the suffixList, form to the formList, transition to the transitionList and if given with is not 0, it is also
+        added to withList.
+
+        PARAMETERS
+        ----------
+        suffix : State
+            State input.
+        form : str
+            String input.
+        transition : str
+            String input.
+        withName : str
+            String input.
+        toPos : str
+            String input.
+        """
         if suffix.getPos() is not None:
             self.__pos = suffix.getPos()
         else:
@@ -207,98 +199,91 @@ class FsmParse(MorphologicalParse):
             self.__withList.append(withName)
         self.__form = form
 
-    """
-    Getter for the form variable.
-
-    RETURNS
-    -------
-    str
-        The form variable.
-    """
-
     def getSurfaceForm(self) -> str:
+        """
+        Getter for the form variable.
+
+        RETURNS
+        -------
+        str
+            The form variable.
+        """
         return self.__form
 
-    """
-    The getStartState method returns the first item of suffixList list.
-
-    RETURNS
-    -------
-    State
-        The first item of suffixList list.
-    """
-
     def getStartState(self) -> State:
+        """
+        The getStartState method returns the first item of suffixList list.
+
+        RETURNS
+        -------
+        State
+            The first item of suffixList list.
+        """
         return self.__suffixList[0]
 
-    """
-    Getter for the pos variable.
-
-    RETURNS
-    -------
-    str
-        The pos variable.
-    """
-
     def getFinalPos(self) -> str:
+        """
+        Getter for the pos variable.
+
+        RETURNS
+        -------
+        str
+            The pos variable.
+        """
         return self.__pos
 
-    """
-    Getter for the initialPos variable.
-
-    RETURNS
-    -------
-    str
-        The initialPos variable.
-    """
-
     def getInitialPos(self) -> str:
+        """
+        Getter for the initialPos variable.
+
+        RETURNS
+        -------
+        str
+            The initialPos variable.
+        """
         return self.__initialPos
 
-    """
-    The setForm method takes a str name as an input and assigns it to the form variable, then it removes the first item
-    of formList list and adds the given name to the formList.
-
-    PARAMETERS
-    ----------
-    name : str
-        String input to set form.
-    """
-
     def setForm(self, name: str):
+        """
+        The setForm method takes a str name as an input and assigns it to the form variable, then it removes the first
+        item of formList list and adds the given name to the formList.
+
+        PARAMETERS
+        ----------
+        name : str
+            String input to set form.
+        """
         self.__form = name
         self.__formList.pop(0)
         self.__formList.append(name)
 
-    """
-    The getFinalSuffix method returns the last item of suffixList list.
-
-    RETURNS
-    -------
-    State
-        The last item of suffixList list.
-    """
-
     def getFinalSuffix(self) -> State:
+        """
+        The getFinalSuffix method returns the last item of suffixList list.
+
+        RETURNS
+        -------
+        State
+            The last item of suffixList list.
+        """
         return self.__suffixList[len(self.__suffixList) - 1]
 
-    """
-    The headerTransition method gets the first item of formList and checks for cases;
-
-    If it is <DOC>, it returns "<DOC>+BDTAG" which indicates the beginning of a document.
-    If it is </DOC>, it returns "</DOC>+EDTAG" which indicates the ending of a document.
-    If it is <TITLE>, it returns "<TITLE>+BTTAG" which indicates the beginning of a title.
-    If it is </TITLE>, it returns "</TITLE>+ETTAG" which indicates the ending of a title.
-    If it is "<S>", it returns "<S>+BSTAG" which indicates the beginning of a sentence.
-    If it is "</S>, it returns "</S>+ESTAG" which indicates the ending of a sentence.
-
-    RETURNS
-    -------
-    str
-        Corresponding tags of the headers and an empty {@link String} if any case does not match.
-    """
-
     def headerTransition(self) -> str:
+        """
+        The headerTransition method gets the first item of formList and checks for cases;
+
+        If it is <DOC>, it returns "<DOC>+BDTAG" which indicates the beginning of a document.
+        If it is </DOC>, it returns "</DOC>+EDTAG" which indicates the ending of a document.
+        If it is <TITLE>, it returns "<TITLE>+BTTAG" which indicates the beginning of a title.
+        If it is </TITLE>, it returns "</TITLE>+ETTAG" which indicates the ending of a title.
+        If it is "<S>", it returns "<S>+BSTAG" which indicates the beginning of a sentence.
+        If it is "</S>, it returns "</S>+ESTAG" which indicates the ending of a sentence.
+
+        RETURNS
+        -------
+        str
+            Corresponding tags of the headers and an empty {@link String} if any case does not match.
+        """
         if self.__formList[0] == "<DOC>":
             return "<DOC>+BDTAG"
         elif self.__formList[0] == "</DOC>":
@@ -314,32 +299,31 @@ class FsmParse(MorphologicalParse):
         else:
             return ""
 
-    """
-    The pronounTransition method gets the first item of formList and checks for cases;
-
-    If it is "kendi", it returns kendi+PRON+REFLEXP which indicates a reflexive pronoun.
-    If it is one of the "hep, öbür, topu, öteki, kimse, hiçbiri, tümü, çoğu, hepsi, herkes, başkası, birçoğu, 
-    birçokları, biri, birbirleri, birbiri, birkaçı, böylesi, diğeri, cümlesi, bazı, kimi", it returns
-    +PRON+QUANTP which indicates a quantitative pronoun.
-    If it is one of the "o, bu, şu" and if it is "o" it also checks the first item of suffixList and if it is a 
-    PronounRoot(DEMONS), it returns +PRON+DEMONSP which indicates a demonstrative pronoun.
-    If it is "ben", it returns +PRON+PERS+A1SG+PNON which indicates a 1st person singular agreement.
-    If it is "sen", it returns +PRON+PERS+A2SG+PNON which indicates a 2nd person singular agreement.
-    If it is "o" and the first item of suffixList, if it is a PronounRoot(PERS), it returns +PRON+PERS+A3SG+PNON which
-    indicates a 3rd person singular agreement.
-    If it is "biz", it returns +PRON+PERS+A1PL+PNON which indicates a 1st person plural agreement.
-    If it is "siz", it returns +PRON+PERS+A2PL+PNON which indicates a 2nd person plural agreement.
-    If it is "onlar" and the first item of suffixList, if it is a PronounRoot(PERS), it returns o+PRON+PERS+A3PL+PNON 
-    which indicates a 3rd person plural agreement.
-    If it is one of the "nere, ne, kim, hangi", it returns +PRON+QUESP which indicates a question pronoun.
-
-    RETURNS
-    -------
-    str
-        Corresponding transitions of pronouns and an empty str if any case does not match.
-    """
-
     def pronounTransition(self) -> str:
+        """
+        The pronounTransition method gets the first item of formList and checks for cases;
+
+        If it is "kendi", it returns kendi+PRON+REFLEXP which indicates a reflexive pronoun.
+        If it is one of the "hep, öbür, topu, öteki, kimse, hiçbiri, tümü, çoğu, hepsi, herkes, başkası, birçoğu,
+        birçokları, biri, birbirleri, birbiri, birkaçı, böylesi, diğeri, cümlesi, bazı, kimi", it returns
+        +PRON+QUANTP which indicates a quantitative pronoun.
+        If it is one of the "o, bu, şu" and if it is "o" it also checks the first item of suffixList and if it is a
+        PronounRoot(DEMONS), it returns +PRON+DEMONSP which indicates a demonstrative pronoun.
+        If it is "ben", it returns +PRON+PERS+A1SG+PNON which indicates a 1st person singular agreement.
+        If it is "sen", it returns +PRON+PERS+A2SG+PNON which indicates a 2nd person singular agreement.
+        If it is "o" and the first item of suffixList, if it is a PronounRoot(PERS), it returns +PRON+PERS+A3SG+PNON
+        which indicates a 3rd person singular agreement.
+        If it is "biz", it returns +PRON+PERS+A1PL+PNON which indicates a 1st person plural agreement.
+        If it is "siz", it returns +PRON+PERS+A2PL+PNON which indicates a 2nd person plural agreement.
+        If it is "onlar" and the first item of suffixList, if it is a PronounRoot(PERS), it returns
+        o+PRON+PERS+A3PL+PNON which indicates a 3rd person plural agreement.
+        If it is one of the "nere, ne, kim, hangi", it returns +PRON+QUESP which indicates a question pronoun.
+
+        RETURNS
+        -------
+        str
+            Corresponding transitions of pronouns and an empty str if any case does not match.
+        """
         if self.__formList[0] == "kendi":
             return "kendi+PRON+REFLEXP"
         elif self.__formList[0] == "hep" or self.__formList[0] == "öbür" or self.__formList[0] == "topu" \
@@ -372,112 +356,113 @@ class FsmParse(MorphologicalParse):
         else:
             return ""
 
-    """
-    The transitionList method first creates an empty {@link String} result, then gets the first item of suffixList and 
-    checks for cases; If it is one of the "NominalRoot, NominalRootNoPossesive, CompoundNounRoot, NominalRootPlural", 
-    it assigns concatenation of first item of formList and +NOUN to the result String.
-    Ex : Birincilik
-
-    If it is one of the "VerbalRoot, PassiveHn", it assigns concatenation of first item of formList and +VERB to the 
-    result String.
-    Ex : Başkalaştı
-
-    If it is "CardinalRoot", it assigns concatenation of first item of formList and +NUM+CARD to the result String.
-    Ex : Onuncu
-
-    If it is "FractionRoot", it assigns concatenation of first item of formList and NUM+FRACTION to the result String.
-    Ex : 1/2
-
-    If it is "TimeRoot", it assigns concatenation of first item of formList and +TIME to the result String.
-    Ex : 14:28
-
-    If it is "RealRoot", it assigns concatenation of first item of formList and +NUM+REAL to the result String.
-    Ex : 1.2
-
-    If it is "Punctuation", it assigns concatenation of first item of formList and +PUNC to the result String.
-    Ex : ,
-
-    If it is "Hashtag", it assigns concatenation of first item of formList and +HASHTAG to the result String.
-    Ex : #
-
-    If it is "DateRoot", it assigns concatenation of first item of formList and +DATE to the result String.
-    Ex : 11/06/2018
-
-    If it is "RangeRoot", it assigns concatenation of first item of formList and +RANGE to the result String.
-    Ex : 3-5
-
-    If it is "Email", it assigns concatenation of first item of formList and +EMAIL to the result String.
-    Ex : abc@
-
-    If it is "PercentRoot", it assigns concatenation of first item of formList and +PERCENT to the result String.
-    Ex : %12.5
-
-    If it is "DeterminerRoot", it assigns concatenation of first item of formList and +DET to the result String.
-    Ex : Birtakım
-
-    If it is "ConjunctionRoot", it assigns concatenation of first item of formList and +CONJ to the result String.
-    Ex : Ama
-
-    If it is "AdverbRoot", it assigns concatenation of first item of formList and +ADV to the result String.
-    Ex : Acilen
-
-    If it is "ProperRoot", it assigns concatenation of first item of formList and +NOUN+PROP to the result String.
-    Ex : Ahmet
-
-    If it is "HeaderRoot", it assigns the result of the headerTransition method to the result String.
-    Ex : &lt;DOC&gt;
-
-    If it is "InterjectionRoot", it assigns concatenation of first item of formList and +INTERJ to the result String.
-    Ex : Hey
-
-    If it is "DuplicateRoot", it assigns concatenation of first item of formList and +DUP to the result String.
-    Ex : Allak
-
-    If it is "QuestionRoot", it assigns concatenation of first item of formList and +QUES to the result String.
-    Ex : Mı
-
-    If it is "PostP", and the first item of formList is one of the "karşı, ilişkin, göre, kadar, ait, yönelik, rağmen, 
-    değin, dek, doğru, karşın, dair, atfen, binaen, hitaben, istinaden, mahsuben, mukabil, nazaran", it assigns 
-    concatenation of first item of formList and +POSTP+PCDAT to the result String.
-    Ex : İlişkin
-
-    If it is "PostP", and the first item of formList is one of the "sonra, önce, beri, fazla, dolayı, itibaren, başka,
-    çok, evvel, ötürü, yana, öte, aşağı, yukarı, dışarı, az, gayrı", it assigns concatenation of first
-    item of formList and +POSTP+PCABL to the result String.
-    Ex : Başka
-
-    If it is "PostP", and the first item of formList is "yanısıra", it assigns concatenation of first
-    item of formList and +POSTP+PCGEN to the result String.
-    Ex : Yanısıra
-
-    If it is "PostP", and the first item of formList is one of the "birlikte, beraber", it assigns concatenation of 
-    first item of formList and +PPOSTP+PCINS to the result String.
-    Ex : Birlikte
-
-    If it is "PostP", and the first item of formList is one of the "aşkın, takiben", it assigns concatenation of first
-    item of formList and +POSTP+PCACC to the result String.
-    Ex : Takiben
-
-    If it is "PostP", it assigns concatenation of first item of formList and +POSTP+PCNOM to the result String.
-
-    If it is "PronounRoot", it assigns result of the pronounTransition method to the result String.
-    Ex : Ben
-
-    If it is "OrdinalRoot", it assigns concatenation of first item of formList and +NUM+ORD to the result String.
-    Ex : Altıncı
-
-    If it starts with "Adjective", it assigns concatenation of first item of formList and +ADJ to the result String.
-    Ex : Güzel
-
-    At the end, it loops through the formList and concatenates each item with result {@link String}.
-
-    RETURNS
-    -------
-    str
-        str result accumulated with items of formList.
-    """
-
     def transitionList(self) -> str:
+        """
+        The transitionList method first creates an empty {@link String} result, then gets the first item of suffixList
+        and checks for cases; If it is one of the "NominalRoot, NominalRootNoPossesive, CompoundNounRoot,
+        NominalRootPlural", it assigns concatenation of first item of formList and +NOUN to the result String.
+        Ex : Birincilik
+
+        If it is one of the "VerbalRoot, PassiveHn", it assigns concatenation of first item of formList and +VERB to the
+        result String.
+        Ex : Başkalaştı
+
+        If it is "CardinalRoot", it assigns concatenation of first item of formList and +NUM+CARD to the result String.
+        Ex : Onuncu
+
+        If it is "FractionRoot", it assigns concatenation of first item of formList and NUM+FRACTION to the result
+        String.
+        Ex : 1/2
+
+        If it is "TimeRoot", it assigns concatenation of first item of formList and +TIME to the result String.
+        Ex : 14:28
+
+        If it is "RealRoot", it assigns concatenation of first item of formList and +NUM+REAL to the result String.
+        Ex : 1.2
+
+        If it is "Punctuation", it assigns concatenation of first item of formList and +PUNC to the result String.
+        Ex : ,
+
+        If it is "Hashtag", it assigns concatenation of first item of formList and +HASHTAG to the result String.
+        Ex : #
+
+        If it is "DateRoot", it assigns concatenation of first item of formList and +DATE to the result String.
+        Ex : 11/06/2018
+
+        If it is "RangeRoot", it assigns concatenation of first item of formList and +RANGE to the result String.
+        Ex : 3-5
+
+        If it is "Email", it assigns concatenation of first item of formList and +EMAIL to the result String.
+        Ex : abc@
+
+        If it is "PercentRoot", it assigns concatenation of first item of formList and +PERCENT to the result String.
+        Ex : %12.5
+
+        If it is "DeterminerRoot", it assigns concatenation of first item of formList and +DET to the result String.
+        Ex : Birtakım
+
+        If it is "ConjunctionRoot", it assigns concatenation of first item of formList and +CONJ to the result String.
+        Ex : Ama
+
+        If it is "AdverbRoot", it assigns concatenation of first item of formList and +ADV to the result String.
+        Ex : Acilen
+
+        If it is "ProperRoot", it assigns concatenation of first item of formList and +NOUN+PROP to the result String.
+        Ex : Ahmet
+
+        If it is "HeaderRoot", it assigns the result of the headerTransition method to the result String.
+        Ex : &lt;DOC&gt;
+
+        If it is "InterjectionRoot", it assigns concatenation of first item of formList and +INTERJ to the result
+        String.
+        Ex : Hey
+
+        If it is "DuplicateRoot", it assigns concatenation of first item of formList and +DUP to the result String.
+        Ex : Allak
+
+        If it is "QuestionRoot", it assigns concatenation of first item of formList and +QUES to the result String.
+        Ex : Mı
+
+        If it is "PostP", and the first item of formList is one of the "karşı, ilişkin, göre, kadar, ait, yönelik,
+        rağmen, değin, dek, doğru, karşın, dair, atfen, binaen, hitaben, istinaden, mahsuben, mukabil, nazaran", it
+        assigns concatenation of first item of formList and +POSTP+PCDAT to the result String.
+        Ex : İlişkin
+
+        If it is "PostP", and the first item of formList is one of the "sonra, önce, beri, fazla, dolayı, itibaren,
+        başka, çok, evvel, ötürü, yana, öte, aşağı, yukarı, dışarı, az, gayrı", it assigns concatenation of first
+        item of formList and +POSTP+PCABL to the result String.
+        Ex : Başka
+
+        If it is "PostP", and the first item of formList is "yanısıra", it assigns concatenation of first
+        item of formList and +POSTP+PCGEN to the result String.
+        Ex : Yanısıra
+
+        If it is "PostP", and the first item of formList is one of the "birlikte, beraber", it assigns concatenation of
+        first item of formList and +PPOSTP+PCINS to the result String.
+        Ex : Birlikte
+
+        If it is "PostP", and the first item of formList is one of the "aşkın, takiben", it assigns concatenation of
+        first item of formList and +POSTP+PCACC to the result String.
+        Ex : Takiben
+
+        If it is "PostP", it assigns concatenation of first item of formList and +POSTP+PCNOM to the result String.
+
+        If it is "PronounRoot", it assigns result of the pronounTransition method to the result String.
+        Ex : Ben
+
+        If it is "OrdinalRoot", it assigns concatenation of first item of formList and +NUM+ORD to the result String.
+        Ex : Altıncı
+
+        If it starts with "Adjective", it assigns concatenation of first item of formList and +ADJ to the result String.
+        Ex : Güzel
+
+        At the end, it loops through the formList and concatenates each item with result {@link String}.
+
+        RETURNS
+        -------
+        str
+            str result accumulated with items of formList.
+        """
         result = ""
         if self.__suffixList[0].getName() == "NominalRoot" \
                 or self.__suffixList[0].getName() == "NominalRootNoPossesive" \
@@ -562,48 +547,45 @@ class FsmParse(MorphologicalParse):
                     result = result + transition
         return result
 
-    """
-    The suffixList method gets the first items of suffixList and formList and concatenates them with parenthesis and
-    assigns a String result. Then, loops through the formList and it the current ith item is not equal to previous
-    item it accumulates ith items of formList and suffixList to the result str.
-
-    RETURNS
-    -------
-    str
-        result str accumulated with the items of formList and suffixList.
-    """
-
     def suffixList(self) -> str:
+        """
+        The suffixList method gets the first items of suffixList and formList and concatenates them with parenthesis and
+        assigns a String result. Then, loops through the formList and it the current ith item is not equal to previous
+        item it accumulates ith items of formList and suffixList to the result str.
+
+        RETURNS
+        -------
+        str
+            result str accumulated with the items of formList and suffixList.
+        """
         result = self.__suffixList[0].getName() + "(" + self.__formList[0] + ")"
         for i in range(1, len(self.__formList)):
             if self.__formList[i] != self.__formList[i - 1]:
                 result = result + self.__suffixList[i].getName() + "(" + self.__formList[i] + ")"
         return result
 
-    """
-    The withList method gets the root as a result str then loops through the withList and concatenates each item
-    with result str.
-    
-    RETURNS
-    -------
-    str
-        result str accumulated with items of withList.
-    """
-
     def withList(self) -> str:
+        """
+        The withList method gets the root as a result str then loops through the withList and concatenates each item
+        with result str.
+
+        RETURNS
+        -------
+        str
+            result str accumulated with items of withList.
+        """
         result = self.root.getName()
         for aWith in self.__withList:
             result = result + "+" + aWith
         return result
 
-    """
-    The overridden str method which returns transitionList method.
-
-    RETURNS
-    -------
-    str
-        Returns transitionList method.
-    """
-
     def __str__(self) -> str:
+        """
+        The overridden str method which returns transitionList method.
+
+        RETURNS
+        -------
+        str
+            Returns transitionList method.
+        """
         return self.transitionList()

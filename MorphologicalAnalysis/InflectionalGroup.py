@@ -81,17 +81,17 @@ class InflectionalGroup:
                   MorphologicalTag.PERSONALPRONOUN, MorphologicalTag.FRACTION, MorphologicalTag.HASHTAG,
                   MorphologicalTag.EMAIL, MorphologicalTag.DATE]
 
-    """
-    A constructor of InflectionalGroup class which initializes the IG list by parsing given input
-    String IG by + and calling the getMorphologicalTag method with these substrings. If getMorphologicalTag method 
-    returns a tag, it adds this tag to the IG list.
-
-    PARAMETERS
-    ----------
-    IG : str
-        String input.
-    """
     def __init__(self, IG: str):
+        """
+        A constructor of InflectionalGroup class which initializes the IG list by parsing given input
+        String IG by + and calling the getMorphologicalTag method with these substrings. If getMorphologicalTag method
+        returns a tag, it adds this tag to the IG list.
+
+        PARAMETERS
+        ----------
+        IG : str
+            String input.
+        """
         self.__IG = []
         st = IG
         while "+" in st:
@@ -109,98 +109,99 @@ class InflectionalGroup:
         else:
             print("Morphological Tag " + morphologicalTag + " not found")
 
-    """
-    The getMorphologicalTag method takes a String tag as an input and if the input matches with one of the elements of
-    tags array, it then gets the morphoTags of this tag and returns it.
-
-    PARAMETERS
-    ----------
-    tag : str
-        String to get morphoTags from.
-        
-    RETURNS
-    -------
-    MorphologicalTag
-        morphoTags if found, None otherwise.
-    """
     @staticmethod
     def getMorphologicalTag(tag: str) -> MorphologicalTag:
+        """
+        The getMorphologicalTag method takes a String tag as an input and if the input matches with one of the elements
+        of tags array, it then gets the morphoTags of this tag and returns it.
+
+        PARAMETERS
+        ----------
+        tag : str
+            String to get morphoTags from.
+
+        RETURNS
+        -------
+        MorphologicalTag
+            morphoTags if found, None otherwise.
+        """
         for j in range(len(InflectionalGroup.tags)):
             if tag == InflectionalGroup.tags[j]:
                 return InflectionalGroup.morphotags[j]
         return None
 
-    """
-    The getTag method takes a MorphologicalTag type tag as an input and returns its corresponding tag from tags array.
-
-    PARAMETERS
-    ----------
-    tag : MorphologicalTag
-        MorphologicalTag type input to find tag from.
-        
-    RETURNS
-    -------
-    str
-        Tag if found, None otherwise.
-    """
     @staticmethod
     def getTagString(tag: MorphologicalTag) -> str:
+        """
+        The getTag method takes a MorphologicalTag type tag as an input and returns its corresponding tag from tags
+        array.
+
+        PARAMETERS
+        ----------
+        tag : MorphologicalTag
+            MorphologicalTag type input to find tag from.
+
+        RETURNS
+        -------
+        str
+            Tag if found, None otherwise.
+        """
         for j in range(len(InflectionalGroup.morphotags)):
             if tag == InflectionalGroup.morphotags[j]:
                 return InflectionalGroup.tags[j]
         return None
 
-    """
-    Another getTag method which takes index as an input and returns the corresponding tag from IG {@link ArrayList}.
-
-    PARAMETERS
-    ----------
-    index : int
-        index to get tag.
-        
-    RETURNS
-    -------
-    MorphologicalTag
-        tag at input index.
-    """
     def getTag(self, index: int) -> MorphologicalTag:
+        """
+        Another getTag method which takes index as an input and returns the corresponding tag from IG {@link ArrayList}.
+
+        PARAMETERS
+        ----------
+        index : int
+            index to get tag.
+
+        RETURNS
+        -------
+        MorphologicalTag
+            tag at input index.
+        """
         return self.__IG[index]
 
-    """
-    The size method returns the size of the IG list.
-
-    RETURNS
-    -------
-    int
-        the size of the IG list.
-    """
     def size(self) -> int:
+        """
+        The size method returns the size of the IG list.
+
+        RETURNS
+        -------
+        int
+            the size of the IG list.
+        """
         return len(self.__IG)
 
-    """
-    Overridden toString method to return resulting tags in IG list.
-
-    RETURNS
-    -------
-    str
-        String result.
-    """
     def __str__(self) -> str:
+        """
+        Overridden toString method to return resulting tags in IG list.
+
+        RETURNS
+        -------
+        str
+            String result.
+        """
         result = InflectionalGroup.getTagString(self.__IG[0])
         for i in range(1, len(self.__IG)):
             result = result + "+" + InflectionalGroup.getTagString(self.__IG[i])
         return result
 
-    """
-    The containsCase method loops through the tags in IG list and finds out the tags of the NOMINATIVE,
-    ACCUSATIVE, DATIVE, LOCATIVE or ABLATIVE cases.
-
-    RETURNS
-    -------
-    MorphologicalTag
-        tag which holds the condition.
-    """
     def containsCase(self) -> MorphologicalTag:
+        """
+        The containsCase method loops through the tags in IG list and finds out the tags of the NOMINATIVE,
+        ACCUSATIVE, DATIVE, LOCATIVE or ABLATIVE cases.
+
+        RETURNS
+        -------
+        MorphologicalTag
+            tag which holds the condition.
+        """
         for tag in self.__IG:
             if tag == MorphologicalTag.NOMINATIVE or tag == MorphologicalTag.ACCUSATIVE or \
                     tag == MorphologicalTag.DATIVE or tag == MorphologicalTag.LOCATIVE or \
@@ -208,52 +209,52 @@ class InflectionalGroup:
                 return tag
         return None
 
-    """
-    The containsPlural method loops through the tags in IG list and checks whether the tags are from
-    the agreement plural or possessive plural, i.e A1PL, A2PL, A3PL, P1PL, P2PL and P3PL.
-
-    RETURNS
-    -------
-    bool
-        True if the tag is plural, False otherwise.
-    """
     def containsPlural(self) -> bool:
+        """
+        The containsPlural method loops through the tags in IG list and checks whether the tags are from
+        the agreement plural or possessive plural, i.e A1PL, A2PL, A3PL, P1PL, P2PL and P3PL.
+
+        RETURNS
+        -------
+        bool
+            True if the tag is plural, False otherwise.
+        """
         for tag in self.__IG:
             if tag == MorphologicalTag.A1PL or tag == MorphologicalTag.A2PL or tag == MorphologicalTag.A3PL or \
                     tag == MorphologicalTag.P1PL or tag == MorphologicalTag.P2PL or tag == MorphologicalTag.P3PL:
                 return True
         return False
 
-    """
-    The containsTag method takes a MorphologicalTag type tag as an input and loops through the tags in
-    IG list and returns true if the input matches with on of the tags in the IG.
-
-    PARAMETERS
-    ----------
-    tag : MorphologicalTag
-        MorphologicalTag type input to search for.
-        
-    RETURNS
-    -------
-    bool
-        True if tag matches with the tag in IG, False otherwise.
-    """
     def containsTag(self, tag: MorphologicalTag) -> bool:
+        """
+        The containsTag method takes a MorphologicalTag type tag as an input and loops through the tags in
+        IG list and returns true if the input matches with on of the tags in the IG.
+
+        PARAMETERS
+        ----------
+        tag : MorphologicalTag
+            MorphologicalTag type input to search for.
+
+        RETURNS
+        -------
+        bool
+            True if tag matches with the tag in IG, False otherwise.
+        """
         for currentTag in self.__IG:
             if tag == currentTag:
                 return True
         return False
 
-    """
-    The containsPossessive method loops through the tags in IG list and returns true if the tag in IG is
-    one of the possessives: P1PL, P1SG, P2PL, P2SG, P3PL AND P3SG.
-
-    RETURNS
-    -------
-    bool
-        True if it contains possessive tag, False otherwise.
-    """
     def containsPossessive(self) -> bool:
+        """
+        The containsPossessive method loops through the tags in IG list and returns true if the tag in IG is
+        one of the possessives: P1PL, P1SG, P2PL, P2SG, P3PL AND P3SG.
+
+        RETURNS
+        -------
+        bool
+            True if it contains possessive tag, False otherwise.
+        """
         for tag in self.__IG:
             if tag == MorphologicalTag.P1SG or tag == MorphologicalTag.P1PL or tag == MorphologicalTag.P2SG or \
                     tag == MorphologicalTag.P2PL or tag == MorphologicalTag.P3SG or tag == MorphologicalTag.P3PL:

@@ -9,28 +9,29 @@ class FiniteStateMachine:
     __states: list
     __transitions: dict
 
-    """
-    Constructor reads the finite state machine in the given input file. It has a NodeList which holds the states
-    of the nodes and there are 4 different type of nodes; stateNode, root Node, transitionNode and withNode.
-    Also there are two states; state that a node currently in and state that a node will be in.
-
-    XMLParser is used to parse the given file. Firstly it gets the document to parse, then gets its elements by the
-    tag names. For instance, it gets states by the tag name 'state' and puts them into an ArrayList called stateList.
-    Secondly, it traverses this stateList and gets each Node's attributes. There are three attributes; name, start,
-    and end which will be named as states. If a node is in a startState it is tagged as 'yes', otherwise 'no'.
-    Also, if a node is in a startState, additional attribute will be fetched; originalPos that represents its original
-    part of speech.
-
-    At the last step, by starting rootNode's first child, it gets all the transitionNodes and next states called toState
-    then continue with the nextSiblings. Also, if there is no possible toState, it prints this case and the causative 
-    states.
-
-    PARAMETERS
-    ----------
-    fileName : str
-        the resource file to read the finite state machine. Only files in resources folder are supported.
-    """
     def __init__(self, fileName: str):
+        """
+        Constructor reads the finite state machine in the given input file. It has a NodeList which holds the states
+        of the nodes and there are 4 different type of nodes; stateNode, root Node, transitionNode and withNode.
+        Also there are two states; state that a node currently in and state that a node will be in.
+
+        XMLParser is used to parse the given file. Firstly it gets the document to parse, then gets its elements by the
+        tag names. For instance, it gets states by the tag name 'state' and puts them into an ArrayList called
+        stateList.
+        Secondly, it traverses this stateList and gets each Node's attributes. There are three attributes; name, start,
+        and end which will be named as states. If a node is in a startState it is tagged as 'yes', otherwise 'no'.
+        Also, if a node is in a startState, additional attribute will be fetched; originalPos that represents its
+        original part of speech.
+
+        At the last step, by starting rootNode's first child, it gets all the transitionNodes and next states called
+        toState then continue with the nextSiblings. Also, if there is no possible toState, it prints this case and the
+        causative states.
+
+        PARAMETERS
+        ----------
+        fileName : str
+            the resource file to read the finite state machine. Only files in resources folder are supported.
+        """
         self.__transitions = {}
         self.__states = []
         root = xml.etree.ElementTree.parse(fileName).getroot()
@@ -76,63 +77,65 @@ class FiniteStateMachine:
                             else:
                                 self.addTransition(state, toState, withNode.text, withName, toPos)
 
-    """
-    The isValidTransition loops through states ArrayList and checks transitions between states. If the actual transition
-    equals to the given transition input, method returns true otherwise returns false.
-
-    PARAMETERS
-    ----------
-    transition : str
-        is used to compare with the actual transition of a state.
-        
-    RETURNS
-    -------
-    bool
-        True when the actual transition equals to the transition input, false otherwise.
-    """
     def isValidTransition(self, transition: str) -> bool:
+        """
+        The isValidTransition loops through states ArrayList and checks transitions between states. If the actual
+        transition equals to the given transition input, method returns true otherwise returns false.
+
+        PARAMETERS
+        ----------
+        transition : str
+            is used to compare with the actual transition of a state.
+
+        RETURNS
+        -------
+        bool
+            True when the actual transition equals to the transition input, false otherwise.
+        """
         for state in self.__transitions.keys():
             for transition1 in self.__transitions[state]:
                 if transition1.__str__() is not None and transition1.__str__() == transition:
                     return True
         return False
 
-    """
-    The getState method is used to loop through the states list and return the state whose name equal
-    to the given input name.
-
-    PARAMETERS
-    ----------
-    name : str
-        is used to compare with the state's actual name.
-        
-    RETURNS
-    -------
-    State
-        State if found any, None otherwise.
-    """
     def getState(self, name: str) -> State:
+        """
+        The getState method is used to loop through the states list and return the state whose name equal
+        to the given input name.
+
+        PARAMETERS
+        ----------
+        name : str
+            is used to compare with the state's actual name.
+
+        RETURNS
+        -------
+        State
+            State if found any, None otherwise.
+        """
         for state in self.__states:
             if state.getName() == name:
                 return state
         return None
 
-    """
-    Another addTransition method which takes additional argument; toPos and. It creates a new Transition
-    with given input parameters and adds the transition to transitions list.
-
-    PARAMETERS
-    ----------
-    toState : State 
-        State type input indicating the next state.
-    _with : str    
-        String input indicating with what the transition will be made.
-    withName : str
-        String input.
-    toPos : str   
-        String input.
-    """
     def addTransition(self, fromState: State, toState: State, _with: str, withName: str, toPos=None):
+        """
+        Another addTransition method which takes additional argument; toPos and. It creates a new Transition
+        with given input parameters and adds the transition to transitions list.
+
+        PARAMETERS
+        ----------
+        fromState : State
+            State type input indicating the previous state.
+        toState : State
+            State type input indicating the next state.
+        _with : str
+            String input indicating with what the transition will be made.
+        withName : str
+            String input.
+        toPos : str
+            String input.
+        """
         newTransition = Transition(_with, toState, withName, toPos)
         if fromState in self.__transitions:
             transitionList = self.__transitions[fromState]
@@ -141,20 +144,20 @@ class FiniteStateMachine:
         transitionList.append(newTransition)
         self.__transitions[fromState] = transitionList
 
-    """
-    The getTransitions method returns the transitions at the given state.
-
-    PARAMETERS
-    ----------
-    state : State
-        State input.
-        
-    RETURNS
-    -------
-    list
-        Transitions at given state.
-    """
     def getTransitions(self, state: State) -> list:
+        """
+        The getTransitions method returns the transitions at the given state.
+
+        PARAMETERS
+        ----------
+        state : State
+            State input.
+
+        RETURNS
+        -------
+        list
+            Transitions at given state.
+        """
         if state in self.__transitions:
             return self.__transitions[state]
         else:

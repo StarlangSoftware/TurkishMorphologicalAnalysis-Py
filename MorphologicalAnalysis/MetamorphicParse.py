@@ -155,16 +155,16 @@ class MetamorphicParse:
     __metaMorphemeList: list
     __root: Word
 
-    """
-    A constructor of MetamorphicParse class which creates an list metaMorphemeList which has split words
-    according to +.
-
-    PARAMETERS
-    ----------
-    parse : str
-        String to parse.
-    """
     def __init__(self, parse=None):
+        """
+        A constructor of MetamorphicParse class which creates an list metaMorphemeList which has split words
+        according to +.
+
+        PARAMETERS
+        ----------
+        parse : str
+            String to parse.
+        """
         if parse is not None:
             self.__metaMorphemeList = []
             if parse == "+":
@@ -175,22 +175,22 @@ class MetamorphicParse:
                 for i in range(1, len(words)):
                     self.__metaMorphemeList.append(words[i])
 
-    """
-    The getMetaMorphemeTag method takes a String tag as an input and takes the first char of the tag. If first char
-    is a punctuation it gets a substring from the tag. And gets the meta morphemes of this tag then adds to the
-    result list.
-
-    PARAMETERS
-    ----------
-    tag : str
-        String to get meta morphemes from.
-        
-    RETURNS
-    -------
-    list
-        List type result which holds meta morphemes.
-    """
     def getMetaMorphemeTag(self, tag: str) -> list:
+        """
+        The getMetaMorphemeTag method takes a String tag as an input and takes the first char of the tag. If first char
+        is a punctuation it gets a substring from the tag. And gets the meta morphemes of this tag then adds to the
+        result list.
+
+        PARAMETERS
+        ----------
+        tag : str
+            String to get meta morphemes from.
+
+        RETURNS
+        -------
+        list
+            List type result which holds meta morphemes.
+        """
         result = []
         s = tag[0]
         if Word.isPunctuationSymbol(s):
@@ -200,33 +200,33 @@ class MetamorphicParse:
                 result.append(MetamorphicParse.morphotacticTags[j])
         return result
 
-    """
-    The getter method for Private Word root.
-
-    RETURNS
-    -------
-    Word
-        Word type root.
-    """
     def getWord(self) -> Word:
+        """
+        The getter method for Private Word root.
+
+        RETURNS
+        -------
+        Word
+            Word type root.
+        """
         return self.__root
 
-    """
-    getMetaMorphemeTagForParse method which also takes parse as an input. It also checks the morphotactic tags.
-
-    PARAMETERS
-    ----------
-    parse : MorphologicalParse
-        MorphologicalParse type input.
-    tag : str  
-        String to get meta morphemes from.
-        
-    RETURNS
-    -------
-    list
-        List type result which holds meta morphemes.
-    """
     def getMetaMorphemeTagForParse(self, parse: MorphologicalParse, tag: str) -> list:
+        """
+        getMetaMorphemeTagForParse method which also takes parse as an input. It also checks the morphotactic tags.
+
+        PARAMETERS
+        ----------
+        parse : MorphologicalParse
+            MorphologicalParse type input.
+        tag : str
+            String to get meta morphemes from.
+
+        RETURNS
+        -------
+        list
+            List type result which holds meta morphemes.
+        """
         result = []
         s = tag[0]
         if Word.isPunctuationSymbol(s):
@@ -236,70 +236,70 @@ class MetamorphicParse:
                 result.append(MetamorphicParse.morphotacticTags[j])
         return result
 
-    """
-    The size method returns the size of the metaMorphemeList.
-
-    RETURNS
-    -------
-    int
-        The size of the metaMorphemeList.
-    """
     def size(self) -> int:
+        """
+        The size method returns the size of the metaMorphemeList.
+
+        RETURNS
+        -------
+        int
+            The size of the metaMorphemeList.
+        """
         return len(self.__metaMorphemeList) + 1
 
-    """
-    The addMetaMorphemeList method splits input String by + and add to the metaMorphemeList.
-
-    PARAMETERS
-    ----------
-    newTacticSet : str
-        String to add the metaMorphemeList.
-    """
     def addMetaMorphemeList(self, newTacticSet: str):
+        """
+        The addMetaMorphemeList method splits input String by + and add to the metaMorphemeList.
+
+        PARAMETERS
+        ----------
+        newTacticSet : str
+            String to add the metaMorphemeList.
+        """
         tactics = newTacticSet.split("\\+")
         self.__metaMorphemeList.extend(tactics)
 
-    """
-    The removeMetaMorphemeFromIndex method removes the meta morpheme at given index from metaMorphemeList.
-
-    PARAMETERS
-    ----------
-    index : int
-        to remove from metaMorphemeList.
-    """
     def removeMetaMorphemeFromIndex(self, index: int):
+        """
+        The removeMetaMorphemeFromIndex method removes the meta morpheme at given index from metaMorphemeList.
+
+        PARAMETERS
+        ----------
+        index : int
+            to remove from metaMorphemeList.
+        """
         i = index - 1
         while i < len(self.__metaMorphemeList):
             self.__metaMorphemeList.pop(i)
 
-    """
-    The getMetaMorpheme method gets the meta morpheme at given index.
-
-    PARAMETERS
-    ----------
-    index : int
-        is used to get the meta morpheme.
-        
-    RETURNS
-    -------
-    str
-        metaMorphemeList's corresponding meta morpheme.
-    """
     def getMetaMorpheme(self, index: int) -> str:
+        """
+        The getMetaMorpheme method gets the meta morpheme at given index.
+
+        PARAMETERS
+        ----------
+        index : int
+            is used to get the meta morpheme.
+
+        RETURNS
+        -------
+        str
+            metaMorphemeList's corresponding meta morpheme.
+        """
         if index == 0:
             return self.__root.getName()
         else:
             return self.__metaMorphemeList[index - 1]
 
-    """
-    Overridden __str__ method to return resulting meta morphemes in metaMorphemeList.
-
-    RETURNS
-    -------
-    str
-        String result.
-    """
     def __str__(self) -> str:
+        """
+        Overridden __str__ method to return resulting meta morphemes in metaMorphemeList.
+
+        RETURNS
+        -------
+        str
+            String result.
+        """
         result = self.__root.getName()
         for metaMorpheme in self.__metaMorphemeList:
             result = result + "+" + metaMorpheme
