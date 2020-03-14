@@ -62,42 +62,42 @@ Deatiled Description
 
 FsmMorphologicalAnalyzer provides Turkish morphological analysis. This class can be created as follows:
 
-    FsmMorphologicalAnalyzer fsm = new FsmMorphologicalAnalyzer();
+    FsmMorphologicalAnalyzer fsm = FsmMorphologicalAnalyzer();
     
 This generates a new `TxtDictionary` type dictionary from [`turkish_dictionary.txt`](https://github.com/olcaytaner/Dictionary/tree/master/src/main/resources) with fixed cache size 100000 and by using [`turkish_finite_state_machine.xml`](https://github.com/olcaytaner/MorphologicalAnalysis/tree/master/src/main/resources). 
 
 Creating a morphological analyzer with different cache size, dictionary or finite state machine is also possible. 
 * With different cache size, 
 
-        FsmMorphologicalAnalyzer fsm = new FsmMorphologicalAnalyzer(50000);   
+        fsm = FsmMorphologicalAnalyzer(50000);   
 
 * Using a different dictionary,
 
-        FsmMorphologicalAnalyzer fsm = new FsmMorphologicalAnalyzer("my_turkish_dictionary.txt");   
+        fsm = FsmMorphologicalAnalyzer("my_turkish_dictionary.txt");   
 
 * Specifying both finite state machine and dictionary, 
 
-        FsmMorphologicalAnalyzer fsm = new FsmMorphologicalAnalyzer("fsm.xml", "my_turkish_dictionary.txt") ;      
+        fsm = FsmMorphologicalAnalyzer("fsm.xml", "my_turkish_dictionary.txt") ;      
     
 * Giving finite state machine and cache size with creating `TxtDictionary` object, 
         
-        TxtDictionary dictionary = new TxtDictionary("my_turkish_dictionary.txt", new TurkishWordComparator());
-        FsmMorphologicalAnalyzer fsm = new FsmMorphologicalAnalyzer("fsm.xml", dictionary, 50000) ;
+        dictionary = TxtDictionary("my_turkish_dictionary.txt");
+        fsm = new FsmMorphologicalAnalyzer("fsm.xml", dictionary, 50000) ;
     
 * With different finite state machine and creating `TxtDictionary` object,
        
-        TxtDictionary dictionary = new TxtDictionary("my_turkish_dictionary.txt", new TurkishWordComparator(), "my_turkish_misspelled.txt");
-        FsmMorphologicalAnalyzer fsm = new FsmMorphologicalAnalyzer("fsm.xml", dictionary);
+        TxtDictionary dictionary = TxtDictionary("my_turkish_dictionary.txt", "my_turkish_misspelled.txt");
+        FsmMorphologicalAnalyzer fsm = FsmMorphologicalAnalyzer("fsm.xml", dictionary);
 
 ## Word level morphological analysis
 
 For morphological analysis,  `morphologicalAnalysis(String word)` method of `FsmMorphologicalAnalyzer` is used. This returns `FsmParseList` object. 
 
 
-    FsmMorphologicalAnalyzer fsm = new FsmMorphologicalAnalyzer();
-    String word = "yarına";
-    FsmParseList fsmParseList = fsm.morphologicalAnalysis(word);
-    for (int i = 0; i < fsmParseList.size(); i++){
+    fsm = FsmMorphologicalAnalyzer();
+    word = "yarına";
+    fsmParseList = fsm.morphologicalAnalysis(word);
+    for (i = 0; i < fsmParseList.size(); i++){
       System.out.println(fsmParseList.getFsmParse(i).transitionList();
     } 
       
@@ -110,8 +110,8 @@ Output
     
 From `FsmParseList`, a single `FsmParse` can be obtained as follows:
 
-    FsmParse parse = fsmParseList.getFsmParse(0);
-    System.out.println(parse.transitionList();   
+    parse = fsmParseList.getFsmParse(0);
+    print(parse.transitionList();   
     
 Output    
     
@@ -120,15 +120,15 @@ Output
 ## Sentence level morphological analysis
 `morphologicalAnalysis(Sentence sentence)` method of `FsmMorphologicalAnalyzer` is used. This returns `FsmParseList[]` object. 
 
-    FsmMorphologicalAnalyzer fsm = new FsmMorphologicalAnalyzer();
-    Sentence sentence = new Sentence("Yarın doktora gidecekler");
-    FsmParseList[] parseLists = fsm.morphologicalAnalysis(sentence);
+    fsm = FsmMorphologicalAnalyzer();
+    sentence = Sentence("Yarın doktora gidecekler");
+    parseLists = fsm.morphologicalAnalysis(sentence);
     for(int i = 0; i < parseLists.length; i++){
         for(int j = 0; j < parseLists[i].size(); j++){
             FsmParse parse = parseLists[i].getFsmParse(j);
-            System.out.println(parse.transitionList());
+            print(parse.transitionList());
         }
-        System.out.println("-----------------");
+        print("-----------------");
     }
     
 Output
