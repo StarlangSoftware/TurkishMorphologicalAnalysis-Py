@@ -90,6 +90,23 @@ class FsmParseList:
             else:
                 i = i + 1
 
+    def getParseWithLongestRootWord(self) -> FsmParse:
+        """
+        The getParseWithLongestRootWord method returns the parse with the longest root word. If more than one parse has
+        the longest root word, the first parse with that root is returned.
+        RETURNS
+        -------
+        FsmParse
+            Parse with the longest root word.
+        """
+        maxLength = -1
+        bestParse = None
+        for currentParse in self.__fsmParses:
+            if len(currentParse.getWord().getName()) > maxLength:
+                maxLength = len(currentParse.getWord().getName())
+                bestParse = currentParse
+        return bestParse
+
     def reduceToParsesWithSameRoot(self, currentRoot: str):
         """
         The reduceToParsesWithSameRoot method takes a str currentWithPos as an input and loops i times till
