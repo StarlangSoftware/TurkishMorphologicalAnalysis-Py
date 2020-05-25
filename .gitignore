@@ -3,3 +3,14 @@
 /bin/
 /dist/
 /.idea/
+MorphologicalAnalysis/__pycache__/__init__.cpython-37.pyc
+MorphologicalAnalysis/__pycache__/FiniteStateMachine.cpython-37.pyc
+MorphologicalAnalysis/__pycache__/FsmMorphologicalAnalyzer.cpython-37.pyc
+MorphologicalAnalysis/__pycache__/FsmParse.cpython-37.pyc
+MorphologicalAnalysis/__pycache__/FsmParseList.cpython-37.pyc
+MorphologicalAnalysis/__pycache__/InflectionalGroup.cpython-37.pyc
+MorphologicalAnalysis/__pycache__/MetamorphicParse.cpython-37.pyc
+MorphologicalAnalysis/__pycache__/MorphologicalParse.cpython-37.pyc
+MorphologicalAnalysis/__pycache__/MorphologicalTag.cpython-37.pyc
+MorphologicalAnalysis/__pycache__/State.cpython-37.pyc
+MorphologicalAnalysis/__pycache__/Transition.cpython-37.pyc
