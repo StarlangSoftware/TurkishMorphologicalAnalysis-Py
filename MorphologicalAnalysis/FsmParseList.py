@@ -120,7 +120,7 @@ class FsmParseList:
         """
         i = 0
         while i < len(self.__fsmParses):
-            if self.__fsmParses[i].getWord().getName() == currentRoot:
+            if self.__fsmParses[i].getWord().getName() != currentRoot:
                 self.__fsmParses.pop(i)
             else:
                 i = i + 1

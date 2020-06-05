@@ -145,7 +145,7 @@ class FsmParse(MorphologicalParse):
             lemma = None
         for i in range(1, len(self.__formList)):
             if self.__transitionList[i - 1] is not None and ("^DB+" + pos) in self.__transitionList[i - 1] and \
-                    ("^DB+" + pos + "+ZERO") in self.__transitionList[i - 1]:
+                    ("^DB+" + pos + "+ZERO") not in self.__transitionList[i - 1]:
                 lemma = self.__formList[i]
         return lemma
 
@@ -561,7 +561,7 @@ class FsmParse(MorphologicalParse):
         result = self.__suffixList[0].getName() + "(" + self.__formList[0] + ")"
         for i in range(1, len(self.__formList)):
             if self.__formList[i] != self.__formList[i - 1]:
-                result = result + self.__suffixList[i].getName() + "(" + self.__formList[i] + ")"
+                result = result + "+" + self.__suffixList[i].getName() + "(" + self.__formList[i] + ")"
         return result
 
     def withList(self) -> str:

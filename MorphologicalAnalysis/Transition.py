@@ -462,7 +462,7 @@ class Transition:
         if root.isAbbreviation():
             return formation + 'e'
         if "0" <= self.__lastVowel(self.__formationToCheck) <= "9":
-            if self.__lastVowel(self.__formationToCheck) == "6" or self.__lastVowel(self.__formationToCheck) == 9:
+            if self.__lastVowel(self.__formationToCheck) == "6" or self.__lastVowel(self.__formationToCheck) == "9":
                 return formation + 'a'
             elif self.__lastVowel(self.__formationToCheck) == "0":
                 if root.getName().endswith("10") or root.getName().endswith("30") or root.getName().endswith("40") \

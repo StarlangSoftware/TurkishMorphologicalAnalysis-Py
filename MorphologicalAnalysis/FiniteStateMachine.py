@@ -98,6 +98,16 @@ class FiniteStateMachine:
                     return True
         return False
 
+    def getStates(self) -> list:
+        """
+        The getStates method returns the states in the FiniteStateMachine.
+        RETURNS
+        -------
+        list
+             StateList.
+        """
+        return self.__states
+
     def getState(self, name: str) -> State:
         """
         The getState method is used to loop through the states list and return the state whose name equal
