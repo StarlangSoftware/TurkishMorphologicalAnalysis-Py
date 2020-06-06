@@ -569,7 +569,7 @@ class MorphologicalParse:
         elif self.containsTag(MorphologicalTag.ADVERB):
             return "ADVP"
         elif self.isCardinal():
-            return "QP"
+            return "CD"
         elif self.containsTag(MorphologicalTag.POSTPOSITION):
             return "PP"
         elif self.containsTag(MorphologicalTag.CONJUNCTION):
@@ -577,11 +577,18 @@ class MorphologicalParse:
         elif self.containsTag(MorphologicalTag.DETERMINER):
             return "DP"
         elif self.containsTag(MorphologicalTag.INTERJECTION):
-            return "INTJ"
+            return "INTJP"
         elif self.containsTag(MorphologicalTag.QUESTIONPRONOUN):
             return "WP"
         elif self.containsTag(MorphologicalTag.PRONOUN):
             return "NP"
+        elif self.isPunctuation():
+            if self.root.getName() == "!" or self.root.getName() == "?":
+                return "."
+            elif self.root.getName() == ";" or self.root.getName() == "-" or self.root.getName() == "--":
+                return ":"
+            else:
+                return self.root.getName()
         else:
             return "-XXX-"
 
