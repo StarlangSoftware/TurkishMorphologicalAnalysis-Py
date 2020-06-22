@@ -568,8 +568,8 @@ class MorphologicalParse:
             return "NP"
         elif self.containsTag(MorphologicalTag.ADVERB):
             return "ADVP"
-        elif self.isCardinal():
-            return "CD"
+        elif self.isNumber():
+            return "NUM"
         elif self.containsTag(MorphologicalTag.POSTPOSITION):
             return "PP"
         elif self.containsTag(MorphologicalTag.CONJUNCTION):
