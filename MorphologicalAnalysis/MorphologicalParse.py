@@ -564,11 +564,11 @@ class MorphologicalParse:
             return "VP"
         elif self.isAdjective():
             return "ADJP"
-        elif self.isNoun():
+        elif self.isNoun() or self.isPercent():
             return "NP"
         elif self.containsTag(MorphologicalTag.ADVERB):
             return "ADVP"
-        elif self.isNumber():
+        elif self.isNumber() or self.isFraction():
             return "NUM"
         elif self.containsTag(MorphologicalTag.POSTPOSITION):
             return "PP"
