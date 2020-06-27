@@ -9817,7 +9817,7 @@ butikçi CL_ISIM
 butikçilik CL_ISIM IS_SD
 butlan CL_ISIM
 butlu IS_ADJ
-buton CL_ISIN
+buton CL_ISIM
 butonlu IS_ADJ
 butonsuz IS_ADJ
 butros IS_OA
