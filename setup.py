@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='NlpToolkit-MorphologicalAnalysis',
-    version='1.0.19',
+    version='1.0.20',
     packages=['MorphologicalAnalysis'],
     url='https://github.com/olcaytaner/TurkishMorphologicalAnalysis-Py',
     license='',

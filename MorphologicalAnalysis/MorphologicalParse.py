@@ -560,8 +560,13 @@ class MorphologicalParse:
         """
         if self.isProperNoun():
             return "NP"
+        elif self.root.getName() == "değil":
+            return "NEG"
         elif self.isVerb():
-            return "VP"
+            if self.lastIGContainsTag(MorphologicalTag.ZERO):
+                return "NOMP"
+            else:
+                return "VP"
         elif self.isAdjective():
             return "ADJP"
         elif self.isNoun() or self.isPercent():

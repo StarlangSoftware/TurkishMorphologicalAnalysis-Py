@@ -5,13 +5,15 @@ from MorphologicalAnalysis.MorphologicalParse import MorphologicalParse
 
 class MorphologicalParseTest(unittest.TestCase):
 
-    parse1 : MorphologicalParse
-    parse2 : MorphologicalParse
-    parse3 : MorphologicalParse
-    parse4 : MorphologicalParse
-    parse5 : MorphologicalParse
-    parse6 : MorphologicalParse
-    parse7 : MorphologicalParse
+    parse1: MorphologicalParse
+    parse2: MorphologicalParse
+    parse3: MorphologicalParse
+    parse4: MorphologicalParse
+    parse5: MorphologicalParse
+    parse6: MorphologicalParse
+    parse7: MorphologicalParse
+    parse8: MorphologicalParse
+    parse9: MorphologicalParse
 
     def setUp(self) -> None:
         self.parse1 = MorphologicalParse("bayan+NOUN+A3SG+PNON+NOM")
@@ -21,6 +23,8 @@ class MorphologicalParseTest(unittest.TestCase):
         self.parse5 = MorphologicalParse("sür+VERB^DB+VERB+CAUS^DB+VERB+PASS+POS^DB+NOUN+INF2+A3SG+P3SG+NOM")
         self.parse6 = MorphologicalParse("değiş+VERB^DB+VERB+CAUS^DB+VERB+PASS+POS^DB+VERB+ABLE+AOR^DB+ADJ+ZERO")
         self.parse7 = MorphologicalParse("iyi+ADJ^DB+VERB+BECOME^DB+VERB+CAUS^DB+VERB+PASS+POS^DB+VERB+ABLE^DB+NOUN+INF2+A3PL+P3PL+ABL")
+        self.parse8 = MorphologicalParse("değil+ADJ^DB+VERB+ZERO+PAST+A3SG")
+        self.parse9 = MorphologicalParse("hazır+ADJ^DB+VERB+ZERO+PAST+A3SG")
 
     def test_GetTransitionList(self):
         self.assertEqual("NOUN+A3SG+PNON+NOM", self.parse1.getTransitionList())
@@ -30,6 +34,7 @@ class MorphologicalParseTest(unittest.TestCase):
         self.assertEqual("VERB+VERB+CAUS+VERB+PASS+POS+NOUN+INF2+A3SG+P3SG+NOM", self.parse5.getTransitionList())
         self.assertEqual("VERB+VERB+CAUS+VERB+PASS+POS+VERB+ABLE+AOR+ADJ+ZERO", self.parse6.getTransitionList())
         self.assertEqual("ADJ+VERB+BECOME+VERB+CAUS+VERB+PASS+POS+VERB+ABLE+NOUN+INF2+A3PL+P3PL+ABL", self.parse7.getTransitionList())
+        self.assertEqual("ADJ+VERB+ZERO+PAST+A3SG", self.parse8.getTransitionList())
 
     def test_GetTag(self):
         self.assertEqual("A3SG", self.parse1.getTag(2))
@@ -48,6 +53,7 @@ class MorphologicalParseTest(unittest.TestCase):
         self.assertEqual(12, self.parse5.tagSize())
         self.assertEqual(12, self.parse6.tagSize())
         self.assertEqual(16, self.parse7.tagSize())
+        self.assertEqual(6, self.parse8.tagSize())
 
     def test_Size(self):
         self.assertEqual(1, self.parse1.size())
@@ -57,6 +63,7 @@ class MorphologicalParseTest(unittest.TestCase):
         self.assertEqual(4, self.parse5.size())
         self.assertEqual(5, self.parse6.size())
         self.assertEqual(6, self.parse7.size())
+        self.assertEqual(2, self.parse8.size())
 
     def test_GetRootPos(self):
         self.assertEqual("NOUN", self.parse1.getRootPos())
@@ -66,6 +73,7 @@ class MorphologicalParseTest(unittest.TestCase):
         self.assertEqual("VERB", self.parse5.getRootPos())
         self.assertEqual("VERB", self.parse6.getRootPos())
         self.assertEqual("ADJ", self.parse7.getRootPos())
+        self.assertEqual("ADJ", self.parse8.getRootPos())
 
     def test_GetPos(self):
         self.assertEqual("NOUN", self.parse1.getPos())
@@ -75,6 +83,7 @@ class MorphologicalParseTest(unittest.TestCase):
         self.assertEqual("NOUN", self.parse5.getPos())
         self.assertEqual("ADJ", self.parse6.getPos())
         self.assertEqual("NOUN", self.parse7.getPos())
+        self.assertEqual("VERB", self.parse8.getPos())
 
     def test_GetWordWithPos(self):
         self.assertEqual("bayan+NOUN", self.parse1.getWordWithPos().getName())
@@ -84,6 +93,7 @@ class MorphologicalParseTest(unittest.TestCase):
         self.assertEqual("sür+VERB", self.parse5.getWordWithPos().getName())
         self.assertEqual("değiş+VERB", self.parse6.getWordWithPos().getName())
         self.assertEqual("iyi+ADJ", self.parse7.getWordWithPos().getName())
+        self.assertEqual("değil+ADJ", self.parse8.getWordWithPos().getName())
 
     def test_LastIGContainsCase(self):
         self.assertEqual("NOM", self.parse1.lastIGContainsCase())
@@ -133,12 +143,24 @@ class MorphologicalParseTest(unittest.TestCase):
 
     def test_IsVerb(self):
         self.assertTrue(self.parse4.isVerb())
+        self.assertTrue(self.parse8.isVerb())
 
     def test_IsRootVerb(self):
         self.assertTrue(self.parse2.isRootVerb())
         self.assertTrue(self.parse4.isRootVerb())
         self.assertTrue(self.parse5.isRootVerb())
         self.assertTrue(self.parse6.isRootVerb())
+
+    def test_GetTreePos(self):
+        self.assertEqual("NP", self.parse1.getTreePos())
+        self.assertEqual("ADJP", self.parse2.getTreePos())
+        self.assertEqual("ADJP", self.parse3.getTreePos())
+        self.assertEqual("VP", self.parse4.getTreePos())
+        self.assertEqual("NP", self.parse5.getTreePos())
+        self.assertEqual("ADJP", self.parse6.getTreePos())
+        self.assertEqual("NP", self.parse7.getTreePos())
+        self.assertEqual("NEG", self.parse8.getTreePos())
+        self.assertEqual("NOMP", self.parse9.getTreePos())
 
 
 if __name__ == '__main__':
