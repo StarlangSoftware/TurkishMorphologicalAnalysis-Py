@@ -592,6 +592,10 @@ class MorphologicalParse:
                 return "."
             elif self.root.getName() == ";" or self.root.getName() == "-" or self.root.getName() == "--":
                 return ":"
+            elif self.root.getName() == "(" or self.root.getName() == "-LRB-" or self.root.getName() == "-lrb-":
+                return "-LRB-"
+            elif self.root.getName() == ")" or self.root.getName() == "-RRB-" or self.root.getName() == "-rrb-":
+                return "-RRB-"
             else:
                 return self.root.getName()
         else:
