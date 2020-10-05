@@ -48,8 +48,6 @@ class TransitionTest(unittest.TestCase):
     def test_PresentTense(self):
         self.assertTrue(self.fsm.morphologicalAnalysis("büyülüyor").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("bölümlüyor").size() != 0)
-        self.assertTrue(self.fsm.morphologicalAnalysis("adresliyor").size() != 0)
-        self.assertTrue(self.fsm.morphologicalAnalysis("alevliyor").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("buğuluyor").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("bulguluyor").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("açıklıyor").size() != 0)
@@ -141,7 +139,6 @@ class TransitionTest(unittest.TestCase):
     def test_LastIdropsDuringSuffixation(self):
         self.assertTrue(self.fsm.morphologicalAnalysis("hizbi").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("kaybı").size() != 0)
-        self.assertTrue(self.fsm.morphologicalAnalysis("akdi").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("ahdi").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("nesci").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("zehri").size() != 0)
