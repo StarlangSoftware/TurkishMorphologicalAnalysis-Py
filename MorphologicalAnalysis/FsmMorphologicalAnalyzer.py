@@ -974,7 +974,8 @@ class FsmMorphologicalAnalyzer:
                             newWord.addFlag("IS_KIS")
                             fsmParse = self.__analysis(self.__toLower(surfaceForm), self.isProperNoun(surfaceForm))
             fsmParseList = FsmParseList(fsmParse)
-            self.__cache.add(surfaceForm, fsmParseList)
+            if fsmParseList.size() > 0:
+                self.__cache.add(surfaceForm, fsmParseList)
             return fsmParseList
 
     def robustMorphologicalAnalysis(self, sentenceOrSurfaceForm):
