@@ -24,6 +24,7 @@ class FsmMorphologicalAnalyzer:
     __dictionary: TxtDictionary
     __cache: LRUCache
     __mostUsedPatterns = {}
+    __parsedSurfaceForms = None
 
     MAX_DISTANCE = 2
 
@@ -51,6 +52,13 @@ class FsmMorphologicalAnalyzer:
         self.__finiteStateMachine = FiniteStateMachine(fileName)
         self.__dictionaryTrie = self.__dictionary.prepareTrie()
         self.__cache = LRUCache(cacheSize)
+
+    def addParsedSurfaceForms(self, fileName: str):
+        self.__parsedSurfaceForms = set()
+        file = open(fileName, "r")
+        lines = file.readlines()
+        for line in lines:
+            self.__parsedSurfaceForms.add(line.strip())
 
     def getPossibleWords(self, morphologicalParse: MorphologicalParse, metamorphicParse: MetamorphicParse) -> set:
         """
@@ -918,6 +926,8 @@ class FsmMorphologicalAnalyzer:
             return result
         elif isinstance(sentenceOrSurfaceForm, str):
             surfaceForm = sentenceOrSurfaceForm
+            if self.__parsedSurfaceForms is not None and surfaceForm not in self.__parsedSurfaceForms:
+                return FsmParseList([])
             if self.__cache.contains(surfaceForm):
                 return self.__cache.get(surfaceForm)
             if self.patternMatches("(\\w|Ç|Ş|İ|Ü|Ö)\\.", surfaceForm):
