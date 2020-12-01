@@ -210,7 +210,7 @@ class FsmParseList:
                 if analyses[i] > analyses[j]:
                     analyses[i], analyses[j] = analyses[j], analyses[i]
         result = analyses[0]
-        for i in range(len(analyses)):
+        for i in range(1, len(analyses)):
             result = result + "$" + analyses[i]
         return result
 

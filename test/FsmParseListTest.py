@@ -17,6 +17,9 @@ class FsmParseListTest(unittest.TestCase):
     parse7 : FsmParseList
     parse8 : FsmParseList
     parse9 : FsmParseList
+    parse10 : FsmParseList
+    parse11 : FsmParseList
+    parse12 : FsmParseList
 
     def setUp(self) -> None:
         fsm = FsmMorphologicalAnalyzer("../turkish_dictionary.txt", "../turkish_misspellings.txt", "../turkish_finite_state_machine.xml")
@@ -29,6 +32,9 @@ class FsmParseListTest(unittest.TestCase):
         self.parse7 = fsm.morphologicalAnalysis("esaslarını")
         self.parse8 = fsm.morphologicalAnalysis("güçleriyle")
         self.parse9 = fsm.morphologicalAnalysis("bulmayacakları")
+        self.parse10 = fsm.morphologicalAnalysis("kitabı")
+        self.parse11 = fsm.morphologicalAnalysis("kitapları")
+        self.parse12 = fsm.morphologicalAnalysis("o")
 
     def test_Size(self):
          self.assertEqual(2, self.parse1.size())
@@ -89,6 +95,11 @@ class FsmParseListTest(unittest.TestCase):
          self.assertEqual(2, len(self.parse7.constructParseListForDifferentRootWithPos()))
          self.assertEqual(2, len(self.parse8.constructParseListForDifferentRootWithPos()))
          self.assertEqual(1, len(self.parse9.constructParseListForDifferentRootWithPos()))
+
+    def test_parsesWithoutPrefixAndSuffix(self):
+        self.assertEqual("P3SG+NOM$PNON+ACC", self.parse10.parsesWithoutPrefixAndSuffix())
+        self.assertEqual("A3PL+P3PL+NOM$A3PL+P3SG+NOM$A3PL+PNON+ACC$A3SG+P3PL+NOM", self.parse11.parsesWithoutPrefixAndSuffix())
+        self.assertEqual("DET$PRON+DEMONSP+A3SG+PNON+NOM$PRON+PERS+A3SG+PNON+NOM", self.parse12.parsesWithoutPrefixAndSuffix())
 
 
 if __name__ == '__main__':
