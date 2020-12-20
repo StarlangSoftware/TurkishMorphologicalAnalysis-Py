@@ -409,7 +409,7 @@ class FsmMorphologicalAnalyzer:
                     fsmParse.append(currentFsmParse)
                 if root.getName() == "öbür" or root.getName() == "öteki" or root.getName() == "hep" or \
                         root.getName() == "kimse" or root.getName() == "diğeri" or root.getName() == "hiçbiri" or \
-                        root.getName() == "böylesi" or root.getName() == "birbiri" or root.getName() == "birbirleri" or\
+                        root.getName() == "böylesi" or root.getName() == "birbiri" or root.getName() == "birbirleri" or \
                         root.getName() == "biri" or root.getName() == "başkası" or root.getName() == "bazı" or \
                         root.getName() == "kimi":
                     currentFsmParse = FsmParse(root, self.__finiteStateMachine.getState("PronounRoot(QUANT)"))
@@ -778,18 +778,17 @@ class FsmMorphologicalAnalyzer:
             fsmParse.constructInflectionalGroups()
             initialFsmParse.append(fsmParse)
             return initialFsmParse
-        if self.patternMatches("(\\d\\d|\\d)/(\\d\\d|\\d)/\\d+", surfaceForm) or \
-                self.patternMatches("(\\d\\d|\\d)\\.(\\d\\d|\\d)\\.\\d+", surfaceForm):
-            initialFsmParse = []
-            fsmParse = FsmParse(surfaceForm, State("DateRoot", True, True))
-            fsmParse.constructInflectionalGroups()
-            initialFsmParse.append(fsmParse)
-            return initialFsmParse
         if self.patternMatches("\\d+/\\d+", surfaceForm):
             initialFsmParse = []
             fsmParse = FsmParse(surfaceForm, State("FractionRoot", True, True))
             fsmParse.constructInflectionalGroups()
             initialFsmParse.append(fsmParse)
+            fsmParse = FsmParse(surfaceForm, State("DateRoot", True, True))
+            fsmParse.constructInflectionalGroups()
+            initialFsmParse.append(fsmParse)
+            return initialFsmParse
+        if self.__isDate(surfaceForm):
+            initialFsmParse = []
             fsmParse = FsmParse(surfaceForm, State("DateRoot", True, True))
             fsmParse.constructInflectionalGroups()
             initialFsmParse.append(fsmParse)
@@ -800,23 +799,19 @@ class FsmMorphologicalAnalyzer:
             fsmParse.constructInflectionalGroups()
             initialFsmParse.append(fsmParse)
             return initialFsmParse
-        if surfaceForm == "%" or self.patternMatches("%(\\d\\d|\\d)", surfaceForm) or \
-                self.patternMatches("%(\\d\\d|\\d)\\.\\d+", surfaceForm):
+        if surfaceForm == "%" or self.__isPercent(surfaceForm):
             initialFsmParse = []
             fsmParse = FsmParse(surfaceForm, State("PercentRoot", True, True))
             fsmParse.constructInflectionalGroups()
             initialFsmParse.append(fsmParse)
             return initialFsmParse
-        if self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d):(\\d\\d|\\d)", surfaceForm) or \
-                self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d)", surfaceForm):
+        if self.__isTime(surfaceForm):
             initialFsmParse = []
             fsmParse = FsmParse(surfaceForm, State("TimeRoot", True, True))
             fsmParse.constructInflectionalGroups()
             initialFsmParse.append(fsmParse)
             return initialFsmParse
-        if self.patternMatches("\\d+-\\d+", surfaceForm) or \
-                self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d)-(\\d\\d|\\d):(\\d\\d|\\d)", surfaceForm) or \
-                self.patternMatches("(\\d\\d|\\d)\\.(\\d\\d|\\d)-(\\d\\d|\\d)\\.(\\d\\d|\\d)", surfaceForm):
+        if self.__isRange(surfaceForm):
             initialFsmParse = []
             fsmParse = FsmParse(surfaceForm, State("RangeRoot", True, True))
             fsmParse.constructInflectionalGroups()
@@ -884,6 +879,24 @@ class FsmMorphologicalAnalyzer:
         return "A" <= surfaceForm[0] <= "Z" or surfaceForm[0] == "Ç" or surfaceForm[0] == "Ö" or surfaceForm[0] == "Ğ" \
                or surfaceForm[0] == "Ü" or surfaceForm[0] == "Ş" or surfaceForm[0] == "İ"
 
+    def __isPercent(self, surfaceForm: str) -> bool:
+        return self.patternMatches("%(\\d\\d|\\d)", surfaceForm) or \
+               self.patternMatches("%(\\d\\d|\\d)\\.\\d+", surfaceForm)
+
+    def __isTime(self, surfaceForm: str) -> bool:
+        return self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d):(\\d\\d|\\d)", surfaceForm) or \
+                self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d)", surfaceForm)
+
+    def __isRange(self, surfaceForm: str) -> bool:
+        return self.patternMatches("\\d+-\\d+", surfaceForm) or \
+                            self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d)-(\\d\\d|\\d):(\\d\\d|\\d)", surfaceForm) or \
+                            self.patternMatches("(\\d\\d|\\d)\\.(\\d\\d|\\d)-(\\d\\d|\\d)\\.(\\d\\d|\\d)",
+                                                surfaceForm)
+
+    def __isDate(self, surfaceForm: str) -> bool:
+        return self.patternMatches("(\\d\\d|\\d)/(\\d\\d|\\d)/\\d+", surfaceForm) or \
+               self.patternMatches("(\\d\\d|\\d)\\.(\\d\\d|\\d)\\.\\d+", surfaceForm)
+
     def morphologicalAnalysis(self, sentenceOrSurfaceForm):
         """
         The morphologicalAnalysis method is used to analyse a FsmParseList by comparing with the regex.
@@ -926,12 +939,16 @@ class FsmMorphologicalAnalyzer:
             return result
         elif isinstance(sentenceOrSurfaceForm, str):
             surfaceForm = sentenceOrSurfaceForm
-            if self.__parsedSurfaceForms is not None and surfaceForm not in self.__parsedSurfaceForms:
+            if self.__parsedSurfaceForms is not None and surfaceForm not in self.__parsedSurfaceForms \
+                    and not self.__isRange(surfaceForm) and not self.__isTime(surfaceForm) \
+                    and not self.__isInteger(surfaceForm) and not self.__isDouble(surfaceForm) \
+                    and not self.__isDate(surfaceForm) and not self.__isPercent(surfaceForm):
                 return FsmParseList([])
             if self.__cache.contains(surfaceForm):
                 return self.__cache.get(surfaceForm)
             if self.patternMatches("(\\w|Ç|Ş|İ|Ü|Ö)\\.", surfaceForm):
-                self.__dictionaryTrie.addWord(self.__toLower(surfaceForm), TxtWord(self.__toLower(surfaceForm), "IS_OA"))
+                self.__dictionaryTrie.addWord(self.__toLower(surfaceForm),
+                                              TxtWord(self.__toLower(surfaceForm), "IS_OA"))
             defaultFsmParse = self.__analysis(self.__toLower(surfaceForm), self.isProperNoun(surfaceForm))
             if len(defaultFsmParse) > 0:
                 fsmParseList = FsmParseList(defaultFsmParse)
@@ -944,25 +961,19 @@ class FsmMorphologicalAnalyzer:
                     if "/" in possibleRoot or "\\/" in possibleRoot:
                         self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_KESIR"))
                         fsmParse = self.__analysis(self.__toLower(surfaceForm), self.isProperNoun(surfaceForm))
-                    elif self.patternMatches("(\\d\\d|\\d)/(\\d\\d|\\d)/\\d+", possibleRoot) or \
-                            self.patternMatches("(\\d\\d|\\d)\\.(\\d\\d|\\d)\\.\\d+", possibleRoot):
+                    elif self.__isDate(possibleRoot):
                         self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_DATE"))
                         fsmParse = self.__analysis(self.__toLower(surfaceForm), self.isProperNoun(surfaceForm))
                     elif self.patternMatches("\\d+/\\d+", possibleRoot):
                         self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_KESIR"))
                         fsmParse = self.__analysis(self.__toLower(surfaceForm), self.isProperNoun(surfaceForm))
-                    elif self.patternMatches("%(\\d\\d|\\d)", possibleRoot) or \
-                            self.patternMatches("%(\\d\\d|\\d)\\.\\d+", possibleRoot):
+                    elif self.__isPercent(possibleRoot):
                         self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_PERCENT"))
                         fsmParse = self.__analysis(self.__toLower(surfaceForm), self.isProperNoun(surfaceForm))
-                    elif self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d):(\\d\\d|\\d)", possibleRoot) or \
-                            self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d)", possibleRoot):
+                    elif self.__isTime(possibleRoot):
                         self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_ZAMAN"))
                         fsmParse = self.__analysis(self.__toLower(surfaceForm), self.isProperNoun(surfaceForm))
-                    elif self.patternMatches("\\d+-\\d+", possibleRoot) or \
-                            self.patternMatches("(\\d\\d|\\d):(\\d\\d|\\d)-(\\d\\d|\\d):(\\d\\d|\\d)", possibleRoot) or\
-                            self.patternMatches("(\\d\\d|\\d)\\.(\\d\\d|\\d)-(\\d\\d|\\d)\\.(\\d\\d|\\d)",
-                                                possibleRoot):
+                    elif self.__isRange(possibleRoot):
                         self.__dictionaryTrie.addWord(possibleRoot, TxtWord(possibleRoot, "IS_RANGE"))
                         fsmParse = self.__analysis(self.__toLower(surfaceForm), self.isProperNoun(surfaceForm))
                     elif self.__isInteger(possibleRoot):
