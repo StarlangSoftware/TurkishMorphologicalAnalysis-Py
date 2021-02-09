@@ -160,17 +160,17 @@ Output
 
 # Cite
 
-@inproceedings{yildiz-etal-2019-open,
-    title = "An Open, Extendible, and Fast {T}urkish Morphological Analyzer",
-    author = {Y{\i}ld{\i}z, Olcay Taner  and
-      Avar, Beg{\"u}m  and
-      Ercan, G{\"o}khan},
-    booktitle = "Proceedings of the International Conference on Recent Advances in Natural Language Processing (RANLP 2019)",
-    month = sep,
-    year = "2019",
-    address = "Varna, Bulgaria",
-    publisher = "INCOMA Ltd.",
-    url = "https://www.aclweb.org/anthology/R19-1156",
-    doi = "10.26615/978-954-452-056-4_156",
-    pages = "1364--1372",
-}
+	@inproceedings{yildiz-etal-2019-open,
+    	title = "An Open, Extendible, and Fast {T}urkish Morphological Analyzer",
+    	author = {Y{\i}ld{\i}z, Olcay Taner  and
+      	Avar, Beg{\"u}m  and
+      	Ercan, G{\"o}khan},
+    	booktitle = "Proceedings of the International Conference on Recent Advances in Natural Language Processing (RANLP 2019)",
+    	month = sep,
+    	year = "2019",
+    	address = "Varna, Bulgaria",
+    	publisher = "INCOMA Ltd.",
+    	url = "https://www.aclweb.org/anthology/R19-1156",
+    	doi = "10.26615/978-954-452-056-4_156",
+    	pages = "1364--1372",
+	}
