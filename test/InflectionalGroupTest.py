@@ -6,6 +6,12 @@ from MorphologicalAnalysis.MorphologicalTag import MorphologicalTag
 
 class InflectionalGroupTest(unittest.TestCase):
 
+    def test_getMorphologicalTag(self):
+        self.assertEqual(InflectionalGroup.getMorphologicalTag("noun"), MorphologicalTag.NOUN)
+        self.assertEqual(InflectionalGroup.getMorphologicalTag("without"), MorphologicalTag.WITHOUT)
+        self.assertEqual(InflectionalGroup.getMorphologicalTag("interj"), MorphologicalTag.INTERJECTION)
+        self.assertEqual(InflectionalGroup.getMorphologicalTag("inf2"), MorphologicalTag.INFINITIVE2)
+
     def test_size(self):
         inflectionalGroup1 = InflectionalGroup("ADJ")
         self.assertEqual(1, inflectionalGroup1.size())

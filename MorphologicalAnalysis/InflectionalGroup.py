@@ -126,7 +126,7 @@ class InflectionalGroup:
             morphoTags if found, None otherwise.
         """
         for j in range(len(InflectionalGroup.tags)):
-            if tag == InflectionalGroup.tags[j]:
+            if tag.upper() == InflectionalGroup.tags[j]:
                 return InflectionalGroup.morphotags[j]
         return None
 
