@@ -26,8 +26,8 @@ class FsmParse(MorphologicalParse):
 
         PARAMETERS
         ----------
-        root : TxtWord
-            TxtWord input.
+        root : Word
+            Word input.
         startState : State
             State input.
         """

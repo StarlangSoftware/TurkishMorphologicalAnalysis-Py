@@ -54,11 +54,12 @@ class FsmMorphologicalAnalyzer:
         self.__cache = LRUCache(cacheSize)
 
     def addParsedSurfaceForms(self, fileName: str):
-        self.__parsedSurfaceForms = set()
+        self.__parsedSurfaceForms = dict()
         file = open(fileName, "r")
         lines = file.readlines()
         for line in lines:
-            self.__parsedSurfaceForms.add(line.strip())
+            items = line.strip().split()
+            self.__parsedSurfaceForms[items[0]] = items[1]
 
     def getPossibleWords(self, morphologicalParse: MorphologicalParse, metamorphicParse: MetamorphicParse) -> set:
         """
@@ -939,11 +940,11 @@ class FsmMorphologicalAnalyzer:
             return result
         elif isinstance(sentenceOrSurfaceForm, str):
             surfaceForm = sentenceOrSurfaceForm
-            if self.__parsedSurfaceForms is not None and surfaceForm not in self.__parsedSurfaceForms \
+            if self.__parsedSurfaceForms is not None and surfaceForm in self.__parsedSurfaceForms \
                     and not self.__isRange(surfaceForm) and not self.__isTime(surfaceForm) \
                     and not self.__isInteger(surfaceForm) and not self.__isDouble(surfaceForm) \
                     and not self.__isDate(surfaceForm) and not self.__isPercent(surfaceForm):
-                return FsmParseList([])
+                return FsmParseList([FsmParse(Word(surfaceForm))])
             if self.__cache.contains(surfaceForm):
                 return self.__cache.get(surfaceForm)
             if self.patternMatches("(\\w|Ç|Ş|İ|Ü|Ö)\\.", surfaceForm):
