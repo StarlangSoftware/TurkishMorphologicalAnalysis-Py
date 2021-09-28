@@ -1,5 +1,6 @@
 import unittest
 
+from Corpus.Sentence import Sentence
 from Dictionary.TxtWord import TxtWord
 
 from MorphologicalAnalysis.FsmMorphologicalAnalyzer import FsmMorphologicalAnalyzer
@@ -173,6 +174,20 @@ class FsmMorphologicalAnalyzerTest(unittest.TestCase):
                     transition = Transition("Hl", transitionState, "^DB+VERB+PASS")
                     surfaceForm = transition.makeTransition(word, word.getName(), startState)
                     self.assertTrue(self.fsm.morphologicalAnalysis(surfaceForm).size() != 0)
+
+    def test_replaceWord(self):
+        self.assertEqual("Şvesterine söyle kazağı güzelmiş", self.fsm.replaceWord(Sentence("Hemşirene söyle kazağı güzelmiş"), "hemşire", "şvester").__str__())
+        self.assertEqual("Burada çok abartma var", self.fsm.replaceWord(Sentence("Burada çok mübalağa var"), "mübalağa", "abartma").__str__())
+        self.assertEqual("Bu bina çok kötü şekilsizleştirildi", self.fsm.replaceWord(Sentence("Bu bina çok kötü biçimsizleştirildi"), "biçimsizleş", "şekilsizleş").__str__())
+        self.assertEqual("Abim geçen yıl ölmüştü gibi", self.fsm.replaceWord(Sentence("Abim geçen yıl son yolculuğa çıkmıştı gibi"), "son yolculuğa çık", "öl").__str__())
+        self.assertEqual("Hemşirenle evlendim", self.fsm.replaceWord(Sentence("Kız kardeşinle evlendim"), "kız kardeş", "hemşire").__str__())
+        self.assertEqual("Dün yaptığı güreş maçında yenildi", self.fsm.replaceWord(Sentence("Dün yaptığı güreş maçında mağlup oldu"), "mağlup ol", "yenil").__str__())
+        self.assertEqual("Abim geçen yıl son yolculuğa çıkmıştı gibi", self.fsm.replaceWord(Sentence("Abim geçen yıl ölmüştü gibi"), "öl", "son yolculuğa çık").__str__())
+        self.assertEqual("Kız kardeşinle evlendim", self.fsm.replaceWord(Sentence("Hemşirenle evlendim"), "hemşire", "kız kardeş").__str__())
+        self.assertEqual("Dün yaptığı güreş maçında mağlup oldu", self.fsm.replaceWord(Sentence("Dün yaptığı güreş maçında yenildi"), "yenil", "mağlup ol").__str__())
+        self.assertEqual("Dün yaptığı güreş maçında alt oldu sanki", self.fsm.replaceWord(Sentence("Dün yaptığı güreş maçında mağlup oldu sanki"), "mağlup ol", "alt ol").__str__())
+        self.assertEqual("Yemin billah vermişlerdi vazoyu kırmadığına", self.fsm.replaceWord(Sentence("Yemin etmişlerdi vazoyu kırmadığına"), "yemin et", "yemin billah ver").__str__())
+        self.assertEqual("Yemin etmişlerdi vazoyu kırmadığına", self.fsm.replaceWord(Sentence("Yemin billah vermişlerdi vazoyu kırmadığına"), "yemin billah ver", "yemin et").__str__())
 
 
 if __name__ == '__main__':

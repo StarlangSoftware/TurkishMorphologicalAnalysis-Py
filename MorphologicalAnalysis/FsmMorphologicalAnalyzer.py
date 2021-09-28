@@ -717,6 +717,76 @@ class FsmMorphologicalAnalyzer:
         self.__initializeParseListFromRoot(initialFsmParse, root, False)
         return self.__parseWord(initialFsmParse, maxLength)
 
+    def replaceRootWord(self, parse: FsmParse, newRoot: TxtWord) -> str:
+        """
+        Replace root word of the current parse with the new root word and returns the new word.
+
+        PARAMETERS
+        ----------
+        newRoot : TxtWord
+            Replaced root word
+
+        RETURNS
+        -------
+        str
+            Root word of the parse will be replaced with the newRoot and the resulting surface form is returned.
+        """
+        result = newRoot.getName()
+        for aWith in parse.getWithList():
+            transition = Transition(aWith)
+            result = transition.makeTransitionNoStartState(newRoot, result)
+        return result
+
+    def replaceWord(self, original: Sentence, previousWord: str, newWord: str) -> Sentence:
+        result = Sentence()
+        previousWordMultiple = " " in previousWord
+        newWordMultiple = " " in newWord
+        if previousWordMultiple:
+            previousWordSplitted = previousWord.split(" ")
+            lastWord = previousWordSplitted[len(previousWordSplitted) - 1]
+        else:
+            lastWord = previousWord
+        if newWordMultiple:
+            newWordSplitted = newWord.split(" ")
+            newRootWord = newWordSplitted[len(newWordSplitted) - 1]
+        else:
+            newRootWord = newWord
+        newRootTxtWord = self.__dictionary.getWord(newRootWord)
+        parseList = self.morphologicalAnalysis(original)
+        i = 0
+        while i < len(parseList):
+            replaced = False
+            replacedWord = None
+            for j in range(parseList[i].size()):
+                if parseList[i].getFsmParse(j).root.getName() == lastWord and newRootTxtWord is not None:
+                    replaced = True
+                    replacedWord = self.replaceRootWord(parseList[i].getFsmParse(j), newRootTxtWord)
+            if replaced and replacedWord is not None:
+                if previousWordMultiple:
+                    for k in range(i - len(previousWordSplitted) + 1):
+                        result.addWord(original.getWord(k))
+                if newWordMultiple:
+                    for k in range(len(newWordSplitted) - 1):
+                        if result.wordCount() == 0:
+                            result.addWord(Word((newWordSplitted[k][0] + "").upper() + newWordSplitted[k][1:]))
+                        else:
+                            result.addWord(Word(newWordSplitted[k]))
+                if result.wordCount() == 0:
+                    replacedWord = (replacedWord[0]).upper() + replacedWord[1:]
+                result.addWord(Word(replacedWord))
+                if previousWordMultiple:
+                    i = i + 1
+                    break
+            else:
+                if not previousWordMultiple:
+                    result.addWord(original.getWord(i))
+            i = i + 1
+        if previousWordMultiple:
+            while i < len(parseList):
+                result.addWord(original.getWord(i))
+                i = i + 1
+        return result
+
     def __analysisExists(self, rootWord: TxtWord, surfaceForm: str, isProper: bool) -> bool:
         """
         The analysisExists method checks several cases. If the given surfaceForm is a punctuation or double then it

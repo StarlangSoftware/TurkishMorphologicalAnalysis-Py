@@ -564,6 +564,9 @@ class FsmParse(MorphologicalParse):
                 result = result + "+" + self.__suffixList[i].getName() + "(" + self.__formList[i] + ")"
         return result
 
+    def getWithList(self) -> list:
+        return self.__withList
+
     def withList(self) -> str:
         """
         The withList method gets the root as a result str then loops through the withList and concatenates each item
