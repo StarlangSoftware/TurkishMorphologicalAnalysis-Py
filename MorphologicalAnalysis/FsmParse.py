@@ -506,7 +506,7 @@ class FsmParse(MorphologicalParse):
         elif self.__suffixList[0].getName() == "DuplicateRoot":
             result = self.__formList[0] + "+DUP"
         elif self.__suffixList[0].getName() == "QuestionRoot":
-            result = self.__formList[0] + "+QUES"
+            result = "mi+QUES"
         elif self.__suffixList[0].getName() == "PostP":
             if self.__formList[0] == "karşı" or self.__formList[0] == "ilişkin" or self.__formList[0] == "göre" \
                     or self.__formList[0] == "kadar" or self.__formList[0] == "ait" or self.__formList[0] == "yönelik" \

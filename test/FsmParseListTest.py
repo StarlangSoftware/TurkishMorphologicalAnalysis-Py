@@ -21,6 +21,7 @@ class FsmParseListTest(unittest.TestCase):
     parse11 : FsmParseList
     parse12 : FsmParseList
     parse13 : FsmParseList
+    parse14 : FsmParseList
 
     def setUp(self) -> None:
         fsm = FsmMorphologicalAnalyzer("../turkish_dictionary.txt", "../turkish_misspellings.txt", "../turkish_finite_state_machine.xml")
@@ -37,6 +38,7 @@ class FsmParseListTest(unittest.TestCase):
         self.parse11 = fsm.morphologicalAnalysis("kitapları")
         self.parse12 = fsm.morphologicalAnalysis("o")
         self.parse13 = fsm.morphologicalAnalysis("arabası")
+        self.parse14 = fsm.morphologicalAnalysis("sana")
 
     def test_Size(self):
          self.assertEqual(2, self.parse1.size())
@@ -48,6 +50,7 @@ class FsmParseListTest(unittest.TestCase):
          self.assertEqual(8, self.parse7.size())
          self.assertEqual(6, self.parse8.size())
          self.assertEqual(5, self.parse9.size())
+         self.assertEqual(4, self.parse14.size())
 
     def test_RootWords(self):
          self.assertEqual("aç", self.parse1.rootWords())

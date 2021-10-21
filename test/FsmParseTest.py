@@ -15,6 +15,7 @@ class FsmParseTest(unittest.TestCase):
     parse7 : FsmParse 
     parse8 : FsmParse 
     parse9 : FsmParse
+    parse10 : FsmParse
 
     def setUp(self) -> None:
         self.fsm = FsmMorphologicalAnalyzer("../turkish_dictionary.txt", "../turkish_misspellings.txt", "../turkish_finite_state_machine.xml")
@@ -27,6 +28,7 @@ class FsmParseTest(unittest.TestCase):
         self.parse7 = self.fsm.morphologicalAnalysis("esaslarını").getFsmParse(0)
         self.parse8 = self.fsm.morphologicalAnalysis("güçleriyle").getFsmParse(0)
         self.parse9 = self.fsm.morphologicalAnalysis("bulmayacakları").getFsmParse(0)
+        self.parse10 = self.fsm.morphologicalAnalysis("mü").getFsmParse(0)
 
     def  test_GetLastLemmaWithTag(self):
         self.assertEqual("açıl", self.parse1.getLastLemmaWithTag("VERB"))
@@ -52,6 +54,7 @@ class FsmParseTest(unittest.TestCase):
         self.assertEqual("esas+ADJ^DB+NOUN+ZERO+A3PL+P2SG+ACC", self.parse7.__str__())
         self.assertEqual("güç+ADJ^DB+NOUN+ZERO+A3PL+P3PL+INS", self.parse8.__str__())
         self.assertEqual("bul+VERB+NEG^DB+ADJ+FUTPART+P3PL", self.parse9.__str__())
+        self.assertEqual("mi+QUES+PRES+A3SG", self.parse10.__str__())
 
     def test_WithList(self):
         self.assertEqual("aç+Hl+Hr", self.parse1.withList())

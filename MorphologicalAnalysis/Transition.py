@@ -322,9 +322,11 @@ class Transition:
         if self.__with == "yA":
             if stem == "ben":
                 return "bana"
+            if stem == "sen":
+                return "sana"
         self.__formationToCheck = stem
         if rootWord and self.__withFirstChar() == "y" and root.vowelEChangesToIDuringYSuffixation() \
-                and self.__with[1] != "H":
+                and (self.__with[1] != "H" or root.getName() == "ye"):
             formation = stem[:len(stem) - 1] + "i"
             self.__formationToCheck = formation
         else:
@@ -337,8 +339,8 @@ class Transition:
                     formation = stem + 'y'
                     self.__formationToCheck = formation
                 else:
-                    if rootWord and root.duplicatesDuringSuffixation() and TurkishLanguage.isConsonantDrop(
-                            self.__with[0]):
+                    if rootWord and root.duplicatesDuringSuffixation() and not startState.getName().startswith(
+                                    "VerbalRoot") and TurkishLanguage.isConsonantDrop(self.__with[0]):
                         if self.softenDuringSuffixation(root):
                             if self.__lastPhoneme(stem) == "p":
                                 formation = stem[:len(stem) - 1] + "bb"

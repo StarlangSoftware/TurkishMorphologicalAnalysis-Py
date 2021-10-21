@@ -104,6 +104,8 @@ class TransitionTest(unittest.TestCase):
         self.assertTrue(self.fsm.morphologicalAnalysis("ahtı").size() != 0)
 
     def test_Exceptions(self):
+        self.assertTrue(self.fsm.morphologicalAnalysis("yiyip").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("sana").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("bununla").size() != 0)
         self.assertEqual(0, self.fsm.morphologicalAnalysis("buyla").size())
         self.assertTrue(self.fsm.morphologicalAnalysis("onunla").size() != 0)

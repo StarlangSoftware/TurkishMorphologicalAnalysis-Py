@@ -193,7 +193,7 @@ class FsmMorphologicalAnalyzer:
                 distance = distance + 1
                 if distance > self.MAX_DISTANCE:
                     break
-        if rootWord and (root.getName() == "ben" or root.lastIdropsDuringSuffixation()
+        if rootWord and (root.getName() == "ben" or root.getName() == "sen" or root.lastIdropsDuringSuffixation()
                          or root.lastIdropsDuringPassiveSuffixation()):
             return distance <= self.MAX_DISTANCE
         elif shortString.endswith("e") or shortString.endswith("a") or shortString.endswith("p") \
