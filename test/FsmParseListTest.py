@@ -24,7 +24,7 @@ class FsmParseListTest(unittest.TestCase):
     parse14 : FsmParseList
 
     def setUp(self) -> None:
-        fsm = FsmMorphologicalAnalyzer("../turkish_dictionary.txt", "../turkish_misspellings.txt", "../turkish_finite_state_machine.xml")
+        fsm = FsmMorphologicalAnalyzer()
         self.parse1 = fsm.morphologicalAnalysis("açılır")
         self.parse2 = fsm.morphologicalAnalysis("koparılarak")
         self.parse3 = fsm.morphologicalAnalysis("toplama")

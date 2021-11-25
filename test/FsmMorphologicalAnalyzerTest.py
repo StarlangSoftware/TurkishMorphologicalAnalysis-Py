@@ -13,7 +13,7 @@ class FsmMorphologicalAnalyzerTest(unittest.TestCase):
     fsm : FsmMorphologicalAnalyzer
 
     def setUp(self) -> None:
-        self.fsm = FsmMorphologicalAnalyzer("../turkish_dictionary.txt", "../turkish_misspellings.txt", "../turkish_finite_state_machine.xml")
+        self.fsm = FsmMorphologicalAnalyzer()
 
     def test_morphologicalAnalysisDataTimeNumber(self):
         self.assertTrue(self.fsm.morphologicalAnalysis("3/4").size() != 0)

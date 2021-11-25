@@ -11,7 +11,7 @@ class FiniteStateMachineTest(unittest.TestCase):
     stateList : list
 
     def setUp(self) -> None:
-        self.fsm = FiniteStateMachine("../turkish_finite_state_machine.xml")
+        self.fsm = FiniteStateMachine("../MorphologicalAnalysis/data/turkish_finite_state_machine.xml")
         self.stateList = self.fsm.getStates()
 
     def test_StateCount(self):
