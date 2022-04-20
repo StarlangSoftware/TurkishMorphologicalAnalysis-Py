@@ -1,7 +1,9 @@
 from Dictionary.TxtWord import TxtWord
+from Dictionary.Word import Word
 from Language.TurkishLanguage import TurkishLanguage
 
 from MorphologicalAnalysis.FsmParse import FsmParse
+from MorphologicalAnalysis.MorphotacticEngine import MorphotacticEngine
 from MorphologicalAnalysis.State import State
 
 
@@ -150,76 +152,6 @@ class Transition:
             return root.takesSuffixIRAsAorist()
         return True
 
-    def __beforeLastVowel(self, stem: str) -> str:
-        """
-        The beforeLastVowel method takes a str stem as an input. It loops through the given stem and returns
-        the second last vowel.
-
-        PARAMETERS
-        ----------
-        stem : str
-            String input.
-
-        RETURNS
-        -------
-        str
-            Vowel before the last vowel.
-        """
-        last = "0"
-        before = 1
-        for i in range(len(stem) - 1, -1, -1):
-            if TurkishLanguage.isVowel(stem[i]):
-                if before == 1:
-                    last = stem[i]
-                    before = before - 1
-                    continue
-                return stem[i]
-        return last
-
-    def __lastVowel(self, stem: str) -> str:
-        """
-        The lastVowel method takes a str stem as an input. It loops through the given stem and returns
-        the last vowel.
-
-        PARAMETERS
-        ----------
-        stem : str
-            String input.
-
-        RETURNS
-        -------
-        str
-            The last vowel.
-        """
-        for i in range(len(stem) - 1, - 1, -1):
-            if TurkishLanguage.isVowel(stem[i]):
-                return stem[i]
-        for i in range(len(stem) - 1, -1, -1):
-            if "0" <= stem[i] <= "9":
-                return stem[i]
-        return "0"
-
-    def __lastPhoneme(self, stem: str) -> str:
-        """
-        The lastPhoneme method takes a str stem as an input. It then returns the last phoneme of the given stem.
-
-        PARAMETERS
-        ----------
-        stem : str
-            String input.
-
-        RETURNS
-        -------
-        str
-            The last phoneme.
-        """
-        if len(stem) == 0:
-            return " "
-        if stem[len(stem) - 1] != "'":
-            return stem[len(stem) - 1]
-        else:
-            return stem[len(stem) - 2]
-
     def __withFirstChar(self) -> str:
         """
         The withFirstChar method returns the first character of the with variable.
@@ -342,9 +274,9 @@ class Transition:
                     if rootWord and root.duplicatesDuringSuffixation() and not startState.getName().startswith(
                                     "VerbalRoot") and TurkishLanguage.isConsonantDrop(self.__with[0]):
                         if self.softenDuringSuffixation(root):
-                            if self.__lastPhoneme(stem) == "p":
+                            if Word.lastPhoneme(stem) == "p":
                                 formation = stem[:len(stem) - 1] + "bb"
-                            elif self.__lastPhoneme(stem) == "t":
+                            elif Word.lastPhoneme(stem) == "t":
                                 formation = stem[:len(stem) - 1] + "dd"
                         else:
                             formation = stem + stem[len(stem) - 1]
@@ -355,33 +287,33 @@ class Transition:
                                     "VerbalRoot") and not startState.getName().startswith("ProperRoot") \
                                 and self.__startWithVowelorConsonantDrops():
                             if self.softenDuringSuffixation(root):
-                                if self.__lastPhoneme(stem) == "p":
+                                if Word.lastPhoneme(stem) == "p":
                                     formation = stem[:len(stem) - 2] + 'b'
-                                elif self.__lastPhoneme(stem) == "t":
+                                elif Word.lastPhoneme(stem) == "t":
                                     formation = stem[:len(stem) - 2] + 'd'
-                                elif self.__lastPhoneme(stem) == "ç":
+                                elif Word.lastPhoneme(stem) == "ç":
                                     formation = stem[:len(stem) - 2] + 'c'
                             else:
                                 formation = stem[:len(stem) - 2] + stem[len(stem) - 1]
                             self.__formationToCheck = stem
                         else:
-                            if self.__lastPhoneme(stem) == "p":
+                            if Word.lastPhoneme(stem) == "p":
                                 if self.__startWithVowelorConsonantDrops() and rootWord and \
                                         self.softenDuringSuffixation(root):
                                     formation = stem[:len(stem) - 1] + 'b'
-                            elif self.__lastPhoneme(stem) == "t":
+                            elif Word.lastPhoneme(stem) == "t":
                                 if self.__startWithVowelorConsonantDrops() and rootWord and \
                                         self.softenDuringSuffixation(root):
                                     formation = stem[:len(stem) - 1] + 'd'
-                            elif self.__lastPhoneme(stem) == "ç":
+                            elif Word.lastPhoneme(stem) == "ç":
                                 if self.__startWithVowelorConsonantDrops() and rootWord and \
                                         self.softenDuringSuffixation(root):
                                     formation = stem[:len(stem) - 1] + 'c'
-                            elif self.__lastPhoneme(stem) == "g":
+                            elif Word.lastPhoneme(stem) == "g":
                                 if self.__startWithVowelorConsonantDrops() and rootWord and \
                                         self.softenDuringSuffixation(root):
                                     formation = stem[:len(stem) - 1] + 'ğ'
-                            elif self.__lastPhoneme(stem) == "k":
+                            elif Word.lastPhoneme(stem) == "k":
                                 if self.__startWithVowelorConsonantDrops() and rootWord and root.endingKChangesIntoG() \
                                         and not root.isProperNoun():
                                     formation = stem[:len(stem) - 1] + 'g'
@@ -406,7 +338,7 @@ class Transition:
                 i = 1
         else:
             if (TurkishLanguage.isConsonantDrop(self.__withFirstChar()) and TurkishLanguage.isConsonant(
-                    self.__lastPhoneme(stem))) or (rootWord and root.consonantSMayInsertedDuringPossesiveSuffixation()):
+                    Word.lastPhoneme(stem))) or (rootWord and root.consonantSMayInsertedDuringPossesiveSuffixation()):
                 if self.__with[0] == "'":
                     formation = formation + "'"
                     if root.isAbbreviation():
@@ -417,20 +349,20 @@ class Transition:
                     i = 1
         while i < len(self.__with):
             if self.__with[i] == "D":
-                formation = self.__resolveD(root, formation)
+                formation = MorphotacticEngine.resolveD(root, formation, self.__formationToCheck)
             elif self.__with[i] == "A":
-                formation = self.__resolveA(root, formation, rootWord)
+                formation = MorphotacticEngine.resolveA(root, formation, rootWord, self.__formationToCheck)
             elif self.__with[i] == "H":
                 if self.__with[0] != "'":
-                    formation = self.__resolveH(root, formation, i == 0, self.__with.startswith("Hyor"), rootWord)
+                    formation = MorphotacticEngine.resolveH(root, formation, i == 0, self.__with.startswith("Hyor"), rootWord, self.__formationToCheck)
                 else:
-                    formation = self.__resolveH(root, formation, i == 1, False, rootWord)
+                    formation = MorphotacticEngine.resolveH(root, formation, i == 1, False, rootWord, self.__formationToCheck)
             elif self.__with[i] == "C":
-                formation = self.__resolveC(formation)
+                formation = MorphotacticEngine.resolveC(formation, self.__formationToCheck)
             elif self.__with[i] == "S":
-                formation = self.__resolveS(formation)
+                formation = MorphotacticEngine.resolveS(formation)
             elif self.__with[i] == "Ş":
-                formation = self.__resolveSh(formation)
+                formation = MorphotacticEngine.resolveSh(formation)
             else:
                 if i == len(self.__with) - 1 and self.__with[i] == "s":
                     formation += "ş"
@@ -439,171 +371,6 @@ class Transition:
             self.__formationToCheck = formation
             i = i + 1
         return formation
-
-    def __resolveD(self, root: TxtWord, formation: str) -> str:
-        if root.isAbbreviation():
-            return formation + 'd'
-        if "0" <= self.__lastPhoneme(self.__formationToCheck) <= "9":
-            if self.__lastPhoneme(self.__formationToCheck) == "3" or self.__lastPhoneme(self.__formationToCheck) == "4"\
-                    or self.__lastPhoneme(self.__formationToCheck) == "5":
-                return formation + 't'
-            elif self.__lastPhoneme(self.__formationToCheck) == "0":
-                if root.getName().endswith("40") or root.getName().endswith("60") or root.getName().endswith("70"):
-                    return formation + 't'
-                else:
-                    return formation + 'd'
-            else:
-                return formation + 'd'
-        else:
-            if TurkishLanguage.isSertSessiz(self.__lastPhoneme(self.__formationToCheck)):
-                return formation + 't'
-            else:
-                return formation + 'd'
-
-    def __resolveA(self, root: TxtWord, formation: str, rootWord: bool):
-        if root.isAbbreviation():
-            return formation + 'e'
-        if "0" <= self.__lastVowel(self.__formationToCheck) <= "9":
-            if self.__lastVowel(self.__formationToCheck) == "6" or self.__lastVowel(self.__formationToCheck) == "9":
-                return formation + 'a'
-            elif self.__lastVowel(self.__formationToCheck) == "0":
-                if root.getName().endswith("10") or root.getName().endswith("30") or root.getName().endswith("40") \
-                        or root.getName().endswith("60") or root.getName().endswith("90"):
-                    return formation + 'a'
-                else:
-                    return formation + 'e'
-            else:
-                return formation + 'e'
-        if TurkishLanguage.isBackVowel(self.__lastVowel(self.__formationToCheck)):
-            if root.notObeysVowelHarmonyDuringAgglutination() and rootWord:
-                return formation + 'e'
-            else:
-                return formation + 'a'
-        if TurkishLanguage.isFrontVowel(self.__lastVowel(self.__formationToCheck)):
-            if root.notObeysVowelHarmonyDuringAgglutination() and rootWord:
-                return formation + 'a'
-            else:
-                return formation + 'e'
-        if root.isNumeral() or root.isFraction() or root.isReal():
-            if root.getName().endswith("6") or root.getName().endswith("9") or root.getName().endswith("10") or \
-                    root.getName().endswith("30") or root.getName().endswith("40") or root.getName().endswith("60") \
-                    or root.getName().endswith("90"):
-                return formation + 'a'
-            else:
-                return formation + 'e'
-        return formation
-
-    def __resolveH(self, root: TxtWord, formation: str, beginningOfSuffix: bool, specialCaseTenseSuffix: bool,
-                   rootWord: bool):
-        if root.isAbbreviation():
-            return formation + 'i'
-        if beginningOfSuffix and TurkishLanguage.isVowel(self.__lastPhoneme(self.__formationToCheck)) and \
-                not specialCaseTenseSuffix:
-            return formation
-        if specialCaseTenseSuffix:
-            if rootWord:
-                if root.vowelAChangesToIDuringYSuffixation():
-                    if TurkishLanguage.isFrontRoundedVowel(self.__beforeLastVowel(self.__formationToCheck)):
-                        return formation[:len(formation) - 1] + 'ü'
-                    if TurkishLanguage.isFrontUnroundedVowel(self.__beforeLastVowel(self.__formationToCheck)):
-                        return formation[:len(formation) - 1] + 'i'
-                    if TurkishLanguage.isBackRoundedVowel(self.__beforeLastVowel(self.__formationToCheck)):
-                        return formation[:len(formation) - 1] + 'u'
-                    if TurkishLanguage.isBackUnroundedVowel(self.__beforeLastVowel(self.__formationToCheck)):
-                        return formation[:len(formation) - 1] + 'ı'
-            if TurkishLanguage.isVowel(self.__lastPhoneme(self.__formationToCheck)):
-                if TurkishLanguage.isFrontRoundedVowel(self.__beforeLastVowel(self.__formationToCheck)):
-                    return formation[:len(formation) - 1] + 'ü'
-                if TurkishLanguage.isFrontUnroundedVowel(self.__beforeLastVowel(self.__formationToCheck)):
-                    return formation[:len(formation) - 1] + 'i'
-                if TurkishLanguage.isBackRoundedVowel(self.__beforeLastVowel(self.__formationToCheck)):
-                    return formation[:len(formation) - 1] + 'u'
-                if TurkishLanguage.isBackUnroundedVowel(self.__beforeLastVowel(self.__formationToCheck)):
-                    return formation[:len(formation) - 1] + 'ı'
-        if TurkishLanguage.isFrontRoundedVowel(self.__lastVowel(self.__formationToCheck)) or \
-                (TurkishLanguage.isBackRoundedVowel(self.__lastVowel(self.__formationToCheck))
-                 and root.notObeysVowelHarmonyDuringAgglutination()):
-            return formation + 'ü'
-        if TurkishLanguage.isFrontUnroundedVowel(self.__lastVowel(self.__formationToCheck)) or \
-                (self.__lastVowel(self.__formationToCheck) == 'a' and root.notObeysVowelHarmonyDuringAgglutination()):
-            return formation + 'i'
-        if TurkishLanguage.isBackRoundedVowel(self.__lastVowel(self.__formationToCheck)):
-            return formation + 'u'
-        if TurkishLanguage.isBackUnroundedVowel(self.__lastVowel(self.__formationToCheck)):
-            return formation + 'ı'
-        if root.isNumeral() or root.isFraction() or root.isReal():
-            if root.getName().endswith("6") or root.getName().endswith("40") or root.getName().endswith("60") \
-                    or root.getName().endswith("90"):
-                return formation + 'ı'
-            else:
-                if root.getName().endswith("3") or root.getName().endswith("4") or root.getName().endswith("00"):
-                    return formation + 'ü'
-                else:
-                    if root.getName().endswith("9") or root.getName().endswith("10") or root.getName().endswith("30"):
-                        return formation + 'u'
-                    else:
-                        return formation + 'i'
-        return formation
-
-    def __resolveC(self, formation: str) -> str:
-        """
-        The resolveC method takes a str formation as an input. If the last phoneme is on of the "çfhkpsşt", it
-        concatenates given formation with 'ç', if not it concatenates given formation with 'c'.
-
-        PARAMETERS
-        ----------
-        formation : str
-            String input.
-
-        RETURNS
-        -------
-        str
-            Resolved String.
-        """
-        if TurkishLanguage.isSertSessiz(self.__lastPhoneme(self.__formationToCheck)):
-            return formation + 'ç'
-        else:
-            return formation + 'c'
-
-    def __resolveS(self, formation: str) -> str:
-        """
-        The resolveS method takes a str formation as an input. It then concatenates given formation with 's'.
-
-        PARAMETERS
-        ----------
-        formation : str
-            String input.
-
-        RETURNS
-        -------
-        str
-            Resolved String.
-        """
-        return formation + 's'
-
-    def __resolveSh(self, formation: str) -> str:
-        """
-        The resolveSh method takes a str formation as an input. If the last character is a vowel, it concatenates
-        given formation with ş, if the last character is not a vowel, and not 't' it directly returns given formation,
-        but if it is equal to 't', it transforms it to 'd'.
-
-        PARAMETERS
-        ----------
-        formation : str
-            String input.
-
-        RETURNS
-        -------
-        str
-            Resolved String.
-        """
-        if TurkishLanguage.isVowel(formation[len(formation) - 1]):
-            return formation + 'ş'
-        else:
-            if formation[len(formation) - 1] != 't':
-                return formation
-            else:
-                return formation[len(formation) - 1] + 'd'
 
     def __str__(self):
         """
