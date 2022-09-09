@@ -32,8 +32,6 @@ class FsmMorphologicalAnalyzerTest(unittest.TestCase):
                 for line in lines:
                     parsesExpected.append(line.split()[1].strip())
                 parsesGenerated = self.fsm.generateAllParses(word, len(word.getName()) + 5)
-                for parseGenerated in parsesGenerated:
-                    print(parseGenerated.getSurfaceForm() + " " + parseGenerated.__str__())
                 self.assertTrue(len(parsesExpected), len(parsesGenerated))
                 for parseGenerated in parsesGenerated:
                     self.assertTrue(parseGenerated.__str__() in parsesExpected)
