@@ -22,6 +22,10 @@ class FsmParseListTest(unittest.TestCase):
     parse12 : FsmParseList
     parse13 : FsmParseList
     parse14 : FsmParseList
+    parse15 : FsmParseList
+    parse16 : FsmParseList
+    parse17 : FsmParseList
+    parse18 : FsmParseList
 
     def setUp(self) -> None:
         fsm = FsmMorphologicalAnalyzer()
@@ -39,6 +43,10 @@ class FsmParseListTest(unittest.TestCase):
         self.parse12 = fsm.morphologicalAnalysis("o")
         self.parse13 = fsm.morphologicalAnalysis("arabası")
         self.parse14 = fsm.morphologicalAnalysis("sana")
+        self.parse15 = fsm.morphologicalAnalysis("açacağını")
+        self.parse16 = fsm.morphologicalAnalysis("kollarımız")
+        self.parse17 = fsm.morphologicalAnalysis("yapmamızı")
+        self.parse18 = fsm.morphologicalAnalysis("koşmalıyız")
 
     def test_Size(self):
          self.assertEqual(2, self.parse1.size())
@@ -69,6 +77,10 @@ class FsmParseListTest(unittest.TestCase):
          self.assertEqual(Word("değerlendirme"), self.parse4.getParseWithLongestRootWord().root)
          self.assertEqual(Word("soruşturma"), self.parse5.getParseWithLongestRootWord().root)
          self.assertEqual(Word("karşılaştırmalı"), self.parse6.getParseWithLongestRootWord().root)
+         self.assertEqual(Word("aç"), self.parse15.getParseWithLongestRootWord().root)
+         self.assertEqual(Word("kol"), self.parse16.getParseWithLongestRootWord().root)
+         self.assertEqual(Word("yap"), self.parse17.getParseWithLongestRootWord().root)
+         self.assertEqual(Word("koş"), self.parse18.getParseWithLongestRootWord().root)
 
     def test_ReduceToParsesWithSameRootAndPos(self):
         self.parse2.reduceToParsesWithSameRootAndPos(Word("kop+VERB"))

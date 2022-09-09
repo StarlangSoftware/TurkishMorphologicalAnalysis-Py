@@ -141,7 +141,7 @@ class Transition:
             return root.takesRelativeSuffixKi()
         if self.__with == "kü":
             return root.takesRelativeSuffixKu()
-        if self.__with == "dHr":
+        if self.__with == "DHr":
             if self.__toState.getName() == "Adverb":
                 return True
             else:
@@ -315,7 +315,7 @@ class Transition:
                                     formation = stem[:len(stem) - 1] + 'ğ'
                             elif Word.lastPhoneme(stem) == "k":
                                 if self.__startWithVowelorConsonantDrops() and rootWord and root.endingKChangesIntoG() \
-                                        and not root.isProperNoun():
+                                        and (not root.isProperNoun() or startState.__str__() != "ProperRoot"):
                                     formation = stem[:len(stem) - 1] + 'g'
                                 else:
                                     if self.__startWithVowelorConsonantDrops() and (not rootWord or (

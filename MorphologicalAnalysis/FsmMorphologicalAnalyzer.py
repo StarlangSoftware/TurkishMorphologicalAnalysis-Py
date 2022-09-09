@@ -235,6 +235,14 @@ class FsmMorphologicalAnalyzer:
         !isPlural, !isPortmanteau and isDuplicate, if root holds the conditions then it gets the state
         with the name of DuplicateRoot.
 
+        !isPlural, !isPortmanteau and isCode, if root holds the conditions then it gets the state
+        with the name of CodeRoot.
+        Ex : 9400f,
+
+        !isPlural, !isPortmanteau and isMetric, if root holds the conditions then it gets the state
+        with the name of MetricRoot.
+        Ex : 11x8x12,
+
         !isPlural, !isPortmanteau and isNumeral, if root holds the conditions then it gets the state
         with the name of CardinalRoot.
 
@@ -373,6 +381,12 @@ class FsmMorphologicalAnalyzer:
                 fsmParse.append(currentFsmParse)
             if root.isDuplicate():
                 currentFsmParse = FsmParse(root, self.__finiteStateMachine.getState("DuplicateRoot"))
+                fsmParse.append(currentFsmParse)
+            if root.isCode():
+                currentFsmParse = FsmParse(root, self.__finiteStateMachine.getState("CodeRoot"))
+                fsmParse.append(currentFsmParse)
+            if root.isMetric():
+                currentFsmParse = FsmParse(root, self.__finiteStateMachine.getState("MetricRoot"))
                 fsmParse.append(currentFsmParse)
             if root.isNumeral():
                 currentFsmParse = FsmParse(root, self.__finiteStateMachine.getState("CardinalRoot"))
@@ -562,7 +576,7 @@ class FsmMorphologicalAnalyzer:
                 if currentTransition.transitionPossibleForParse(currentFsmParse) \
                         and (currentSurfaceForm != root.getName()
                              or (currentSurfaceForm == root.getName() and
-                                 currentTransition.transitionPossibleWord(root, currentState))):
+                                 currentTransition.transitionPossibleForWord(root, currentState))):
                     tmp = currentTransition.makeTransition(root, currentSurfaceForm, currentFsmParse.getStartState())
                     if len(tmp) <= maxLength:
                         newFsmParse = copy.deepcopy(currentFsmParse)

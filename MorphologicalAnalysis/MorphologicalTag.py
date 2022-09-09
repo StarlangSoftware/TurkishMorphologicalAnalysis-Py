@@ -512,3 +512,11 @@ class MorphologicalTag(Enum):
     Date : 11/06/2018
     """
     DATE = auto()
+    """
+    Code : i7-9700K
+    """
+    CODE = auto()
+    """
+    Metric : 6cmx7cmx8cm
+    """
+    METRIC = auto
