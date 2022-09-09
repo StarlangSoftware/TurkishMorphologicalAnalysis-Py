@@ -15,14 +15,14 @@ class FiniteStateMachineTest(unittest.TestCase):
         self.stateList = self.fsm.getStates()
 
     def test_StateCount(self):
-        self.assertEqual(139, len(self.stateList))
+        self.assertEqual(141, len(self.stateList))
 
     def test_StartEndStates(self):
         endStateCount = 0
         for state in self.stateList:
             if state.isEndState():
                 endStateCount = endStateCount + 1
-        self.assertEqual(35, endStateCount)
+        self.assertEqual(37, endStateCount)
         posCounts = CounterHashMap()
         for state in self.stateList:
             posCounts.put(state.getPos())
@@ -45,7 +45,7 @@ class FiniteStateMachineTest(unittest.TestCase):
         transitionCount = 0
         for state in self.stateList:
             transitionCount += len(self.fsm.getTransitions(state))
-        self.assertEqual(778, transitionCount)
+        self.assertEqual(779, transitionCount)
 
     def test_TransitionWith(self):
         transitionCounts = CounterHashMap()
