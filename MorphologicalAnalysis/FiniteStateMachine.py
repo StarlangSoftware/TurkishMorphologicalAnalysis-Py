@@ -5,7 +5,6 @@ from MorphologicalAnalysis.Transition import Transition
 
 
 class FiniteStateMachine:
-
     __states: list
     __transitions: dict
 
@@ -35,47 +34,58 @@ class FiniteStateMachine:
         self.__transitions = {}
         self.__states = []
         root = xml.etree.ElementTree.parse(fileName).getroot()
-        for stateNode in root:
-            stateName = stateNode.attrib["name"]
-            startState = stateNode.attrib["start"] == "yes"
-            endState = stateNode.attrib["end"] == "yes"
-            if startState:
-                originalPos = stateNode.attrib["originalpos"]
-                self.__states.append(State(stateName, True, endState, originalPos))
+        for state_node in root:
+            state_name = state_node.attrib["name"]
+            start_state = state_node.attrib["start"] == "yes"
+            end_state = state_node.attrib["end"] == "yes"
+            if start_state:
+                original_pos = state_node.attrib["originalpos"]
+                self.__states.append(State(state_name, True, end_state, original_pos))
             else:
-                self.__states.append(State(stateName, False, endState))
-        for stateNode in root:
-            if "name" in stateNode.attrib:
-                stateName = stateNode.attrib["name"]
-                state = self.getState(stateName)
-                for transitionNode in stateNode:
-                    stateName = transitionNode.attrib["name"]
-                    if "transitionname" in transitionNode.attrib:
-                        withName = transitionNode.attrib["transitionname"]
+                self.__states.append(State(state_name, False, end_state))
+        for state_node in root:
+            if "name" in state_node.attrib:
+                state_name = state_node.attrib["name"]
+                state = self.getState(state_name)
+                for transition_node in state_node:
+                    state_name = transition_node.attrib["name"]
+                    if "transitionname" in transition_node.attrib:
+                        with_name = transition_node.attrib["transitionname"]
                     else:
-                        withName = None
-                    if "topos" in transitionNode.attrib:
-                        rootToPos = transitionNode.attrib["topos"]
+                        with_name = None
+                    if "topos" in transition_node.attrib:
+                        root_to_pos = transition_node.attrib["topos"]
                     else:
-                        rootToPos = None
-                    toState = self.getState(stateName)
-                    if toState is not None:
-                        for withNode in transitionNode:
-                            if "name" in withNode.attrib:
-                                withName = withNode.attrib["name"]
-                                if "topos" in withNode.attrib:
-                                    toPos = withNode.attrib["topos"]
+                        root_to_pos = None
+                    to_state = self.getState(state_name)
+                    if to_state is not None:
+                        for with_node in transition_node:
+                            if "name" in with_node.attrib:
+                                with_name = with_node.attrib["name"]
+                                if "topos" in with_node.attrib:
+                                    to_pos = with_node.attrib["topos"]
                                 else:
-                                    toPos = None
+                                    to_pos = None
                             else:
-                                toPos = None
-                            if toPos is None:
-                                if rootToPos is None:
-                                    self.addTransition(state, toState, withNode.text, withName)
+                                to_pos = None
+                            if to_pos is None:
+                                if root_to_pos is None:
+                                    self.addTransition(fromState=state,
+                                                       toState=to_state,
+                                                       _with=with_node.text,
+                                                       withName=with_name)
                                 else:
-                                    self.addTransition(state, toState, withNode.text, withName, rootToPos)
+                                    self.addTransition(fromState=state,
+                                                       toState=to_state,
+                                                       _with=with_node.text,
+                                                       withName=with_name,
+                                                       toPos=root_to_pos)
                             else:
-                                self.addTransition(state, toState, withNode.text, withName, toPos)
+                                self.addTransition(fromState=state,
+                                                   toState=to_state,
+                                                   _with=with_node.text,
+                                                   withName=with_name,
+                                                   toPos=to_pos)
 
     def isValidTransition(self, transition: str) -> bool:
         """
@@ -128,7 +138,12 @@ class FiniteStateMachine:
                 return state
         return None
 
-    def addTransition(self, fromState: State, toState: State, _with: str, withName: str, toPos=None):
+    def addTransition(self,
+                      fromState: State,
+                      toState: State,
+                      _with: str,
+                      withName: str,
+                      toPos=None):
         """
         Another addTransition method which takes additional argument; toPos and. It creates a new Transition
         with given input parameters and adds the transition to transitions list.
@@ -146,13 +161,16 @@ class FiniteStateMachine:
         toPos : str
             String input.
         """
-        newTransition = Transition(_with, toState, withName, toPos)
+        new_transition = Transition(_with=_with,
+                                    toState=toState,
+                                    withName=withName,
+                                    toPos=toPos)
         if fromState in self.__transitions:
-            transitionList = self.__transitions[fromState]
+            transition_list = self.__transitions[fromState]
         else:
-            transitionList = []
-        transitionList.append(newTransition)
-        self.__transitions[fromState] = transitionList
+            transition_list = []
+        transition_list.append(new_transition)
+        self.__transitions[fromState] = transition_list
 
     def getTransitions(self, state: State) -> list:
         """

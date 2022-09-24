@@ -5,43 +5,42 @@ from MorphologicalAnalysis.MorphologicalTag import MorphologicalTag
 
 
 class MetamorphicParse:
-
     """
     MetaMorphemes that can be used.
     """
-    metaMorphemes = ["Ar", "Ar", "CA", "CA",
-                     "CA", "cAsHnA", "CH", "CHk",
-                     "DA", "DAn", "DH", "DHk",
-                     "DHkCA", "DHr", "DHr", "DHr",
-                     "H", "Hl", "Hm", "Hn",
-                     "Hn", "Hn", "HmHz", "HncH",
-                     "HnHz", "Hr", "Hr", "Hs",
-                     "Ht", "Hyor", "Hz", "k",
-                     "ki", "kü", "lAn", "lAr",
-                     "lArDHr", "lArH", "lArH'", "lAs",
-                     "lH", "lHk", "lHm", "m",
-                     "mA", "mA", "mAcA", "mAdAn",
-                     "mAk", "mAksHzHn", "mAktA", "mAlH",
-                     "mAzlHk", "mHs", "n", "n",
-                     "nA", "ncA", "nDA", "nDAn",
-                     "nH", "nHn", "nHz", "nlAr",
-                     "SA", "SAl", "sH", "SH",
-                     "SH", "SHn", "SHnHz", "SHnlAr",
-                     "SHz", "ŞAr", "t", "yA",
-                     "yA", "yAbil", "yAcAk", "yAcAk",
-                     "yAdur", "yAgel", "yAlH", "yAmA",
-                     "yAmAdAn", "yAn", "yArAk", "yAsH",
-                     "yDH", "yH", "yHcH", "yHm",
-                     "yHn", "yHncA", "yHp", "yHs",
-                     "yHver", "yHz", "yken", "ylA",
-                     "ymHs", "ysA", "z", "zsHn",
-                     "zsHnHz", "zlAr", "yAkal", "yAkoy",
-                     "yAgor"]
+    meta_morphemes = ["Ar", "Ar", "CA", "CA",
+                      "CA", "cAsHnA", "CH", "CHk",
+                      "DA", "DAn", "DH", "DHk",
+                      "DHkCA", "DHr", "DHr", "DHr",
+                      "H", "Hl", "Hm", "Hn",
+                      "Hn", "Hn", "HmHz", "HncH",
+                      "HnHz", "Hr", "Hr", "Hs",
+                      "Ht", "Hyor", "Hz", "k",
+                      "ki", "kü", "lAn", "lAr",
+                      "lArDHr", "lArH", "lArH'", "lAs",
+                      "lH", "lHk", "lHm", "m",
+                      "mA", "mA", "mAcA", "mAdAn",
+                      "mAk", "mAksHzHn", "mAktA", "mAlH",
+                      "mAzlHk", "mHs", "n", "n",
+                      "nA", "ncA", "nDA", "nDAn",
+                      "nH", "nHn", "nHz", "nlAr",
+                      "SA", "SAl", "sH", "SH",
+                      "SH", "SHn", "SHnHz", "SHnlAr",
+                      "SHz", "ŞAr", "t", "yA",
+                      "yA", "yAbil", "yAcAk", "yAcAk",
+                      "yAdur", "yAgel", "yAlH", "yAmA",
+                      "yAmAdAn", "yAn", "yArAk", "yAsH",
+                      "yDH", "yH", "yHcH", "yHm",
+                      "yHn", "yHncA", "yHp", "yHs",
+                      "yHver", "yHz", "yken", "ylA",
+                      "ymHs", "ysA", "z", "zsHn",
+                      "zsHnHz", "zlAr", "yAkal", "yAkoy",
+                      "yAgor"]
 
     """
     MorphotacticTags that can be used.
     """
-    morphotacticTags = [
+    morphotactic_tags = [
         MorphologicalTag.AORIST,
         MorphologicalTag.CAUSATIVE,
         MorphologicalTag.ASIF,
@@ -152,7 +151,7 @@ class MetamorphicParse:
         MorphologicalTag.START,
         MorphologicalTag.REPEAT]
 
-    __metaMorphemeList: list
+    __meta_morpheme_list: list
     __root: Word
 
     def __init__(self, parse=None):
@@ -166,14 +165,14 @@ class MetamorphicParse:
             String to parse.
         """
         if parse is not None:
-            self.__metaMorphemeList = []
+            self.__meta_morpheme_list = []
             if parse == "+":
                 self.__root = Word("+")
             else:
                 words = parse.split("\\+")
                 self.__root = Word(words[0])
                 for i in range(1, len(words)):
-                    self.__metaMorphemeList.append(words[i])
+                    self.__meta_morpheme_list.append(words[i])
 
     def getMetaMorphemeTag(self, tag: str) -> list:
         """
@@ -195,9 +194,9 @@ class MetamorphicParse:
         s = tag[0]
         if Word.isPunctuationSymbol(s):
             tag = tag[1:]
-        for j in range(len(MetamorphicParse.metaMorphemes)):
-            if tag == self.metaMorphemes[j]:
-                result.append(MetamorphicParse.morphotacticTags[j])
+        for j in range(len(MetamorphicParse.meta_morphemes)):
+            if tag == self.meta_morphemes[j]:
+                result.append(MetamorphicParse.morphotactic_tags[j])
         return result
 
     def getWord(self) -> Word:
@@ -231,9 +230,9 @@ class MetamorphicParse:
         s = tag[0]
         if Word.isPunctuationSymbol(s):
             tag = tag[1:]
-        for j in range(len(MetamorphicParse.metaMorphemes)):
-            if tag == self.metaMorphemes[j] and parse.containsTag(MetamorphicParse.morphotacticTags[j]):
-                result.append(MetamorphicParse.morphotacticTags[j])
+        for j in range(len(MetamorphicParse.meta_morphemes)):
+            if tag == self.meta_morphemes[j] and parse.containsTag(MetamorphicParse.morphotactic_tags[j]):
+                result.append(MetamorphicParse.morphotactic_tags[j])
         return result
 
     def size(self) -> int:
@@ -245,7 +244,7 @@ class MetamorphicParse:
         int
             The size of the metaMorphemeList.
         """
-        return len(self.__metaMorphemeList) + 1
+        return len(self.__meta_morpheme_list) + 1
 
     def addMetaMorphemeList(self, newTacticSet: str):
         """
@@ -257,7 +256,7 @@ class MetamorphicParse:
             String to add the metaMorphemeList.
         """
         tactics = newTacticSet.split("\\+")
-        self.__metaMorphemeList.extend(tactics)
+        self.__meta_morpheme_list.extend(tactics)
 
     def removeMetaMorphemeFromIndex(self, index: int):
         """
@@ -269,8 +268,8 @@ class MetamorphicParse:
             to remove from metaMorphemeList.
         """
         i = index - 1
-        while i < len(self.__metaMorphemeList):
-            self.__metaMorphemeList.pop(i)
+        while i < len(self.__meta_morpheme_list):
+            self.__meta_morpheme_list.pop(i)
 
     def getMetaMorpheme(self, index: int) -> str:
         """
@@ -289,7 +288,7 @@ class MetamorphicParse:
         if index == 0:
             return self.__root.getName()
         else:
-            return self.__metaMorphemeList[index - 1]
+            return self.__meta_morpheme_list[index - 1]
 
     def __str__(self) -> str:
         """
@@ -301,6 +300,6 @@ class MetamorphicParse:
             String result.
         """
         result = self.__root.getName()
-        for metaMorpheme in self.__metaMorphemeList:
-            result = result + "+" + metaMorpheme
+        for meta_morpheme in self.__meta_morpheme_list:
+            result = result + "+" + meta_morpheme
         return result

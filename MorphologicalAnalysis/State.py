@@ -1,11 +1,15 @@
 class State:
 
-    __startState: bool
-    __endState: bool
+    __start_state: bool
+    __end_state: bool
     __name: str
     __pos: str
 
-    def __init__(self, name: str, startState: bool, endState: bool, pos=None):
+    def __init__(self,
+                 name: str,
+                 startState: bool,
+                 endState: bool,
+                 pos=None):
         """
         Second constructor of the State class which takes 4 parameters as input; String name, boolean startState,
         boolean endState, and String pos and initializes the private variables of the class.
@@ -21,8 +25,8 @@ class State:
         pos : str
             String input.
         """
-        self.__endState = endState
-        self.__startState = startState
+        self.__end_state = endState
+        self.__start_state = startState
         self.__name = name
         self.__pos = pos
 
@@ -68,4 +72,4 @@ class State:
         bool
             boolean endState.
         """
-        return self.__endState
+        return self.__end_state

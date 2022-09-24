@@ -6,7 +6,9 @@ from Language.TurkishLanguage import TurkishLanguage
 class MorphotacticEngine:
 
     @staticmethod
-    def resolveD(root: TxtWord, formation: str, formationToCheck: str) -> str:
+    def resolveD(root: TxtWord,
+                 formation: str,
+                 formationToCheck: str) -> str:
         if root.isAbbreviation():
             return formation + 'd'
         if "0" <= Word.lastPhoneme(formationToCheck) <= "9":
@@ -27,7 +29,10 @@ class MorphotacticEngine:
                 return formation + 'd'
 
     @staticmethod
-    def resolveA(root: TxtWord, formation: str, rootWord: bool, formationToCheck: str):
+    def resolveA(root: TxtWord,
+                 formation: str,
+                 rootWord: bool,
+                 formationToCheck: str):
         if root.isAbbreviation():
             return formation + 'e'
         if "0" <= Word.lastVowel(formationToCheck) <= "9":
@@ -61,8 +66,12 @@ class MorphotacticEngine:
         return formation
 
     @staticmethod
-    def resolveH(root: TxtWord, formation: str, beginningOfSuffix: bool, specialCaseTenseSuffix: bool,
-                   rootWord: bool, formationToCheck: str):
+    def resolveH(root: TxtWord,
+                 formation: str,
+                 beginningOfSuffix: bool,
+                 specialCaseTenseSuffix: bool,
+                 rootWord: bool,
+                 formationToCheck: str):
         if root.isAbbreviation():
             return formation + 'i'
         if beginningOfSuffix and TurkishLanguage.isVowel(Word.lastPhoneme(formationToCheck)) and \
@@ -114,7 +123,8 @@ class MorphotacticEngine:
         return formation
 
     @staticmethod
-    def resolveC(formation: str, formationToCheck: str) -> str:
+    def resolveC(formation: str,
+                 formationToCheck: str) -> str:
         """
         The resolveC method takes a str formation as an input. If the last phoneme is on of the "çfhkpsşt", it
         concatenates given formation with 'ç', if not it concatenates given formation with 'c'.

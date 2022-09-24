@@ -4,8 +4,8 @@ from MorphologicalAnalysis.FsmParse import FsmParse
 
 
 class FsmParseList:
-    __fsmParses: list
-    longestRootExceptions = [
+    __fsm_parses: list
+    longest_root_exceptions = [
         "acağı acak NOUN VERB", "acağım acak NOUN VERB", "acağımı acak NOUN VERB", "acağımız acak NOUN VERB",
         "acağın acak NOUN VERB",
         "acağına acak NOUN VERB", "acağını acak NOUN VERB", "acağının acak NOUN VERB", "acağınız acak NOUN VERB",
@@ -103,7 +103,7 @@ class FsmParseList:
                 fsmParses.pop(i + 1)
                 i = i - 1
             i = i + 1
-        self.__fsmParses = fsmParses
+        self.__fsm_parses = fsmParses
 
     def size(self) -> int:
         """
@@ -114,7 +114,7 @@ class FsmParseList:
         int
             The size of fsmParses list.
         """
-        return len(self.__fsmParses)
+        return len(self.__fsm_parses)
 
     def getFsmParse(self, index: int) -> FsmParse:
         """
@@ -130,7 +130,7 @@ class FsmParseList:
         FsmParse
             The item of fsmParses list at given index.
         """
-        return self.__fsmParses[index]
+        return self.__fsm_parses[index]
 
     def rootWords(self) -> str:
         """
@@ -143,12 +143,12 @@ class FsmParseList:
         str
             String result that has root words.
         """
-        result = self.__fsmParses[0].getWord().getName()
-        currentRoot = result
-        for i in range(1, len(self.__fsmParses)):
-            if self.__fsmParses[i].getWord().getName() != currentRoot:
-                currentRoot = self.__fsmParses[i].getWord().getName()
-                result = result + "$" + currentRoot
+        result = self.__fsm_parses[0].getWord().getName()
+        current_root = result
+        for i in range(1, len(self.__fsm_parses)):
+            if self.__fsm_parses[i].getWord().getName() != current_root:
+                current_root = self.__fsm_parses[i].getWord().getName()
+                result = result + "$" + current_root
         return result
 
     def reduceToParsesWithSameRootAndPos(self, currentWithPos: Word):
@@ -163,9 +163,9 @@ class FsmParseList:
             Word input.
         """
         i = 0
-        while i < len(self.__fsmParses):
-            if self.__fsmParses[i].getWordWithPos() != currentWithPos:
-                self.__fsmParses.pop(i)
+        while i < len(self.__fsm_parses):
+            if self.__fsm_parses[i].getWordWithPos() != currentWithPos:
+                self.__fsm_parses.pop(i)
             else:
                 i = i + 1
 
@@ -174,15 +174,18 @@ class FsmParseList:
         The getParseWithLongestRootWord method returns the parse with the longest root word. If more than one parse has
         the longest root word, the first parse with that root is returned. If the longest root word belongs to an
         exceptional case, the parse with the next longest root word that does not, is returned.
-        :return: Parse with the longest root word.
+
+        RETURNS
+        -------
+        Parse with the longest root word.
         """
-        maxLength = -1
-        bestParse = None
-        for currentParse in self.__fsmParses:
-            if len(currentParse.getWord().getName()) > maxLength and not self.isLongestRootException(currentParse):
-                maxLength = len(currentParse.getWord().getName())
-                bestParse = currentParse
-        return bestParse
+        max_length = -1
+        best_parse = None
+        for current_parse in self.__fsm_parses:
+            if len(current_parse.getWord().getName()) > max_length and not self.isLongestRootException(current_parse):
+                max_length = len(current_parse.getWord().getName())
+                best_parse = current_parse
+        return best_parse
 
     def isLongestRootException(self, fsmParse: FsmParse) -> bool:
         """
@@ -191,20 +194,20 @@ class FsmParseList:
         :param fsmParse: FsmParse input
         :return: true if the longest root belongs to an exceptional case, false otherwise.
         """
-        surfaceForm = fsmParse.getSurfaceForm()
+        surface_form = fsmParse.getSurfaceForm()
         root = fsmParse.getWord().getName()
-        for longestRootException in self.longestRootExceptions:
-            exceptionItems = longestRootException.split(" ")
-            surfaceFormEnding = exceptionItems[0]
-            longestRootEnding = exceptionItems[1]
-            longestRootPos = exceptionItems[2]
-            possibleRootPos = exceptionItems[3]
-            possibleRoot = surfaceForm.replace(surfaceFormEnding, "")
-            if surfaceForm.endswith(surfaceFormEnding) and root.endswith(longestRootEnding) \
-                    and fsmParse.getRootPos() == longestRootPos:
-                for currentParse in self.__fsmParses:
-                    if currentParse.getWord().getName() == possibleRoot \
-                            and currentParse.getRootPos() == possibleRootPos:
+        for longest_root_exception in self.longest_root_exceptions:
+            exception_items = longest_root_exception.split(" ")
+            surface_form_ending = exception_items[0]
+            longest_root_ending = exception_items[1]
+            longest_root_pos = exception_items[2]
+            possible_root_pos = exception_items[3]
+            possible_root = surface_form.replace(surface_form_ending, "")
+            if surface_form.endswith(surface_form_ending) and root.endswith(longest_root_ending) \
+                    and fsmParse.getRootPos() == longest_root_pos:
+                for current_parse in self.__fsm_parses:
+                    if current_parse.getWord().getName() == possible_root \
+                            and current_parse.getRootPos() == possible_root_pos:
                         return True
         return False
 
@@ -220,9 +223,9 @@ class FsmParseList:
             String input.
         """
         i = 0
-        while i < len(self.__fsmParses):
-            if self.__fsmParses[i].getWord().getName() != currentRoot:
-                self.__fsmParses.pop(i)
+        while i < len(self.__fsm_parses):
+            if self.__fsm_parses[i].getWord().getName() != currentRoot:
+                self.__fsm_parses.pop(i)
             else:
                 i = i + 1
 
@@ -244,15 +247,15 @@ class FsmParseList:
         """
         result = []
         i = 0
-        while i < len(self.__fsmParses):
+        while i < len(self.__fsm_parses):
             if i == 0:
-                initial = [self.__fsmParses[i]]
+                initial = [self.__fsm_parses[i]]
                 result.append(FsmParseList(initial))
             else:
-                if self.__fsmParses[i].getWordWithPos() == self.__fsmParses[i - 1].getWordWithPos():
-                    result[len(result) - 1].__fsmParses.append(self.__fsmParses[i])
+                if self.__fsm_parses[i].getWordWithPos() == self.__fsm_parses[i - 1].getWordWithPos():
+                    result[len(result) - 1].__fsm_parses.append(self.__fsm_parses[i])
                 else:
-                    initial = [self.__fsmParses[i]]
+                    initial = [self.__fsm_parses[i]]
                     result.append(FsmParseList(initial))
             i = i + 1
         return result
@@ -279,32 +282,32 @@ class FsmParseList:
         str
             result str that has the accumulated items of analyses array.
         """
-        analyses = [""] * len(self.__fsmParses)
-        removePrefix = True
-        removeSuffix = True
-        if len(self.__fsmParses) == 1:
-            return self.__fsmParses[0].transitionList()[self.__fsmParses[0].transitionList().index("+") + 1]
-        for i in range(len(self.__fsmParses)):
-            analyses[i] = self.__fsmParses[i].transitionList()
-        while removePrefix:
-            removePrefix = True
-            for i in range(len(self.__fsmParses) - 1):
+        analyses = [""] * len(self.__fsm_parses)
+        remove_prefix = True
+        remove_suffix = True
+        if len(self.__fsm_parses) == 1:
+            return self.__fsm_parses[0].transitionList()[self.__fsm_parses[0].transitionList().index("+") + 1]
+        for i in range(len(self.__fsm_parses)):
+            analyses[i] = self.__fsm_parses[i].transitionList()
+        while remove_prefix:
+            remove_prefix = True
+            for i in range(len(self.__fsm_parses) - 1):
                 if "+" not in analyses[i] or "+" not in analyses[i + 1] or \
                         analyses[i][:analyses[i].index("+") + 1] != analyses[i + 1][:analyses[i + 1].index("+") + 1]:
-                    removePrefix = False
+                    remove_prefix = False
                     break
-            if removePrefix:
-                for i in range(len(self.__fsmParses)):
+            if remove_prefix:
+                for i in range(len(self.__fsm_parses)):
                     analyses[i] = analyses[i][analyses[i].index("+") + 1:]
-        while removeSuffix:
-            removeSuffix = True
-            for i in range(len(self.__fsmParses) - 1):
+        while remove_suffix:
+            remove_suffix = True
+            for i in range(len(self.__fsm_parses) - 1):
                 if "+" not in analyses[i] or "+" not in analyses[i + 1] or \
                         analyses[i][analyses[i].rindex("+") + 1] != analyses[i + 1][analyses[i + 1].rindex("+") + 1]:
-                    removeSuffix = False
+                    remove_suffix = False
                     break
-            if removeSuffix:
-                for i in range(len(self.__fsmParses)):
+            if remove_suffix:
+                for i in range(len(self.__fsm_parses)):
                     analyses[i] = analyses[i][:analyses[i].rindex("+")]
         for i in range(len(analyses)):
             for j in range(i + 1, len(analyses)):
@@ -325,6 +328,6 @@ class FsmParseList:
             Result str that has the items of fsmParses list.
         """
         result = ""
-        for i in range(len(self.__fsmParses)):
-            result += self.__fsmParses[i] + "\n"
+        for i in range(len(self.__fsm_parses)):
+            result += self.__fsm_parses[i] + "\n"
         return result

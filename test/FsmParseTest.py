@@ -78,5 +78,6 @@ class FsmParseTest(unittest.TestCase):
         self.assertEqual("AdjectiveRoot(güç)+Possesive3(güçleri)+Case1(güçleriyle)", self.parse8.suffixList())
         self.assertEqual("VerbalRoot(F5PW)(bul)+Negativema(bulma)+AdjectiveParticiple(bulmayacak)+Adjective(bulmayacakları)", self.parse9.suffixList())
 
+
 if __name__ == '__main__':
     unittest.main()

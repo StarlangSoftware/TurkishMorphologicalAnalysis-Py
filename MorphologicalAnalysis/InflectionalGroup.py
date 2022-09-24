@@ -96,19 +96,19 @@ class InflectionalGroup:
         self.__IG = []
         st = IG
         while "+" in st:
-            morphologicalTag = st[:st.index("+")]
-            tag = InflectionalGroup.getMorphologicalTag(morphologicalTag)
+            morphological_tag = st[:st.index("+")]
+            tag = InflectionalGroup.getMorphologicalTag(morphological_tag)
             if tag is not None:
                 self.__IG.append(tag)
             else:
-                print("Morphological Tag " + morphologicalTag + " not found")
+                print("Morphological Tag " + morphological_tag + " not found")
             st = st[st.index("+") + 1:]
-        morphologicalTag = st
-        tag = InflectionalGroup.getMorphologicalTag(morphologicalTag)
+        morphological_tag = st
+        tag = InflectionalGroup.getMorphologicalTag(morphological_tag)
         if tag is not None:
             self.__IG.append(tag)
         else:
-            print("Morphological Tag " + morphologicalTag + " not found")
+            print("Morphological Tag " + morphological_tag + " not found")
 
     @staticmethod
     def getMorphologicalTag(tag: str) -> MorphologicalTag:
@@ -241,8 +241,8 @@ class InflectionalGroup:
         bool
             True if tag matches with the tag in IG, False otherwise.
         """
-        for currentTag in self.__IG:
-            if tag == currentTag:
+        for current_tag in self.__IG:
+            if tag == current_tag:
                 return True
         return False
 

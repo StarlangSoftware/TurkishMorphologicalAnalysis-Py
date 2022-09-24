@@ -8,13 +8,18 @@ from MorphologicalAnalysis.State import State
 
 
 class Transition:
-    __toState: State
-    __with: str
-    __withName: str
-    __formationToCheck: str
-    __toPos: str
 
-    def __init__(self, _with: str, toState=None, withName=None, toPos=None):
+    __to_state: State
+    __with: str
+    __with_name: str
+    __formation_to_check: str
+    __to_pos: str
+
+    def __init__(self,
+                 _with: str,
+                 toState=None,
+                 withName=None,
+                 toPos=None):
         """
         Constructor of Transition class which takes a State, and three str as input. Then it
         initializes toState, with, withName and toPos variables with given inputs.
@@ -31,9 +36,9 @@ class Transition:
             String input.
         """
         self.__with = _with
-        self.__toState = toState
-        self.__withName = withName
-        self.__toPos = toPos
+        self.__to_state = toState
+        self.__with_name = withName
+        self.__to_pos = toPos
 
     def toState(self) -> State:
         """
@@ -44,7 +49,7 @@ class Transition:
         State
             toState variable.
         """
-        return self.__toState
+        return self.__to_state
 
     def toPos(self) -> str:
         """
@@ -55,9 +60,11 @@ class Transition:
         str
             toPos variable.
         """
-        return self.__toPos
+        return self.__to_pos
 
-    def transitionPossibleForString(self, currentSurfaceForm: str, realSurfaceForm: str) -> bool:
+    def transitionPossibleForString(self,
+                                    currentSurfaceForm: str,
+                                    realSurfaceForm: str) -> bool:
         """
         The transitionPossibleForString method takes two str as inputs; currentSurfaceForm and realSurfaceForm. If the
         length of the given currentSurfaceForm is greater than the given realSurfaceForm, it directly returns true. If
@@ -85,19 +92,19 @@ class Transition:
         """
         if len(currentSurfaceForm) == 0 or len(currentSurfaceForm) >= len(realSurfaceForm):
             return True
-        searchString = realSurfaceForm[len(currentSurfaceForm):]
+        search_string = realSurfaceForm[len(currentSurfaceForm):]
         for ch in self.__with:
             if ch == 'C':
-                return 'c' in searchString or 'ç' in searchString
+                return 'c' in search_string or 'ç' in search_string
             elif ch == 'D':
-                return 'd' in searchString or 't' in searchString
+                return 'd' in search_string or 't' in search_string
             elif ch == 'c' or ch == 'e' or ch == 'r' or ch == 'p' or ch == 'l' or ch == 'b' or ch == 'd' or ch == 'g' \
                     or ch == 'o' or ch == 'm' or ch == 'v' or ch == 'i' or ch == 'ü' or ch == 'z':
-                return ch in searchString
+                return ch in search_string
             elif ch == 'A':
-                return 'a' in searchString or 'e' in searchString
+                return 'a' in search_string or 'e' in search_string
             elif ch == 'k':
-                return 'k' in searchString or 'g' in searchString or 'ğ' in searchString
+                return 'k' in search_string or 'g' in search_string or 'ğ' in search_string
         return True
 
     def transitionPossibleForParse(self, currentFsmParse: FsmParse) -> bool:
@@ -119,18 +126,20 @@ class Transition:
                 currentFsmParse.getWord().getName() != currentFsmParse.getSurfaceForm():
             return False
         if currentFsmParse.getVerbAgreement() is not None and currentFsmParse.getPossesiveAgreement() is not None and \
-                self.__withName is not None:
-            if currentFsmParse.getVerbAgreement() == "A3PL" and self.__withName == "^DB+VERB+ZERO+PRES+A1SG":
+                self.__with_name is not None:
+            if currentFsmParse.getVerbAgreement() == "A3PL" and self.__with_name == "^DB+VERB+ZERO+PRES+A1SG":
                 return False
             if currentFsmParse.getVerbAgreement() == "A3SG" and (currentFsmParse.getPossesiveAgreement() == "P1SG" or
                                                                  currentFsmParse.getPossesiveAgreement() == "P2SG") \
-                    and self.__withName == "^DB+VERB+ZERO+PRES+A1PL":
+                    and self.__with_name == "^DB+VERB+ZERO+PRES+A1PL":
                 return False
         return True
 
-    def transitionPossibleForWord(self, root: TxtWord, fromState: State) -> bool:
+    def transitionPossibleForWord(self,
+                                  root: TxtWord,
+                                  fromState: State) -> bool:
         if root.isAdjective() and ((root.isNominal() and not root.isExceptional()) or root.isPronoun()) \
-                and self.__toState.getName() == "NominalRoot(ADJ)" and self.__with == "0":
+                and self.__to_state.getName() == "NominalRoot(ADJ)" and self.__with == "0":
             return False
         if root.isAdjective() and root.isNominal() and self.__with == "^DB+VERB+ZERO+PRES+A3PL" \
                 and fromState.getName() == "AdjectiveRoot":
@@ -142,13 +151,13 @@ class Transition:
         if self.__with == "kü":
             return root.takesRelativeSuffixKu()
         if self.__with == "DHr":
-            if self.__toState.getName() == "Adverb":
+            if self.__to_state.getName() == "Adverb":
                 return True
             else:
                 return root.takesSuffixDIRAsFactitive()
         if self.__with == "Hr" and (
-                self.__toState.getName() == "AdjectiveRoot(VERB)" or self.__toState.getName() == "OtherTense" or
-                self.__toState.getName() == "OtherTense2"):
+                self.__to_state.getName() == "AdjectiveRoot(VERB)" or self.__to_state.getName() == "OtherTense" or
+                self.__to_state.getName() == "OtherTense2"):
             return root.takesSuffixIRAsAorist()
         return True
 
@@ -243,35 +252,38 @@ class Transition:
         else:
             return self.makeTransition(root, stem, State("NominalRoot", True, False))
 
-    def makeTransition(self, root: TxtWord, stem: str, startState: State) -> str:
-        rootWord = root.getName() == stem or (root.getName() + "'") == stem
+    def makeTransition(self,
+                       root: TxtWord,
+                       stem: str,
+                       startState: State) -> str:
+        root_word = root.getName() == stem or (root.getName() + "'") == stem
         formation = stem
         i = 0
         if self.__with == "0":
             return stem
-        if (stem == "bu" or stem == "şu" or stem == "o") and rootWord and self.__with == "ylA":
+        if (stem == "bu" or stem == "şu" or stem == "o") and root_word and self.__with == "ylA":
             return stem + "nunla"
         if self.__with == "yA":
             if stem == "ben":
                 return "bana"
             if stem == "sen":
                 return "sana"
-        self.__formationToCheck = stem
-        if rootWord and self.__withFirstChar() == "y" and root.vowelEChangesToIDuringYSuffixation() \
+        self.__formation_to_check = stem
+        if root_word and self.__withFirstChar() == "y" and root.vowelEChangesToIDuringYSuffixation() \
                 and (self.__with[1] != "H" or root.getName() == "ye"):
             formation = stem[:len(stem) - 1] + "i"
-            self.__formationToCheck = formation
+            self.__formation_to_check = formation
         else:
-            if rootWord and (self.__with == "Hl" or self.__with == "Hn") and root.lastIdropsDuringPassiveSuffixation():
+            if root_word and (self.__with == "Hl" or self.__with == "Hn") and root.lastIdropsDuringPassiveSuffixation():
                 formation = stem[:len(stem) - 2] + stem[len(stem) - 1]
-                self.__formationToCheck = stem
+                self.__formation_to_check = stem
             else:
-                if rootWord and root.showsSuRegularities() and self.__startWithVowelorConsonantDrops() and \
+                if root_word and root.showsSuRegularities() and self.__startWithVowelorConsonantDrops() and \
                         not self.__with.startswith("y"):
                     formation = stem + 'y'
-                    self.__formationToCheck = formation
+                    self.__formation_to_check = formation
                 else:
-                    if rootWord and root.duplicatesDuringSuffixation() and not startState.getName().startswith(
+                    if root_word and root.duplicatesDuringSuffixation() and not startState.getName().startswith(
                                     "VerbalRoot") and TurkishLanguage.isConsonantDrop(self.__with[0]):
                         if self.softenDuringSuffixation(root):
                             if Word.lastPhoneme(stem) == "p":
@@ -280,9 +292,9 @@ class Transition:
                                 formation = stem[:len(stem) - 1] + "dd"
                         else:
                             formation = stem + stem[len(stem) - 1]
-                        self.__formationToCheck = formation
+                        self.__formation_to_check = formation
                     else:
-                        if rootWord and root.lastIdropsDuringSuffixation() and \
+                        if root_word and root.lastIdropsDuringSuffixation() and \
                                 not startState.getName().startswith(
                                     "VerbalRoot") and not startState.getName().startswith("ProperRoot") \
                                 and self.__startWithVowelorConsonantDrops():
@@ -295,34 +307,34 @@ class Transition:
                                     formation = stem[:len(stem) - 2] + 'c'
                             else:
                                 formation = stem[:len(stem) - 2] + stem[len(stem) - 1]
-                            self.__formationToCheck = stem
+                            self.__formation_to_check = stem
                         else:
                             if Word.lastPhoneme(stem) == "p":
-                                if self.__startWithVowelorConsonantDrops() and rootWord and \
+                                if self.__startWithVowelorConsonantDrops() and root_word and \
                                         self.softenDuringSuffixation(root):
                                     formation = stem[:len(stem) - 1] + 'b'
                             elif Word.lastPhoneme(stem) == "t":
-                                if self.__startWithVowelorConsonantDrops() and rootWord and \
+                                if self.__startWithVowelorConsonantDrops() and root_word and \
                                         self.softenDuringSuffixation(root):
                                     formation = stem[:len(stem) - 1] + 'd'
                             elif Word.lastPhoneme(stem) == "ç":
-                                if self.__startWithVowelorConsonantDrops() and rootWord and \
+                                if self.__startWithVowelorConsonantDrops() and root_word and \
                                         self.softenDuringSuffixation(root):
                                     formation = stem[:len(stem) - 1] + 'c'
                             elif Word.lastPhoneme(stem) == "g":
-                                if self.__startWithVowelorConsonantDrops() and rootWord and \
+                                if self.__startWithVowelorConsonantDrops() and root_word and \
                                         self.softenDuringSuffixation(root):
                                     formation = stem[:len(stem) - 1] + 'ğ'
                             elif Word.lastPhoneme(stem) == "k":
-                                if self.__startWithVowelorConsonantDrops() and rootWord and root.endingKChangesIntoG() \
+                                if self.__startWithVowelorConsonantDrops() and root_word and root.endingKChangesIntoG() \
                                         and (not root.isProperNoun() or startState.__str__() != "ProperRoot"):
                                     formation = stem[:len(stem) - 1] + 'g'
                                 else:
-                                    if self.__startWithVowelorConsonantDrops() and (not rootWord or (
+                                    if self.__startWithVowelorConsonantDrops() and (not root_word or (
                                             self.softenDuringSuffixation(root) and (
                                             not root.isProperNoun() or startState.__str__() != "ProperRoot"))):
                                         formation = stem[:len(stem) - 1] + 'ğ'
-                            self.__formationToCheck = formation
+                            self.__formation_to_check = formation
         if TurkishLanguage.isConsonantDrop(self.__withFirstChar()) and not TurkishLanguage.isVowel(stem[len(stem) - 1])\
                 and (root.isNumeral() or root.isReal() or root.isFraction() or root.isTime() or root.isDate()
                      or root.isPercent() or root.isRange()) \
@@ -338,7 +350,7 @@ class Transition:
                 i = 1
         else:
             if (TurkishLanguage.isConsonantDrop(self.__withFirstChar()) and TurkishLanguage.isConsonant(
-                    Word.lastPhoneme(stem))) or (rootWord and root.consonantSMayInsertedDuringPossesiveSuffixation()):
+                    Word.lastPhoneme(stem))) or (root_word and root.consonantSMayInsertedDuringPossesiveSuffixation()):
                 if self.__with[0] == "'":
                     formation = formation + "'"
                     if root.isAbbreviation():
@@ -349,16 +361,16 @@ class Transition:
                     i = 1
         while i < len(self.__with):
             if self.__with[i] == "D":
-                formation = MorphotacticEngine.resolveD(root, formation, self.__formationToCheck)
+                formation = MorphotacticEngine.resolveD(root, formation, self.__formation_to_check)
             elif self.__with[i] == "A":
-                formation = MorphotacticEngine.resolveA(root, formation, rootWord, self.__formationToCheck)
+                formation = MorphotacticEngine.resolveA(root, formation, root_word, self.__formation_to_check)
             elif self.__with[i] == "H":
                 if self.__with[0] != "'":
-                    formation = MorphotacticEngine.resolveH(root, formation, i == 0, self.__with.startswith("Hyor"), rootWord, self.__formationToCheck)
+                    formation = MorphotacticEngine.resolveH(root, formation, i == 0, self.__with.startswith("Hyor"), root_word, self.__formation_to_check)
                 else:
-                    formation = MorphotacticEngine.resolveH(root, formation, i == 1, False, rootWord, self.__formationToCheck)
+                    formation = MorphotacticEngine.resolveH(root, formation, i == 1, False, root_word, self.__formation_to_check)
             elif self.__with[i] == "C":
-                formation = MorphotacticEngine.resolveC(formation, self.__formationToCheck)
+                formation = MorphotacticEngine.resolveC(formation, self.__formation_to_check)
             elif self.__with[i] == "S":
                 formation = MorphotacticEngine.resolveS(formation)
             elif self.__with[i] == "Ş":
@@ -368,7 +380,7 @@ class Transition:
                     formation += "ş"
                 else:
                     formation += self.__with[i]
-            self.__formationToCheck = formation
+            self.__formation_to_check = formation
             i = i + 1
         return formation
 
@@ -392,4 +404,4 @@ class Transition:
         str
             The withName variable.
         """
-        return self.__withName
+        return self.__with_name

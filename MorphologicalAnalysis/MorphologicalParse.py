@@ -5,7 +5,8 @@ from MorphologicalAnalysis.MorphologicalTag import MorphologicalTag
 
 
 class MorphologicalParse:
-    inflectionalGroups: list
+
+    inflectional_groups: list
     root: Word
 
     def __init__(self, parse=None):
@@ -46,25 +47,25 @@ class MorphologicalParse:
                     iGs.append(st[:st.index("^DB+")])
                     st = st[st.index("^DB+") + 4:]
                 iGs.append(st)
-                self.inflectionalGroups = []
+                self.inflectional_groups = []
                 if iGs[0] == "++Punc":
                     self.root = Word("+")
-                    self.inflectionalGroups.append(InflectionalGroup("Punc"))
+                    self.inflectional_groups.append(InflectionalGroup("Punc"))
                 else:
                     if iGs[0].index("+") != -1:
                         self.root = Word(iGs[0][:iGs[0].index("+")])
-                        self.inflectionalGroups.append(InflectionalGroup(iGs[0][iGs[0].index("+") + 1:]))
+                        self.inflectional_groups.append(InflectionalGroup(iGs[0][iGs[0].index("+") + 1:]))
                     else:
                         self.root = Word(iGs[0])
                     for i in range(1, len(iGs)):
-                        self.inflectionalGroups.append(InflectionalGroup(iGs[i]))
+                        self.inflectional_groups.append(InflectionalGroup(iGs[i]))
             elif isinstance(parse, list):
-                self.inflectionalGroups = []
+                self.inflectional_groups = []
                 if parse[0].index("+") != -1:
                     self.root = Word(parse[0][:parse[0].index("+")])
-                    self.inflectionalGroups.append(InflectionalGroup(parse[0][parse[0].index("+") + 1:]))
+                    self.inflectional_groups.append(InflectionalGroup(parse[0][parse[0].index("+") + 1:]))
                 for i in range(1, len(parse)):
-                    self.inflectionalGroups.append(InflectionalGroup(parse[i]))
+                    self.inflectional_groups.append(InflectionalGroup(parse[i]))
 
     def getWord(self) -> Word:
         """
@@ -87,9 +88,9 @@ class MorphologicalParse:
         str
             String that contains transition list.
         """
-        result = self.inflectionalGroups[0].__str__()
-        for i in range(1, len(self.inflectionalGroups)):
-            result = result + "+" + self.inflectionalGroups[i].__str__()
+        result = self.inflectional_groups[0].__str__()
+        for i in range(1, len(self.inflectional_groups)):
+            result = result + "+" + self.inflectional_groups[i].__str__()
         return result
 
     def getInflectionalGroupString(self, index: int) -> str:
@@ -109,9 +110,9 @@ class MorphologicalParse:
             Corresponding item of inflectionalGroups at given index as a str.
         """
         if index == 0:
-            return self.root.getName() + "+" + self.inflectionalGroups[0].__str__()
+            return self.root.getName() + "+" + self.inflectional_groups[0].__str__()
         else:
-            return self.inflectionalGroups[index].__str__()
+            return self.inflectional_groups[index].__str__()
 
     def getInflectionalGroup(self, index: int) -> InflectionalGroup:
         """
@@ -128,7 +129,7 @@ class MorphologicalParse:
         InflectionalGroup
             InflectionalGroup at given index.
         """
-        return self.inflectionalGroups[index]
+        return self.inflectional_groups[index]
 
     def getLastInflectionalGroup(self) -> InflectionalGroup:
         """
@@ -139,7 +140,7 @@ class MorphologicalParse:
         InflectionalGroup
             The last InflectionalGroup of inflectionalGroups list.
         """
-        return self.inflectionalGroups[len(self.inflectionalGroups) - 1]
+        return self.inflectional_groups[len(self.inflectional_groups) - 1]
 
     def getTag(self, index: int) -> str:
         """
@@ -160,7 +161,7 @@ class MorphologicalParse:
         size = 1
         if index == 0:
             return self.root.getName()
-        for group in self.inflectionalGroups:
+        for group in self.inflectional_groups:
             if index < size + group.size():
                 return InflectionalGroup.getTagString(group.getTag(index - size))
             size += group.size()
@@ -177,7 +178,7 @@ class MorphologicalParse:
             Total size of the inflectionalGroups list.
         """
         size = 1
-        for group in self.inflectionalGroups:
+        for group in self.inflectional_groups:
             size += group.size()
         return size
 
@@ -190,7 +191,7 @@ class MorphologicalParse:
         int
             The size of the inflectionalGroups list.
         """
-        return len(self.inflectionalGroups)
+        return len(self.inflectional_groups)
 
     def firstInflectionalGroup(self) -> InflectionalGroup:
         """
@@ -201,7 +202,7 @@ class MorphologicalParse:
         InflectionalGroup
             The first inflectional group of inflectionalGroups list.
         """
-        return self.inflectionalGroups[0]
+        return self.inflectional_groups[0]
 
     def lastInflectionalGroup(self) -> InflectionalGroup:
         """
@@ -212,7 +213,7 @@ class MorphologicalParse:
         InflectionalGroup
             The last inflectional group of inflectionalGroups list.
         """
-        return self.inflectionalGroups[len(self.inflectionalGroups) - 1]
+        return self.inflectional_groups[len(self.inflectional_groups) - 1]
 
     def getWordWithPos(self) -> Word:
         """
@@ -258,9 +259,9 @@ class MorphologicalParse:
             The MorphologicalTag of last inflectional group if it is one of the NOMINATIVE, ACCUSATIVE, DATIVE, LOCATIVE
             or ABLATIVE cases, null otherwise.
         """
-        caseTag = self.lastInflectionalGroup().containsCase()
-        if caseTag is not None:
-            return InflectionalGroup.getTagString(caseTag)
+        case_tag = self.lastInflectionalGroup().containsCase()
+        if case_tag is not None:
+            return InflectionalGroup.getTagString(case_tag)
         else:
             return "NULL"
 
@@ -512,8 +513,8 @@ class MorphologicalParse:
         bool
             True if InflectionalGroup's MorphologicalTags are from the agreement plural or possessive plural.
         """
-        for inflectionalGroup in self.inflectionalGroups:
-            if inflectionalGroup.containsPlural():
+        for inflectional_group in self.inflectional_groups:
+            if inflectional_group.containsPlural():
                 return True
         return False
 
@@ -543,8 +544,8 @@ class MorphologicalParse:
         bool
             True if the input matches with on of the tags in the IG, False otherwise.
         """
-        for inflectionalGroup in self.inflectionalGroups:
-            if inflectionalGroup.containsTag(tag):
+        for inflectional_group in self.inflectional_groups:
+            if inflectional_group.containsTag(tag):
                 return True
         return False
 
@@ -758,55 +759,55 @@ class MorphologicalParse:
         return ""
 
     def getUniversalDependencyFeatures(self, uPos: str) -> list:
-        featureList = []
-        pronType = self.getPronType()
-        if pronType != "" and uPos != "ADJ" and uPos != "VERB" and uPos != "CCONJ":
-            featureList.append("PronType=" + pronType)
-        numType = self.getNumType()
-        if numType != "" and uPos != "VERB":
-            featureList.append("NumType=" + numType)
+        feature_list = []
+        pron_type = self.getPronType()
+        if pron_type != "" and uPos != "ADJ" and uPos != "VERB" and uPos != "CCONJ":
+            feature_list.append("PronType=" + pron_type)
+        num_type = self.getNumType()
+        if num_type != "" and uPos != "VERB":
+            feature_list.append("NumType=" + num_type)
         reflex = self.getReflex()
         if reflex != "":
-            featureList.append("Reflex=" + reflex)
+            feature_list.append("Reflex=" + reflex)
         degree = self.getDegree()
         if degree != "":
-            featureList.append("Degree=" + degree)
+            feature_list.append("Degree=" + degree)
         if self.isNoun() or self.isVerb():
             number = self.getNumber()
             if number != "":
-                featureList.append("Number=" + number)
+                feature_list.append("Number=" + number)
         if self.isNoun():
             case_ = self.getCase()
             if case_ != "":
-                featureList.append("Case=" + case_)
+                feature_list.append("Case=" + case_)
         if self.containsTag(MorphologicalTag.DETERMINER):
             definite = self.getDefinite()
             if definite != "":
-                featureList.append("Definite=" + definite)
+                feature_list.append("Definite=" + definite)
         if self.isVerb():
             polarity = self.getPolarity()
             if polarity != "":
-                featureList.append("Polarity=" + polarity)
+                feature_list.append("Polarity=" + polarity)
             person = self.getPerson()
             if person != "" and uPos != "PROPN":
-                featureList.append("Person=" + person)
+                feature_list.append("Person=" + person)
             voice = self.getVoice()
             if voice != "":
-                featureList.append("Voice=" + voice)
+                feature_list.append("Voice=" + voice)
             aspect = self.getAspect()
             if aspect != "" and uPos != "PROPN":
-                featureList.append("Aspect=" + aspect)
+                feature_list.append("Aspect=" + aspect)
             tense = self.getTense()
             if tense != "" and uPos != "PROPN":
-                featureList.append("Tense=" + tense)
+                feature_list.append("Tense=" + tense)
             mood = self.getMood()
             if mood != "" and uPos != "PROPN":
-                featureList.append("Mood=" + mood)
-            verbForm = self.getVerbForm()
-            if verbForm != "":
-                featureList.append("VerbForm=" + verbForm)
-        featureList.sort()
-        return featureList
+                feature_list.append("Mood=" + mood)
+            verb_form = self.getVerbForm()
+            if verb_form != "":
+                feature_list.append("VerbForm=" + verb_form)
+        feature_list.sort()
+        return feature_list
 
     def getUniversalDependencyPos(self) -> str:
         lemma = self.root.getName()
@@ -853,7 +854,7 @@ class MorphologicalParse:
         str
             result str.
         """
-        result = self.root.getName() + "+" + self.inflectionalGroups[0].__str__()
-        for i in range(1, len(self.inflectionalGroups)):
-            result = result + "^DB+" + self.inflectionalGroups[i].__str__()
+        result = self.root.getName() + "+" + self.inflectional_groups[0].__str__()
+        for i in range(1, len(self.inflectional_groups)):
+            result = result + "^DB+" + self.inflectional_groups[i].__str__()
         return result
