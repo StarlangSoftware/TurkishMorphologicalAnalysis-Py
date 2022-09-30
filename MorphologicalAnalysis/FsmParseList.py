@@ -181,6 +181,8 @@ class FsmParseList:
         """
         max_length = -1
         best_parse = None
+        if len(self.__fsm_parses) > 0:
+            best_parse = self.__fsm_parses[0]
         for current_parse in self.__fsm_parses:
             if len(current_parse.getWord().getName()) > max_length and not self.isLongestRootException(current_parse):
                 max_length = len(current_parse.getWord().getName())
