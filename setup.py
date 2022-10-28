@@ -6,7 +6,7 @@ long_description = (this_directory / "README.md").read_text(encoding='utf-8')
 
 setup(
     name='NlpToolkit-MorphologicalAnalysis',
-    version='1.0.44',
+    version='1.0.45',
     packages=['MorphologicalAnalysis', 'MorphologicalAnalysis.data', 'DisambiguationCorpus'],
     package_data={'MorphologicalAnalysis.data': ['*.xml']},
     url='https://github.com/StarlangSoftware/TurkishMorphologicalAnalysis-Py',
