@@ -37,6 +37,14 @@ class FsmMorphologicalAnalyzerTest(unittest.TestCase):
                 for parseGenerated in parsesGenerated:
                     self.assertTrue(parseGenerated.__str__() in parsesExpected)
 
+    def test_morphologicalAnalysisSpecialProperNoun(self):
+        self.assertTrue(self.fsm.morphologicalAnalysis("Times'ın").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("Times'tır").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("Times'mış").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("Twitter'ın").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("Twitter'dır").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("Twitter'mış").size() != 0)
+
     def test_morphologicalAnalysisDataTimeNumber(self):
         self.assertTrue(self.fsm.morphologicalAnalysis("3/4").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("3\\/4").size() != 0)

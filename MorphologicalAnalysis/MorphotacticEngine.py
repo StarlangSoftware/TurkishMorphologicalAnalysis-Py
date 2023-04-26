@@ -101,12 +101,15 @@ class MorphotacticEngine:
                 (TurkishLanguage.isBackRoundedVowel(Word.lastVowel(formationToCheck))
                  and root.notObeysVowelHarmonyDuringAgglutination()):
             return formation + 'ü'
-        if TurkishLanguage.isFrontUnroundedVowel(Word.lastVowel(formationToCheck)) or \
-                (Word.lastVowel(formationToCheck) == 'a' and root.notObeysVowelHarmonyDuringAgglutination()):
+        if (TurkishLanguage.isFrontUnroundedVowel(Word.lastVowel(formationToCheck)) and
+                                                 not root.notObeysVowelHarmonyDuringAgglutination()) or \
+                ((Word.lastVowel(formationToCheck) == 'a' or Word.lastVowel(formationToCheck) == 'â') and root.notObeysVowelHarmonyDuringAgglutination()):
             return formation + 'i'
         if TurkishLanguage.isBackRoundedVowel(Word.lastVowel(formationToCheck)):
             return formation + 'u'
-        if TurkishLanguage.isBackUnroundedVowel(Word.lastVowel(formationToCheck)):
+        if TurkishLanguage.isBackUnroundedVowel(Word.lastVowel(formationToCheck)) or \
+                (TurkishLanguage.isFrontUnroundedVowel(Word.lastVowel(formationToCheck)) and
+                                                 root.notObeysVowelHarmonyDuringAgglutination()):
             return formation + 'ı'
         if root.isNumeral() or root.isFraction() or root.isReal():
             if root.getName().endswith("6") or root.getName().endswith("40") or root.getName().endswith("60") \
