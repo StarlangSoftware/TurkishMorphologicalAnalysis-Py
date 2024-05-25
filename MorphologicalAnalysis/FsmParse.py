@@ -584,6 +584,10 @@ class FsmParse(MorphologicalParse):
         return result
 
     def getWithList(self) -> list:
+        """
+        Accessor to the __with_list list.
+        :return: __with_list list.
+        """
         return self.__with_list
 
     def withList(self) -> str:
