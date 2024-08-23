@@ -391,6 +391,7 @@ class Transition:
                     formation = MorphotacticEngine.resolveH(root, formation, i == 0, self.__with.startswith("Hyor"), root_word, formation_to_check)
                 else:
                     formation = MorphotacticEngine.resolveH(root, formation, i == 1, False, root_word, formation_to_check)
+                root_word = False
             elif self.__with[i] == "C":
                 formation = MorphotacticEngine.resolveC(formation, formation_to_check)
             elif self.__with[i] == "S":

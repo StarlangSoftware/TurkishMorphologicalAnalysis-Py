@@ -46,10 +46,10 @@ class FsmMorphologicalAnalyzerTest(unittest.TestCase):
         self.assertTrue(self.fsm.morphologicalAnalysis("Twitter'mış").size() != 0)
 
     def test_morphologicalAnalysisNewWords(self):
-        self.assertTrue(self.fsm.robustMorphologicalAnalysis("googlecılardan").size() != 0)
-        self.assertTrue(self.fsm.robustMorphologicalAnalysis("zaptıraplaştırılmayana").size() != 0)
-        self.assertTrue(self.fsm.robustMorphologicalAnalysis("abzürtleşenmiş").size() != 0)
-        self.assertTrue(self.fsm.robustMorphologicalAnalysis("vışlığından").size() != 0)
+        self.assertTrue(self.fsm.robustMorphologicalAnalysis("googlecılardan").size() == 6)
+        self.assertTrue(self.fsm.robustMorphologicalAnalysis("zaptıraplaştırılmayana").size() == 8)
+        self.assertTrue(self.fsm.robustMorphologicalAnalysis("abzürtleşenmiş").size() == 5)
+        self.assertTrue(self.fsm.robustMorphologicalAnalysis("vışlığından").size() == 8)
 
     def test_morphologicalAnalysisDataTimeNumber(self):
         self.assertTrue(self.fsm.morphologicalAnalysis("3/4").size() != 0)

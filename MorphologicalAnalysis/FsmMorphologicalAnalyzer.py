@@ -83,7 +83,7 @@ class FsmMorphologicalAnalyzer:
         lines = file.readlines()
         file.close()
         for suffix in lines:
-            reverse_suffix = self.reverseString(suffix)
+            reverse_suffix = self.reverseString(suffix.strip())
             self.__suffix_trie.addWord(reverse_suffix, Word(reverse_suffix))
 
     def addParsedSurfaceForms(self, fileName: str):
@@ -1203,7 +1203,7 @@ class FsmMorphologicalAnalyzer:
                 self.__cache.add(surface_form, fsm_parse_list)
             return fsm_parse_list
 
-    def rootOfPossiblyNewWord(self, surfaceForm: str) -> TxtWord:
+    def rootOfPossiblyNewWord(self, surfaceForm: str) -> [TxtWord]:
         """
         Identifies a possible new root word for a given surface form. It also adds the new root form to the dictionary
         for further usage. The method first searches the suffix trie for the reverse string of the surface form. This
@@ -1218,23 +1218,19 @@ class FsmMorphologicalAnalyzer:
         :return: Possible new root form.
         """
         words = self.__suffix_trie.getWordsWithPrefix(self.reverseString(surfaceForm))
-        max_length = 0
-        longest_word = None
+        candidate_list = []
         for word in words:
-            if len(word.getName()) > max_length:
-                longest_word = surfaceForm[0: len(surfaceForm) - len(word.getName())]
-                max_length = len(word.getName())
-        if max_length != 0:
-            if longest_word.endswith("ğ"):
-                longest_word = longest_word[0: len(longest_word) - 1] + "k"
-                new_word = TxtWord(longest_word, "CL_ISIM")
+            candidate_word = surfaceForm[0: len(surfaceForm) - len(word.getName())]
+            if candidate_word.endswith("ğ"):
+                candidate_word = candidate_word[0: len(candidate_word) - 1] + "k"
+                new_word = TxtWord(candidate_word, "CL_ISIM")
                 new_word.addFlag("IS_SD")
             else:
-                new_word = TxtWord(longest_word, "CL_ISIM")
+                new_word = TxtWord(candidate_word, "CL_ISIM")
                 new_word.addFlag("CL_FIIL")
-            self.__dictionary_trie.addWord(longest_word, new_word)
-            return new_word
-        return None
+            candidate_list.append(new_word)
+            self.__dictionary_trie.addWord(candidate_word, new_word)
+        return candidate_list
 
     def robustMorphologicalAnalysis(self, sentenceOrSurfaceForm):
         """
@@ -1278,15 +1274,14 @@ class FsmMorphologicalAnalyzer:
                 fsm_parse = []
                 if self.isProperNoun(surface_form):
                     fsm_parse.append(FsmParse(surface_form, self.__finite_state_machine.getState("ProperRoot")))
-                elif self.__isCode(surface_form):
+                if self.__isCode(surface_form):
                     fsm_parse.append(FsmParse(surface_form, self.__finite_state_machine.getState("CodeRoot")))
-                else:
-                    new_root = self.rootOfPossiblyNewWord(surface_form)
-                    if new_root is not None:
-                        fsm_parse.append(FsmParse(surface_form, self.__finite_state_machine.getState("VerbalRoot")))
-                        fsm_parse.append(FsmParse(surface_form, self.__finite_state_machine.getState("NominalRoot")))
-                    else:
-                        fsm_parse.append(FsmParse(surface_form, self.__finite_state_machine.getState("NominalRoot")))
+                new_candidate_list = self.rootOfPossiblyNewWord(surface_form)
+                if len(new_candidate_list) != 0:
+                    for word in new_candidate_list:
+                        fsm_parse.append(FsmParse(word, self.__finite_state_machine.getState("VerbalRoot")))
+                        fsm_parse.append(FsmParse(word, self.__finite_state_machine.getState("NominalRoot")))
+                fsm_parse.append(FsmParse(surface_form, self.__finite_state_machine.getState("NominalRoot")))
                 return FsmParseList(self.__parseWord(fsm_parse, surface_form))
             else:
                 return current_parse

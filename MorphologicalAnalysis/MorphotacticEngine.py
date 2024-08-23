@@ -149,7 +149,7 @@ class MorphotacticEngine:
                  and root.notObeysVowelHarmonyDuringAgglutination()):
             return formation + 'ü'
         if (TurkishLanguage.isFrontUnroundedVowel(Word.lastVowel(formationToCheck)) and
-                                                 not root.notObeysVowelHarmonyDuringAgglutination()) or \
+                (not root.notObeysVowelHarmonyDuringAgglutination() or not rootWord)) or \
                 ((Word.lastVowel(formationToCheck) == 'a' or Word.lastVowel(formationToCheck) == 'â') and root.notObeysVowelHarmonyDuringAgglutination()):
             return formation + 'i'
         if TurkishLanguage.isBackRoundedVowel(Word.lastVowel(formationToCheck)):

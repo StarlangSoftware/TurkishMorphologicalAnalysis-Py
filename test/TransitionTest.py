@@ -54,6 +54,7 @@ class TransitionTest(unittest.TestCase):
         self.assertTrue(self.fsm.morphologicalAnalysis("çalkalıyor").size() != 0)
 
     def test_A(self):
+        self.assertTrue(self.fsm.morphologicalAnalysis("saatinizi").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("alkole").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("anormale").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("sakala").size() != 0)
