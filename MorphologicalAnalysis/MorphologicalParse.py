@@ -609,10 +609,21 @@ class MorphologicalParse:
         "Int" if the pronoun is a question pronoun; "Dem" if the pronoun is a demonstrative pronoun.
         """
         lemma = self.root.getName()
-        if self.containsTag(MorphologicalTag.PERSONALPRONOUN):
+        if self.containsTag(MorphologicalTag.DETERMINER):
+            return "Art"
+        if lemma == "kendi" or self.containsTag(MorphologicalTag.PERSONALPRONOUN):
             return "Prs"
         if lemma == "birbiri" or lemma == "birbirleri":
             return "Rcp"
+        if lemma == "birçoğu" or lemma == "hep" or lemma == "kimse" \
+                or lemma == "bazı" or lemma == "biri" or lemma == "çoğu" \
+                or lemma == "hepsi" or lemma == "diğeri" or lemma == "tümü" \
+                or lemma == "herkes" or lemma == "kimi" or lemma == "öbür" \
+                or lemma == "öteki" or lemma == "birkaçı" or lemma == "topu" \
+                or lemma == "başkası":
+            return "Ind"
+        if lemma == "hiçbiri":
+            return "Neg"
         if lemma == "kim" or lemma == "nere" or lemma == "ne" or lemma == "hangi" or lemma == "nasıl" or \
                 lemma == "kaç" or lemma == "mi" or lemma == "mı" or lemma == "mu" or lemma == "mü":
             return "Int"
@@ -627,12 +638,14 @@ class MorphologicalParse:
         distributive number such as 'beşinci'; "Card" if the number is cardinal or any number or the word is 'kaç'.
         """
         lemma = self.root.getName()
-        if self.containsTag(MorphologicalTag.CARDINAL) or self.containsTag(MorphologicalTag.NUMBER) or lemma == "kaç":
-            return "Card"
+        if lemma == "%" or self.containsTag(MorphologicalTag.TIME):
+            return "Ord"
         if self.containsTag(MorphologicalTag.ORDINAL) or lemma == "kaçıncı":
             return "Ord"
         if self.containsTag(MorphologicalTag.DISTRIBUTIVE):
             return "Dist"
+        if self.containsTag(MorphologicalTag.CARDINAL) or self.containsTag(MorphologicalTag.NUMBER) or lemma == "kaç":
+            return "Card"
         return ""
 
     def getReflex(self) -> str:
@@ -661,6 +674,20 @@ class MorphologicalParse:
             return "Plur"
         return ""
 
+    def getPossessiveNumber(self) -> str:
+        """
+        Returns the possessive agreement of the parse for the universal dependency feature [Pos].
+        :return: "Sing" if the possessive agreement of the parse is singular (contains P1SG, P2SG, P3SG); "Plur" if the
+        possessive agreement of the parse is plural (contains P1PL, P2PL, P3PL).
+        """
+        if self.containsTag(MorphologicalTag.P1SG) or \
+                self.containsTag(MorphologicalTag.P2SG) or self.containsTag(MorphologicalTag.P3SG):
+            return "Sing"
+        if self.containsTag(MorphologicalTag.P1PL) or \
+                self.containsTag(MorphologicalTag.P2PL) or self.containsTag(MorphologicalTag.P3PL):
+            return "Plur"
+        return ""
+
     def getCase(self) -> str:
         """
         Returns the case marking of the parse for the universal dependency feature case.
@@ -679,6 +706,8 @@ class MorphologicalParse:
             return "Ins"
         if self.containsTag(MorphologicalTag.ABLATIVE) or self.containsTag(MorphologicalTag.PCABLATIVE):
             return "Abl"
+        if self.containsTag(MorphologicalTag.EQUATIVE):
+            return "Equ"
         if self.containsTag(MorphologicalTag.NOMINATIVE) or self.containsTag(MorphologicalTag.PCNOMINATIVE):
             return "Nom"
         return ""
@@ -691,9 +720,9 @@ class MorphologicalParse:
         """
         lemma = self.root.getName()
         if self.containsTag(MorphologicalTag.DETERMINER):
-            if lemma == "bir" or lemma == "bazı" or lemma == "birkaç":
+            if lemma == "bir" or lemma == "bazı" or lemma == "birkaç" or lemma == "birçok" or lemma == "kimi":
                 return "Ind"
-            if lemma == "her" or lemma == "bu" or lemma == "şu" or lemma == "o" or lemma == "bütün":
+            if lemma == "her" or lemma == "hangi" or lemma == "bu" or lemma == "şu" or lemma == "o" or lemma == "bütün":
                 return "Def"
         return ""
 
@@ -714,6 +743,8 @@ class MorphologicalParse:
         Returns the polarity of the verb for the universal dependency feature polarity.
         :return: "Pos" for positive polarity containing tag POS; "Neg" for negative polarity containing tag NEG.
         """
+        if self.root.getName() == "değil":
+            return "Neg"
         if self.containsTag(MorphologicalTag.POSITIVE):
             return "Pos"
         if self.containsTag(MorphologicalTag.NEGATIVE):
@@ -736,6 +767,19 @@ class MorphologicalParse:
             return "3"
         return ""
 
+    def getPossessivePerson(self) -> str:
+        """
+        Returns the person of the possessive agreement of the parse for the universal dependency feature [pos].
+        :return: "1" for first person; "2" for second person; "3" for third person.
+        """
+        if self.containsTag(MorphologicalTag.P1SG) or self.containsTag(MorphologicalTag.P1PL):
+            return "1"
+        if self.containsTag(MorphologicalTag.P2SG) or self.containsTag(MorphologicalTag.P2PL):
+            return "2"
+        if self.containsTag(MorphologicalTag.P3SG) or self.containsTag(MorphologicalTag.P3PL):
+            return "3"
+        return ""
+
     def getVoice(self) -> str:
         """
         Returns the voice of the verb parse for the universal dependency feature voice.
@@ -743,6 +787,8 @@ class MorphologicalParse:
         "Rcp" if the verb parse is reciprocal; "Cau" if the verb parse is only causative; "Rfl" if the verb parse is
         reflexive.
         """
+        if self.containsTag(MorphologicalTag.CAUSATIVE) and self.containsTag(MorphologicalTag.PASSIVE):
+            return "CauPass"
         if self.containsTag(MorphologicalTag.PASSIVE):
             return "Pass"
         if self.containsTag(MorphologicalTag.RECIPROCAL):
@@ -779,12 +825,12 @@ class MorphologicalParse:
         :return: "Past" for simple past tense; "Fut" for future tense; "Pqp" for narrative past tense; "Pres" for other
         past tenses.
         """
-        if self.containsTag(MorphologicalTag.PASTTENSE):
+        if self.containsTag(MorphologicalTag.PASTTENSE) and self.containsTag(MorphologicalTag.NARRATIVE):
+            return "Pqp"
+        if self.containsTag(MorphologicalTag.PASTTENSE) or self.containsTag(MorphologicalTag.NARRATIVE):
             return "Past"
         if self.containsTag(MorphologicalTag.FUTURE):
             return "Fut"
-        if self.containsTag(MorphologicalTag.NARRATIVE) and self.containsTag(MorphologicalTag.PASTTENSE):
-            return "Pqp"
         if not self.containsTag(MorphologicalTag.PASTTENSE) and not self.containsTag(MorphologicalTag.FUTURE):
             return "Pres"
         return ""
@@ -803,6 +849,22 @@ class MorphologicalParse:
         "Imp" for imperative; "Cnd" for simple conditional; "Des" for simple desiderative; "Opt" for optative; "Nec" for
         simple necessitative; "Pot" for simple potential; "Gen" for simple suffix of a general modality.
         """
+        if (self.containsTag(MorphologicalTag.COPULA) or self.containsTag(MorphologicalTag.AORIST)) and self.containsTag(MorphologicalTag.NECESSITY) and self.containsTag(MorphologicalTag.ABLE):
+            return "GenNecPot"
+        if (self.containsTag(MorphologicalTag.COPULA) or self.containsTag(MorphologicalTag.AORIST)) and self.containsTag(MorphologicalTag.CONDITIONAL) and self.containsTag(MorphologicalTag.ABLE):
+            return "CndGenPot"
+        if (self.containsTag(MorphologicalTag.COPULA) or self.containsTag(MorphologicalTag.AORIST)) and self.containsTag(MorphologicalTag.NECESSITY):
+            return "GenNec"
+        if (self.containsTag(MorphologicalTag.COPULA) or self.containsTag(MorphologicalTag.AORIST)) and self.containsTag(MorphologicalTag.ABLE):
+            return "GenPot"
+        if self.containsTag(MorphologicalTag.NECESSITY) and self.containsTag(MorphologicalTag.ABLE):
+            return "NecPot"
+        if self.containsTag(MorphologicalTag.DESIRE) and self.containsTag(MorphologicalTag.ABLE):
+            return "DesPot"
+        if self.containsTag(MorphologicalTag.CONDITIONAL) and self.containsTag(MorphologicalTag.ABLE):
+            return "CndPot"
+        if self.containsTag(MorphologicalTag.CONDITIONAL) and self.containsTag(MorphologicalTag.COPULA) or self.containsTag(MorphologicalTag.AORIST):
+            return "CndGen"
         if self.containsTag(MorphologicalTag.IMPERATIVE):
             return "Imp"
         if self.containsTag(MorphologicalTag.CONDITIONAL):
@@ -813,6 +875,10 @@ class MorphologicalParse:
             return "Opt"
         if self.containsTag(MorphologicalTag.NECESSITY):
             return "Nec"
+        if self.containsTag(MorphologicalTag.ZERO) and not self.containsTag(MorphologicalTag.A3PL):
+            return "Gen"
+        if self.containsTag(MorphologicalTag.ABLE):
+            return "Pot"
         if self.containsTag(MorphologicalTag.PASTTENSE) or self.containsTag(MorphologicalTag.PROGRESSIVE1) \
                 or self.containsTag(MorphologicalTag.FUTURE):
             return "Ind"
@@ -827,11 +893,27 @@ class MorphologicalParse:
         if self.containsTag(MorphologicalTag.PASTPARTICIPLE) or self.containsTag(MorphologicalTag.FUTUREPARTICIPLE) \
                 or self.containsTag(MorphologicalTag.PRESENTPARTICIPLE):
             return "Part"
+        if self.containsTag(MorphologicalTag.INFINITIVE) or self.containsTag(MorphologicalTag.INFINITIVE2):
+            return "Vnoun"
         if self.containsTag(MorphologicalTag.SINCEDOINGSO) or self.containsTag(MorphologicalTag.WITHOUTHAVINGDONESO) \
                 or self.containsTag(MorphologicalTag.WITHOUTBEINGABLETOHAVEDONESO) \
                 or self.containsTag(MorphologicalTag.BYDOINGSO) or self.containsTag(MorphologicalTag.AFTERDOINGSO) \
                 or self.containsTag(MorphologicalTag.INFINITIVE3):
             return "Conv"
+        if self.containsTag(MorphologicalTag.COPULA) or self.containsTag(MorphologicalTag.ABLE) or self.containsTag(MorphologicalTag.AORIST) or self.containsTag(MorphologicalTag.PROGRESSIVE2) \
+                or self.containsTag(MorphologicalTag.DESIRE) or self.containsTag(MorphologicalTag.NECESSITY) or self.containsTag(MorphologicalTag.CONDITIONAL) or self.containsTag(MorphologicalTag.IMPERATIVE) or self.containsTag(MorphologicalTag.OPTATIVE) \
+                or self.containsTag(MorphologicalTag.PASTTENSE) or self.containsTag(MorphologicalTag.NARRATIVE) or self.containsTag(MorphologicalTag.PROGRESSIVE1) or self.containsTag(MorphologicalTag.FUTURE) \
+                or (self.containsTag(MorphologicalTag.ZERO) and not self.containsTag(MorphologicalTag.A3PL)):
+            return "Fin"
+        return ""
+
+    def getEvident(self) -> str:
+        if self.containsTag(MorphologicalTag.NARRATIVE):
+            return "Nfh"
+        elif self.containsTag(MorphologicalTag.COPULA) or self.containsTag(MorphologicalTag.ABLE) or self.containsTag(MorphologicalTag.AORIST) or self.containsTag(MorphologicalTag.PROGRESSIVE2) \
+                or self.containsTag(MorphologicalTag.DESIRE) or self.containsTag(MorphologicalTag.NECESSITY) or self.containsTag(MorphologicalTag.CONDITIONAL) or self.containsTag(MorphologicalTag.IMPERATIVE) or self.containsTag(MorphologicalTag.OPTATIVE) \
+                or self.containsTag(MorphologicalTag.PASTTENSE) or self.containsTag(MorphologicalTag.NARRATIVE) or self.containsTag(MorphologicalTag.PROGRESSIVE1) or self.containsTag(MorphologicalTag.FUTURE):
+            return "Fh"
         return ""
 
     def getUniversalDependencyFeatures(self, uPos: str) -> list:
@@ -843,22 +925,31 @@ class MorphologicalParse:
         """
         feature_list = []
         pron_type = self.getPronType()
-        if pron_type != "" and uPos != "ADJ" and uPos != "VERB" and uPos != "CCONJ":
+        if pron_type != "" and uPos != "NOUN" and uPos != "ADJ" and uPos != "VERB" and uPos != "CCONJ" and uPos != "PROPN":
             feature_list.append("PronType=" + pron_type)
         num_type = self.getNumType()
-        if num_type != "" and uPos != "VERB":
+        if num_type != "" and uPos != "VERB" and uPos != "NOUN" and uPos != "ADV":
             feature_list.append("NumType=" + num_type)
         reflex = self.getReflex()
-        if reflex != "":
+        if reflex != "" and uPos != "ADJ" and uPos != "VERB":
             feature_list.append("Reflex=" + reflex)
         degree = self.getDegree()
-        if degree != "":
+        if degree != "" and uPos != "ADJ":
             feature_list.append("Degree=" + degree)
-        if self.isNoun() or self.isVerb():
+        if self.isNoun() or self.isVerb() or self.root.getName() == "mi" or (pron_type != "" and pron_type != "Art"):
             number = self.getNumber()
             if number != "":
                 feature_list.append("Number=" + number)
-        if self.isNoun():
+            possessive_number = self.getPossessiveNumber()
+            if possessive_number != "":
+                feature_list.append("Number[psor]=" + possessive_number)
+            person = self.getPerson()
+            if person != "" and uPos != "PROPN":
+                feature_list.append("Person=" + person)
+            possessive_person = self.getPossessivePerson()
+            if possessive_person != "" and uPos != "PROPN":
+                feature_list.append("Person[psor]=" + possessive_person)
+        if self.isNoun() or (pron_type != "" and pron_type != "Art"):
             case_ = self.getCase()
             if case_ != "":
                 feature_list.append("Case=" + case_)
@@ -866,28 +957,28 @@ class MorphologicalParse:
             definite = self.getDefinite()
             if definite != "":
                 feature_list.append("Definite=" + definite)
-        if self.isVerb():
+        if self.isVerb() or self.root.getName() == "mi":
             polarity = self.getPolarity()
             if polarity != "":
                 feature_list.append("Polarity=" + polarity)
-            person = self.getPerson()
-            if person != "" and uPos != "PROPN":
-                feature_list.append("Person=" + person)
             voice = self.getVoice()
-            if voice != "":
+            if voice != "" and self.root.getName() != "mi":
                 feature_list.append("Voice=" + voice)
             aspect = self.getAspect()
-            if aspect != "" and uPos != "PROPN":
+            if aspect != "" and uPos != "PROPN" and self.root.getName() != "mi":
                 feature_list.append("Aspect=" + aspect)
             tense = self.getTense()
             if tense != "" and uPos != "PROPN":
                 feature_list.append("Tense=" + tense)
             mood = self.getMood()
-            if mood != "" and uPos != "PROPN":
+            if mood != "" and uPos != "PROPN" and self.root.getName() != "mi":
                 feature_list.append("Mood=" + mood)
             verb_form = self.getVerbForm()
             if verb_form != "":
                 feature_list.append("VerbForm=" + verb_form)
+            evident = self.getEvident()
+            if evident != "":
+                feature_list.append("Evident=" + evident)
         feature_list.sort()
         return feature_list
 
