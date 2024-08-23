@@ -1192,7 +1192,7 @@ class FsmMorphologicalAnalyzer:
                     elif self.__isDouble(possible_root):
                         self.__dictionary_trie.addWord(possible_root, TxtWord(possible_root, "IS_REELSAYI"))
                         fsm_parse = self.__analysis(lowercased, self.isProperNoun(surface_form))
-                    elif Word.isCapital(possible_root):
+                    elif Word.isCapital(possible_root) or possible_root[0:1] in "QXW":
                         possible_root_lowercased = self.__toLower(possible_root)
                         if possible_root_lowercased in self.__pronunciations:
                             is_root_replaced = True
