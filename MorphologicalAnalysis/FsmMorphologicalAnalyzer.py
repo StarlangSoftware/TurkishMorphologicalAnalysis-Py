@@ -9,6 +9,7 @@ from Dictionary.Trie.Trie import Trie
 from Dictionary.TxtDictionary import TxtDictionary
 from Dictionary.TxtWord import TxtWord
 from Dictionary.Word import Word
+from Util.FileUtils import FileUtils
 
 from MorphologicalAnalysis.FiniteStateMachine import FiniteStateMachine
 from MorphologicalAnalysis.FsmParse import FsmParse
@@ -28,6 +29,7 @@ class FsmMorphologicalAnalyzer:
     __cache: LRUCache
     __most_used_patterns = {}
     __parsed_surface_forms = None
+    __pronunciations = {}
 
     MAX_DISTANCE = 2
 
@@ -59,6 +61,7 @@ class FsmMorphologicalAnalyzer:
         self.__dictionary_trie = self.__dictionary.prepareTrie()
         self.prepareSuffixTrie(pkg_resources.resource_filename(__name__, 'data/suffixes.txt'))
         self.__cache = LRUCache(cacheSize)
+        self.addPronunciations(pkg_resources.resource_filename(__name__, 'data/pronunciations.txt'))
 
     def reverseString(self, s: str) -> str:
         """
@@ -92,13 +95,14 @@ class FsmMorphologicalAnalyzer:
         which have at least one morphological analysis in  Turkish.
         :param fileName: Input file containing analyzable surface forms and their root forms.
         """
-        self.__parsed_surface_forms = dict()
-        file = open(fileName, "r")
-        lines = file.readlines()
-        file.close()
-        for line in lines:
-            items = line.strip().split()
-            self.__parsed_surface_forms[items[0]] = items[1]
+        self.__parsed_surface_forms = FileUtils.readHashMap(fileName)
+
+    def addPronunciations(self, fileName: str):
+        """
+        Reads the file for foreign words and their pronunciations.
+        :param fileName: Input file containing foreign words and their pronunciations.
+        """
+        self.__pronunciations = FileUtils.readHashMap(fileName)
 
     def getPossibleWords(self,
                          morphologicalParse: MorphologicalParse,
@@ -1142,6 +1146,9 @@ class FsmMorphologicalAnalyzer:
                 result.append(word_fsm_parse_list)
             return result
         elif isinstance(sentenceOrSurfaceForm, str):
+            possible_root_lowercased = ""
+            lowercased = self.__toLower(sentenceOrSurfaceForm)
+            is_root_replaced = False
             surface_form = sentenceOrSurfaceForm
             if self.__parsed_surface_forms is not None and surface_form in self.__parsed_surface_forms \
                     and not self.__isRange(surface_form) and not self.__isTime(surface_form) \
@@ -1151,9 +1158,8 @@ class FsmMorphologicalAnalyzer:
             if self.__cache.contains(surface_form):
                 return self.__cache.get(surface_form)
             if self.patternMatches("(\\w|Ç|Ş|İ|Ü|Ö)\\.", surface_form):
-                self.__dictionary_trie.addWord(self.__toLower(surface_form),
-                                               TxtWord(self.__toLower(surface_form), "IS_OA"))
-            default_fsm_parse = self.__analysis(self.__toLower(surface_form), self.isProperNoun(surface_form))
+                self.__dictionary_trie.addWord(lowercased, TxtWord(lowercased, "IS_OA"))
+            default_fsm_parse = self.__analysis(lowercased, self.isProperNoun(surface_form))
             if len(default_fsm_parse) > 0:
                 fsm_parse_list = FsmParseList(default_fsm_parse)
                 self.__cache.add(surface_form, fsm_parse_list)
@@ -1164,40 +1170,52 @@ class FsmMorphologicalAnalyzer:
                 if len(possible_root) > 0:
                     if "/" in possible_root or "\\/" in possible_root:
                         self.__dictionary_trie.addWord(possible_root, TxtWord(possible_root, "IS_KESIR"))
-                        fsm_parse = self.__analysis(self.__toLower(surface_form), self.isProperNoun(surface_form))
+                        fsm_parse = self.__analysis(lowercased, self.isProperNoun(surface_form))
                     elif self.__isDate(possible_root):
                         self.__dictionary_trie.addWord(possible_root, TxtWord(possible_root, "IS_DATE"))
-                        fsm_parse = self.__analysis(self.__toLower(surface_form), self.isProperNoun(surface_form))
+                        fsm_parse = self.__analysis(lowercased, self.isProperNoun(surface_form))
                     elif self.patternMatches("\\d+/\\d+", possible_root):
                         self.__dictionary_trie.addWord(possible_root, TxtWord(possible_root, "IS_KESIR"))
-                        fsm_parse = self.__analysis(self.__toLower(surface_form), self.isProperNoun(surface_form))
+                        fsm_parse = self.__analysis(lowercased, self.isProperNoun(surface_form))
                     elif self.__isPercent(possible_root):
                         self.__dictionary_trie.addWord(possible_root, TxtWord(possible_root, "IS_PERCENT"))
-                        fsm_parse = self.__analysis(self.__toLower(surface_form), self.isProperNoun(surface_form))
+                        fsm_parse = self.__analysis(lowercased, self.isProperNoun(surface_form))
                     elif self.__isTime(possible_root):
                         self.__dictionary_trie.addWord(possible_root, TxtWord(possible_root, "IS_ZAMAN"))
-                        fsm_parse = self.__analysis(self.__toLower(surface_form), self.isProperNoun(surface_form))
+                        fsm_parse = self.__analysis(lowercased, self.isProperNoun(surface_form))
                     elif self.__isRange(possible_root):
                         self.__dictionary_trie.addWord(possible_root, TxtWord(possible_root, "IS_RANGE"))
-                        fsm_parse = self.__analysis(self.__toLower(surface_form), self.isProperNoun(surface_form))
+                        fsm_parse = self.__analysis(lowercased, self.isProperNoun(surface_form))
                     elif self.__isInteger(possible_root):
                         self.__dictionary_trie.addWord(possible_root, TxtWord(possible_root, "IS_SAYI"))
-                        fsm_parse = self.__analysis(self.__toLower(surface_form), self.isProperNoun(surface_form))
+                        fsm_parse = self.__analysis(lowercased, self.isProperNoun(surface_form))
                     elif self.__isDouble(possible_root):
                         self.__dictionary_trie.addWord(possible_root, TxtWord(possible_root, "IS_REELSAYI"))
-                        fsm_parse = self.__analysis(self.__toLower(surface_form), self.isProperNoun(surface_form))
+                        fsm_parse = self.__analysis(lowercased, self.isProperNoun(surface_form))
                     elif Word.isCapital(possible_root):
-                        new_word = None
-                        word = self.__dictionary.getWord(self.__toLower(possible_root))
-                        if word is not None and isinstance(word, TxtWord):
-                            word.addFlag("IS_OA")
+                        possible_root_lowercased = self.__toLower(possible_root)
+                        if possible_root_lowercased in self.__pronunciations:
+                            is_root_replaced = True
+                            pronunciation = self.__pronunciations[possible_root_lowercased]
+                            word = self.__dictionary.getWord(pronunciation)
+                            if word is not None and isinstance(word, TxtWord):
+                                word.addFlag("IS_OA")
+                            else:
+                                new_word = TxtWord(pronunciation, "IS_OA")
+                                self.__dictionary_trie.addWord(pronunciation, new_word)
+                            replaced_word = pronunciation + lowercased[len(possible_root_lowercased):]
+                            fsm_parse = self.__analysis(replaced_word, self.isProperNoun(surface_form))
                         else:
-                            new_word = TxtWord(self.__toLower(possible_root), "IS_OA")
-                            self.__dictionary_trie.addWord(self.__toLower(possible_root), new_word)
-                        fsm_parse = self.__analysis(self.__toLower(surface_form), self.isProperNoun(surface_form))
-                        if len(fsm_parse) == 0 and new_word is not None:
-                            new_word.addFlag("IS_KIS")
-                            fsm_parse = self.__analysis(self.__toLower(surface_form), self.isProperNoun(surface_form))
+                            word = self.__dictionary.getWord(possible_root_lowercased)
+                            if word is not None and isinstance(word, TxtWord):
+                                word.addFlag("IS_OA")
+                            else:
+                                new_word = TxtWord(possible_root_lowercased, "IS_OA")
+                                self.__dictionary_trie.addWord(possible_root_lowercased, new_word)
+                            fsm_parse = self.__analysis(lowercased, self.isProperNoun(surface_form))
+            if is_root_replaced:
+                for parse in fsm_parse:
+                    parse.restoreOriginalForm(possible_root_lowercased, pronunciation)
             fsm_parse_list = FsmParseList(fsm_parse)
             if fsm_parse_list.size() > 0:
                 self.__cache.add(surface_form, fsm_parse_list)

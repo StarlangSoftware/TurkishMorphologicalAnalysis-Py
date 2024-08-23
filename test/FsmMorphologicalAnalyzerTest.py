@@ -38,12 +38,9 @@ class FsmMorphologicalAnalyzerTest(unittest.TestCase):
                     self.assertTrue(parseGenerated.__str__() in parsesExpected)
 
     def test_morphologicalAnalysisSpecialProperNoun(self):
-        self.assertTrue(self.fsm.morphologicalAnalysis("Times'ın").size() != 0)
-        self.assertTrue(self.fsm.morphologicalAnalysis("Times'tır").size() != 0)
-        self.assertTrue(self.fsm.morphologicalAnalysis("Times'mış").size() != 0)
-        self.assertTrue(self.fsm.morphologicalAnalysis("Twitter'ın").size() != 0)
-        self.assertTrue(self.fsm.morphologicalAnalysis("Twitter'dır").size() != 0)
-        self.assertTrue(self.fsm.morphologicalAnalysis("Twitter'mış").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("Slack'in").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("SPK'ya").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("Stephen'ın").size() != 0)
 
     def test_morphologicalAnalysisNewWords(self):
         self.assertTrue(self.fsm.robustMorphologicalAnalysis("googlecılardan").size() == 6)

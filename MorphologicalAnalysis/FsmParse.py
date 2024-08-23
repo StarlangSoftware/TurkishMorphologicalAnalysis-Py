@@ -605,6 +605,20 @@ class FsmParse(MorphologicalParse):
             result = result + "+" + a_with
         return result
 
+    def restoreOriginalForm(self, original: str, pronunciation: str):
+        """
+        In order to morphologically parse special proper nouns in Turkish, whose affixes obeys not the original but their
+        pronunciations, the morphologicalAnalysis method replaces the original word with its pronunciation and do the
+        rest. This method reverts it back, that is it restores its original form by replacing the pronunciations in the
+        parses with the original form.
+        :param original: Original form of the proper noun.
+        :param pronunciation: Pronunciation of the proper noun.
+        """
+        self.root = TxtWord(original, "IS_OA")
+        self.__form = original + self.__form[len(pronunciation):]
+        for i in range(0, len(self.__form_list)):
+            self.__form_list[i] = original + self.__form_list[i][len(pronunciation):]
+
     def __str__(self) -> str:
         """
         The overridden str method which returns transitionList method.
