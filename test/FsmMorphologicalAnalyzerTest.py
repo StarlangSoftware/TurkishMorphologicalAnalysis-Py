@@ -38,6 +38,7 @@ class FsmMorphologicalAnalyzerTest(unittest.TestCase):
                     self.assertTrue(parseGenerated.__str__() in parsesExpected)
 
     def test_morphologicalAnalysisSpecialProperNoun(self):
+        self.assertTrue(self.fsm.morphologicalAnalysis("TL").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("Won'u").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("Slack'in").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("SPK'ya").size() != 0)

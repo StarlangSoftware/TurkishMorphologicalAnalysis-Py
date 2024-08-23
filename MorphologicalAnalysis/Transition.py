@@ -300,9 +300,9 @@ class Transition:
                 formation = stem[:len(stem) - 2] + stem[len(stem) - 1]
                 formation_to_check = stem
             else:
-                if root_word and root.showsSuRegularities() and self.__startWithVowelorConsonantDrops() and \
-                        not self.__with.startswith("y"):
+                if root_word and root.showsSuRegularities() and self.__startWithVowelorConsonantDrops():
                     formation = stem + 'y'
+                    i = 1
                     formation_to_check = formation
                 else:
                     if root_word and root.duplicatesDuringSuffixation() and not startState.getName().startswith(

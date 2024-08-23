@@ -125,6 +125,13 @@ class TransitionTest(unittest.TestCase):
     def test_ShowsSuRegularities(self):
         self.assertTrue(self.fsm.morphologicalAnalysis("karasuyu").size() != 0)
         self.assertTrue(self.fsm.morphologicalAnalysis("suyu").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("suymuş").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("suyuymuş").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("suyla").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("suyuyla").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("suydu").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("suyuydu").size() != 0)
+        self.assertTrue(self.fsm.morphologicalAnalysis("suyuna").size() != 0)
 
     def test_DuplicatesDuringSuffixation(self):
         self.assertTrue(self.fsm.morphologicalAnalysis("tıbbı").size() != 0)
