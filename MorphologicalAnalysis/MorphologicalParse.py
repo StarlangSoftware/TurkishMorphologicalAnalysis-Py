@@ -664,6 +664,14 @@ class MorphologicalParse:
         :return: "Sing" if the agreement of the parse is singular (contains A1SG, A2SG, A3SG); "Plur" if the agreement
         of the parse is plural (contains A1PL, A2PL, A3PL).
         """
+        if self.lastIGContainsTag(MorphologicalTag.A1SG) or self.lastIGContainsTag(MorphologicalTag.A2SG) or \
+                self.lastIGContainsTag(MorphologicalTag.A3SG) or self.lastIGContainsTag(MorphologicalTag.P1SG) or \
+                self.lastIGContainsTag(MorphologicalTag.P2SG) or self.lastIGContainsTag(MorphologicalTag.P3SG):
+            return "Sing"
+        if self.lastIGContainsTag(MorphologicalTag.A1PL) or self.lastIGContainsTag(MorphologicalTag.A2PL) or \
+                self.lastIGContainsTag(MorphologicalTag.A3PL) or self.lastIGContainsTag(MorphologicalTag.P1PL) or \
+                self.lastIGContainsTag(MorphologicalTag.P2PL) or self.lastIGContainsTag(MorphologicalTag.P3PL):
+            return "Plur"
         if self.containsTag(MorphologicalTag.A1SG) or self.containsTag(MorphologicalTag.A2SG) or \
                 self.containsTag(MorphologicalTag.A3SG) or self.containsTag(MorphologicalTag.P1SG) or \
                 self.containsTag(MorphologicalTag.P2SG) or self.containsTag(MorphologicalTag.P3SG):
@@ -680,6 +688,12 @@ class MorphologicalParse:
         :return: "Sing" if the possessive agreement of the parse is singular (contains P1SG, P2SG, P3SG); "Plur" if the
         possessive agreement of the parse is plural (contains P1PL, P2PL, P3PL).
         """
+        if self.lastIGContainsTag(MorphologicalTag.P1SG) or \
+                self.lastIGContainsTag(MorphologicalTag.P2SG) or self.lastIGContainsTag(MorphologicalTag.P3SG):
+            return "Sing"
+        if self.lastIGContainsTag(MorphologicalTag.P1PL) or \
+                self.lastIGContainsTag(MorphologicalTag.P2PL) or self.lastIGContainsTag(MorphologicalTag.P3PL):
+            return "Plur"
         if self.containsTag(MorphologicalTag.P1SG) or \
                 self.containsTag(MorphologicalTag.P2SG) or self.containsTag(MorphologicalTag.P3SG):
             return "Sing"
@@ -756,6 +770,15 @@ class MorphologicalParse:
         Returns the person of the agreement of the parse for the universal dependency feature person.
         :return: "1" for first person; "2" for second person; "3" for third person.
         """
+        if self.lastIGContainsTag(MorphologicalTag.A1SG) or self.lastIGContainsTag(MorphologicalTag.A1PL) \
+                or self.lastIGContainsTag(MorphologicalTag.P1SG) or self.lastIGContainsTag(MorphologicalTag.P1PL):
+            return "1"
+        if self.lastIGContainsTag(MorphologicalTag.A2SG) or self.lastIGContainsTag(MorphologicalTag.A2PL) \
+                or self.lastIGContainsTag(MorphologicalTag.P2SG) or self.lastIGContainsTag(MorphologicalTag.P2PL):
+            return "2"
+        if self.lastIGContainsTag(MorphologicalTag.A3SG) or self.lastIGContainsTag(MorphologicalTag.A3PL) \
+                or self.lastIGContainsTag(MorphologicalTag.P3SG) or self.lastIGContainsTag(MorphologicalTag.P3PL):
+            return "3"
         if self.containsTag(MorphologicalTag.A1SG) or self.containsTag(MorphologicalTag.A1PL) \
                 or self.containsTag(MorphologicalTag.P1SG) or self.containsTag(MorphologicalTag.P1PL):
             return "1"
@@ -772,6 +795,12 @@ class MorphologicalParse:
         Returns the person of the possessive agreement of the parse for the universal dependency feature [pos].
         :return: "1" for first person; "2" for second person; "3" for third person.
         """
+        if self.lastIGContainsTag(MorphologicalTag.P1SG) or self.lastIGContainsTag(MorphologicalTag.P1PL):
+            return "1"
+        if self.lastIGContainsTag(MorphologicalTag.P2SG) or self.lastIGContainsTag(MorphologicalTag.P2PL):
+            return "2"
+        if self.lastIGContainsTag(MorphologicalTag.P3SG) or self.lastIGContainsTag(MorphologicalTag.P3PL):
+            return "3"
         if self.containsTag(MorphologicalTag.P1SG) or self.containsTag(MorphologicalTag.P1PL):
             return "1"
         if self.containsTag(MorphologicalTag.P2SG) or self.containsTag(MorphologicalTag.P2PL):
