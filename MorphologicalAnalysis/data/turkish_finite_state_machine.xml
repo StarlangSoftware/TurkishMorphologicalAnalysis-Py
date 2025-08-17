@@ -1634,7 +1634,7 @@
 <to name="Adverb3" transitionname="^DB+ADV+WITHOUTBEINGABLETOHAVEDONESO" topos="ADVERB">
 <with>yAmAdAn</with>
 </to>
-<to name="NominalRoot(VERB)">
+<to name="NominalRoot(VERB-ADJ)">
 <with name="^DB+NOUN+FEELLIKE" topos="NOUN">yAsH</with>
 <with name="^DB+NOUN+NOTABLESTATE" topos="NOUN">mAzlHk</with>
 </to>
@@ -1647,6 +1647,9 @@
 <to name="NominalRoot">
 <with name="^DB+NOUN+INF2" topos="NOUN">mA</with>
 <with name="^DB+NOUN+INF3" topos="NOUN">yHs</with>
+</to>
+<to name="AdjectiveRoot">
+<with name="^DB+ADJ+FEELLIKE" topos="NOUN">yAsH</with>
 </to>
 <to name="AdjectiveRoot(VERB)">
 <with name="AOR^DB+ADJ+ZERO" topos="ADJ">Ar</with>
@@ -1686,7 +1689,12 @@
 <to name="PerfectConditional">
 <with name="PAST">DH</with>
 <with name="DESR">SA</with>
+<with name="COND">SA</with>
 </to>
+    <to name="Verb">
+        <with name="DESR+URGE+A2SG">SAnA</with>
+        <with name="DESR+URGE+A2PL">SAnHzA</with>
+    </to>
 </state>
 <state name="AdjectiveParticiple" start="no" end="no">
 <to name="Adjective">
@@ -1702,7 +1710,7 @@
 <state name="Adverb1" start="no" end="no">
 <to name="Adverb">
 <with>0</with>
-<with name="AdvTAdv">DAn</with>
+<with name="^DB+ADV">DAn</with>
 </to>
 </state>
 <state name="Adverb2" start="no" end="no">
@@ -1796,7 +1804,7 @@
 <to name="ImperativeVerb">
 <with name="A2SG">0</with>
 <with name="A3SG">SHn</with>
-<with name="A2PL">yHnHz</with>
+<with name="POL+A2PL">yHnHz</with>
 <with name="A2PL">yHn</with>
 <with name="A3PL">SHnlAr</with>
 </to>

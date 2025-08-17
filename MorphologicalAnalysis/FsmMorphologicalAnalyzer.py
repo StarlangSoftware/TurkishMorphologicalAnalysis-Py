@@ -708,7 +708,7 @@ class FsmMorphologicalAnalyzer:
             Result list which has the currentFsmParse.
         """
         result = []
-        result_suffix_list = []
+        result_transition_list = []
         if isinstance(maxLengthOrSurfaceForm, int):
             max_length = maxLengthOrSurfaceForm
             while len(fsmParse) > 0:
@@ -717,11 +717,11 @@ class FsmMorphologicalAnalyzer:
                 current_state = current_fsm_parse.getFinalSuffix()
                 current_surface_form = current_fsm_parse.getSurfaceForm()
                 if current_state.isEndState() and len(current_surface_form) <= max_length:
-                    current_suffix_list = current_fsm_parse.suffixList()
-                    if current_suffix_list not in result_suffix_list:
+                    current_transition_list = current_surface_form + " " + current_fsm_parse.transitionList()
+                    if current_transition_list not in result_transition_list:
                         result.append(current_fsm_parse)
                         current_fsm_parse.constructInflectionalGroups()
-                        result_suffix_list.append(current_suffix_list)
+                        result_transition_list.append(current_transition_list)
                 self.__addNewParsesFromCurrentParse(current_fsm_parse, fsmParse, max_length, root)
         elif isinstance(maxLengthOrSurfaceForm, str):
             surface_form = maxLengthOrSurfaceForm
@@ -731,11 +731,11 @@ class FsmMorphologicalAnalyzer:
                 current_state = current_fsm_parse.getFinalSuffix()
                 current_surface_form = current_fsm_parse.getSurfaceForm()
                 if current_state.isEndState() and current_surface_form == surface_form:
-                    current_suffix_list = current_fsm_parse.suffixList()
-                    if current_suffix_list not in result_suffix_list:
+                    current_transition_list = current_fsm_parse.transitionList()
+                    if current_transition_list not in result_transition_list:
                         result.append(current_fsm_parse)
                         current_fsm_parse.constructInflectionalGroups()
-                        result_suffix_list.append(current_suffix_list)
+                        result_transition_list.append(current_transition_list)
                 self.__addNewParsesFromCurrentParse(current_fsm_parse, fsmParse, surface_form, root)
         return result
 

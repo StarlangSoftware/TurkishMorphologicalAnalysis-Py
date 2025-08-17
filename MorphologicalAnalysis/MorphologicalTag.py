@@ -520,3 +520,11 @@ class MorphologicalTag(Enum):
     Metric : 6cmx7cmx8cm
     """
     METRIC = auto
+    """
+    Polite : yapınız, gidiniz
+    """
+    POLITE = auto
+    """
+    Urge : baksana, yapsana
+    """
+    URGE = auto

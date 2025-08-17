@@ -29,7 +29,7 @@ class InflectionalGroup:
             "ETTAG", "BDTAG", "EDTAG", "INF1", "ASLONGAS",
             "DIST", "ADAMANTLY", "PERCENT", "WITHOUTBEINGABLETOHAVEDONESO", "DIM",
             "PERS", "FRACTION", "HASHTAG", "EMAIL", "DATE",
-            "CODE", "METRIC"]
+            "CODE", "METRIC", "POL", "URGE"]
     morphotags = [MorphologicalTag.NOUN, MorphologicalTag.ADVERB, MorphologicalTag.ADJECTIVE,
                   MorphologicalTag.VERB, MorphologicalTag.A1SG, MorphologicalTag.A2SG, MorphologicalTag.A3SG,
                   MorphologicalTag.A1PL,
@@ -80,7 +80,8 @@ class InflectionalGroup:
                   MorphologicalTag.DISTRIBUTIVE, MorphologicalTag.ADAMANTLY, MorphologicalTag.PERCENT,
                   MorphologicalTag.WITHOUTBEINGABLETOHAVEDONESO, MorphologicalTag.DIMENSION,
                   MorphologicalTag.PERSONALPRONOUN, MorphologicalTag.FRACTION, MorphologicalTag.HASHTAG,
-                  MorphologicalTag.EMAIL, MorphologicalTag.DATE, MorphologicalTag.CODE, MorphologicalTag.METRIC]
+                  MorphologicalTag.EMAIL, MorphologicalTag.DATE, MorphologicalTag.CODE, MorphologicalTag.METRIC,
+                  MorphologicalTag.POLITE, MorphologicalTag.URGE]
 
     def __init__(self, IG: str):
         """

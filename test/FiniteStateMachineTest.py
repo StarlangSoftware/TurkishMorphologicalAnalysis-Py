@@ -45,7 +45,7 @@ class FiniteStateMachineTest(unittest.TestCase):
         transitionCount = 0
         for state in self.stateList:
             transitionCount += len(self.fsm.getTransitions(state))
-        self.assertEqual(779, transitionCount)
+        self.assertEqual(783, transitionCount)
 
     def test_TransitionWith(self):
         transitionCounts = CounterHashMap()
