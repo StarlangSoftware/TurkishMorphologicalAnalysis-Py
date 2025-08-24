@@ -204,7 +204,7 @@ class Transition:
             return True
         return False
 
-    def softenDuringSuffixation(self, root: TxtWord) -> bool:
+    def softenDuringSuffixation(self, root: TxtWord, startState: State) -> bool:
         """
         The startWithVowelorConsonantDrops method checks for some cases. If the first character of with variable is
         "nsy", and with variable does not equal to one of the Strings; "ylA, ysA, ymHs, yDH, yken", it returns true. If
@@ -216,13 +216,13 @@ class Transition:
         bool
             True if it starts with vowel or consonant drops, false otherwise.
         """
-        if (root.isNominal() or root.isAdjective()) and root.nounSoftenDuringSuffixation() and \
+        if not startState.getName().startswith("VerbalRoot") and (root.isNominal() or root.isAdjective()) and root.nounSoftenDuringSuffixation() and \
                 (self.__with == "Hm" or self.__with == "nDAn" or self.__with == "ncA" or self.__with == "nDA"
                  or self.__with == "yA" or self.__with == "yHm" or self.__with == "yHz" or self.__with == "yH"
                  or self.__with == "nH" or self.__with == "nA" or self.__with == "nHn" or self.__with == "H"
                  or self.__with == "sH" or self.__with == "Hn" or self.__with == "HnHz" or self.__with == "HmHz"):
             return True
-        if root.isVerb() and root.verbSoftenDuringSuffixation() and \
+        if startState.getName().startswith("VerbalRoot") and root.isVerb() and root.verbSoftenDuringSuffixation() and \
                 (self.__with.startswith("Hyor") or self.__with == "yHs" or self.__with == "yAn" or self.__with == "yA"
                  or self.__with == "yAcAk" or self.__with == "yAsH" or self.__with == "yHncA" or self.__with == "yHp"
                  or self.__with == "yAlH" or self.__with == "yArAk" or self.__with == "yAdur" or self.__with == "yHver"
@@ -307,7 +307,7 @@ class Transition:
                 else:
                     if root_word and root.duplicatesDuringSuffixation() and not startState.getName().startswith(
                                     "VerbalRoot") and TurkishLanguage.isConsonantDrop(self.__with[0]):
-                        if self.softenDuringSuffixation(root):
+                        if self.softenDuringSuffixation(root, startState):
                             if Word.lastPhoneme(stem) == "p":
                                 formation = stem[:len(stem) - 1] + "bb"
                             elif Word.lastPhoneme(stem) == "t":
@@ -320,7 +320,7 @@ class Transition:
                                 not startState.getName().startswith(
                                     "VerbalRoot") and not startState.getName().startswith("ProperRoot") \
                                 and self.__startWithVowelorConsonantDrops():
-                            if self.softenDuringSuffixation(root):
+                            if self.softenDuringSuffixation(root, startState):
                                 if Word.lastPhoneme(stem) == "p":
                                     formation = stem[:len(stem) - 2] + 'b'
                                 elif Word.lastPhoneme(stem) == "t":
@@ -333,19 +333,19 @@ class Transition:
                         else:
                             if Word.lastPhoneme(stem) == "p":
                                 if self.__startWithVowelorConsonantDrops() and root_word and \
-                                        self.softenDuringSuffixation(root):
+                                        self.softenDuringSuffixation(root, startState):
                                     formation = stem[:len(stem) - 1] + 'b'
                             elif Word.lastPhoneme(stem) == "t":
                                 if self.__startWithVowelorConsonantDrops() and root_word and \
-                                        self.softenDuringSuffixation(root):
+                                        self.softenDuringSuffixation(root, startState):
                                     formation = stem[:len(stem) - 1] + 'd'
                             elif Word.lastPhoneme(stem) == "ç":
                                 if self.__startWithVowelorConsonantDrops() and root_word and \
-                                        self.softenDuringSuffixation(root):
+                                        self.softenDuringSuffixation(root, startState):
                                     formation = stem[:len(stem) - 1] + 'c'
                             elif Word.lastPhoneme(stem) == "g":
                                 if self.__startWithVowelorConsonantDrops() and root_word and \
-                                        self.softenDuringSuffixation(root):
+                                        self.softenDuringSuffixation(root, startState):
                                     formation = stem[:len(stem) - 1] + 'ğ'
                             elif Word.lastPhoneme(stem) == "k":
                                 if self.__startWithVowelorConsonantDrops() and root_word and root.endingKChangesIntoG() \
@@ -353,7 +353,7 @@ class Transition:
                                     formation = stem[:len(stem) - 1] + 'g'
                                 else:
                                     if self.__startWithVowelorConsonantDrops() and (not root_word or (
-                                            self.softenDuringSuffixation(root) and (
+                                            self.softenDuringSuffixation(root, startState) and (
                                             not root.isProperNoun() or startState.__str__() != "ProperRoot"))):
                                         formation = stem[:len(stem) - 1] + 'ğ'
                             formation_to_check = formation

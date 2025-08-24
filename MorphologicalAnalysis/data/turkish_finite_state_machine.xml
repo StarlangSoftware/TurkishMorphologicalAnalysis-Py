@@ -1073,7 +1073,7 @@
 <with name="COP">DHr</with>
 </to>
 <to name="AttitudeAdverb">
-<with name="^DB+ADV+ASIF" topos="ADVERB">CAsHnA</with>
+<with name="^DB+ADV+ASIF" topos="ADVERB">cAsHnA</with>
 </to>
 </state>
 <state name="AttitudeAdverb" start="no" end="yes">
@@ -1253,7 +1253,7 @@
 </to>
 <to name="PassiveHn">
 <with>0</with>
-<with name="REFLEX">Hn</with>    
+<with name="REFLEX">Hn</with>
 </to>
 <to name="CausativeDHr" transitionname="^DB+VERB+CAUS" topos="VERB">
 <with>DHr</with>
@@ -1318,7 +1318,7 @@
 </to>
 <to name="PassiveHn">
 <with>0</with>
-<with name="REFLEX">Hn</with>    
+<with name="REFLEX">Hn</with>
 </to>
 <to name="Causativet" transitionname="^DB+VERB+CAUS" topos="VERB">
 <with>t</with>
@@ -1492,7 +1492,7 @@
 </to>
 <to name="PassiveHn">
 <with>0</with>
-</to>    
+</to>
 </state>
 <state name="CausativeHt" start="no" end="no">
 <to name="CausativeDHr" transitionname="^DB+VERB+CAUS" topos="VERB">
@@ -1591,7 +1591,7 @@
 <with>0</with>
 <with name="^DB+VERB+ABLE" topos="VERB">yAbil</with>
 </to>
-</state> 
+</state>
 <state name="NegativeAorist" start="no" end="no">
 <to name="SecondTensePerfectConditional">
 <with name="PAST">yDH</with>
@@ -1602,7 +1602,7 @@
 </to>
 <to name="TemporalAdverb">
 <with name="^DB+ADV+WHILE" topos="ADVERB">yken</with>
-</to>    
+</to>
 </state>
 <state name="NegAorist" start="no" end="yes">
 </state>
@@ -1704,7 +1704,7 @@
 <with name="P3SG">sH</with>
 <with name="P1PL">HmHz</with>
 <with name="P2PL">HnHz</with>
-<with name="P3PL">lArH</with>    
+<with name="P3PL">lArH</with>
 </to>
 </state>
 <state name="Adverb1" start="no" end="no">
@@ -1837,7 +1837,7 @@
 </state>
 <state name="OtherTense3rdPerson" start="no" end="no">
 <to name="Adverb">
-<with name="A3SG^DB+ADV+ASIF" topos="ADVERB">CAsHnA</with>
+<with name="A3SG^DB+ADV+ASIF" topos="ADVERB">cAsHnA</with>
 <with name="^DB+ADV+WHILE" topos="ADVERB">yken</with>
 </to>
 </state>
@@ -1893,7 +1893,7 @@
 <with name="A3PL">lAr</with>
 </to>
 <to name="Adverb" transitionname="^DB+ADV+ASIF" topos="ADVERB">
-<with>CAsHnA</with>
+<with>cAsHnA</with>
 </to>
 </state>
 </statelist>
