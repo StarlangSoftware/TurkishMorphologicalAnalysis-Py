@@ -124,14 +124,6 @@ class Transition:
         if self.__with == "Ar" and currentFsmParse.getSurfaceForm().endswith("l") and \
                 currentFsmParse.getWord().getName() != currentFsmParse.getSurfaceForm():
             return False
-        if currentFsmParse.getVerbAgreement() is not None and currentFsmParse.getPossesiveAgreement() is not None and \
-                self.__with_name is not None:
-            if currentFsmParse.getVerbAgreement() == "A3PL" and self.__with_name == "^DB+VERB+ZERO+PRES+A1SG":
-                return False
-            if currentFsmParse.getVerbAgreement() == "A3SG" and (currentFsmParse.getPossesiveAgreement() == "P1SG" or
-                                                                 currentFsmParse.getPossesiveAgreement() == "P2SG") \
-                    and self.__with_name == "^DB+VERB+ZERO+PRES+A1PL":
-                return False
         return True
 
     def transitionPossibleForWord(self,

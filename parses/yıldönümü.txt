@@ -146,6 +146,7 @@ yıldönümünündü yıldönüm+NOUN+A3SG+P3SG+GEN^DB+VERB+ZERO+PAST+A3SG
 yıldönümününse yıldönüm+NOUN+A3SG+P3SG+GEN^DB+VERB+ZERO+COND+A3SG
 yıldönümler yıldönüm+NOUN+A3PL+PNON+NOM
 yıldönümlerlik yıldönüm+NOUN+A3PL+PNON+NOM^DB+ADJ+FITFOR
+yıldönümlerim yıldönüm+NOUN+A3PL+PNON+NOM^DB+VERB+ZERO+PRES+A1SG
 yıldönümlersin yıldönüm+NOUN+A3PL+PNON+NOM^DB+VERB+ZERO+PRES+A2SG
 yıldönümleriz yıldönüm+NOUN+A3PL+PNON+NOM^DB+VERB+ZERO+PRES+A1PL
 yıldönümlerler yıldönüm+NOUN+A3PL+PNON+NOM^DB+VERB+ZERO+PRES+A3PL
