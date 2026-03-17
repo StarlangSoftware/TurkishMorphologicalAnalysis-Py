@@ -23,6 +23,10 @@ In our morphological analyzer, finite state transducer is encoded in an xml file
 
 To overcome the irregularities and also to accelerate the search for the bareforms, we use a trie data structure in our morphological analyzer, and store all words in our lexicon in that data structure. For the regular words, we only store that word in our trie, whereas for irregular words we store both the original form and some prefix of that word. 
 
+Simple Web Interface
+============
+[Link 1](http://104.247.163.162/nlptoolkit/turkish-morphological-analysis.html) [Link 2](https://starlangsoftware.github.io/nlptoolkit-web-simple/turkish-morphological-analysis.html)
+
 Video Lectures
 ============
 
