@@ -22,7 +22,7 @@ class FsmParseTest(unittest.TestCase):
         self.parse1 = self.fsm.morphologicalAnalysis("açılır").getFsmParse(0)
         self.parse2 = self.fsm.morphologicalAnalysis("koparılarak").getFsmParse(0)
         self.parse3 = self.fsm.morphologicalAnalysis("toplama").getFsmParse(0)
-        self.parse4 = self.fsm.morphologicalAnalysis("değerlendirmede").getFsmParse(0)
+        self.parse4 = self.fsm.morphologicalAnalysis("değerlendirmede").getFsmParse(1)
         self.parse5 = self.fsm.morphologicalAnalysis("soruşturmasının").getFsmParse(0)
         self.parse6 = self.fsm.morphologicalAnalysis("karşılaştırmalı").getFsmParse(0)
         self.parse7 = self.fsm.morphologicalAnalysis("esaslarını").getFsmParse(0)

@@ -52,7 +52,7 @@ class FsmParseListTest(unittest.TestCase):
          self.assertEqual(2, self.parse1.size())
          self.assertEqual(2, self.parse2.size())
          self.assertEqual(6, self.parse3.size())
-         self.assertEqual(4, self.parse4.size())
+         self.assertEqual(5, self.parse4.size())
          self.assertEqual(5, self.parse5.size())
          self.assertEqual(12, self.parse6.size())
          self.assertEqual(8, self.parse7.size())
@@ -106,7 +106,7 @@ class FsmParseListTest(unittest.TestCase):
          self.assertEqual(1, len(self.parse1.constructParseListForDifferentRootWithPos()))
          self.assertEqual(2, len(self.parse2.constructParseListForDifferentRootWithPos()))
          self.assertEqual(5, len(self.parse3.constructParseListForDifferentRootWithPos()))
-         self.assertEqual(4, len(self.parse4.constructParseListForDifferentRootWithPos()))
+         self.assertEqual(5, len(self.parse4.constructParseListForDifferentRootWithPos()))
          self.assertEqual(5, len(self.parse5.constructParseListForDifferentRootWithPos()))
          self.assertEqual(7, len(self.parse6.constructParseListForDifferentRootWithPos()))
          self.assertEqual(2, len(self.parse7.constructParseListForDifferentRootWithPos()))
@@ -116,7 +116,7 @@ class FsmParseListTest(unittest.TestCase):
     def test_parsesWithoutPrefixAndSuffix(self):
         self.assertEqual("P3SG+NOM$PNON+ACC", self.parse10.parsesWithoutPrefixAndSuffix())
         self.assertEqual("A3PL+P3PL+NOM$A3PL+P3SG+NOM$A3PL+PNON+ACC$A3SG+P3PL+NOM", self.parse11.parsesWithoutPrefixAndSuffix())
-        self.assertEqual("DET$PRON+DEMONSP+A3SG+PNON+NOM$PRON+PERS+A3SG+PNON+NOM", self.parse12.parsesWithoutPrefixAndSuffix())
+        self.assertEqual("ADJ$DET$PRON+DEMONSP+A3SG+PNON+NOM$PRON+PERS+A3SG+PNON+NOM", self.parse12.parsesWithoutPrefixAndSuffix())
         self.assertEqual("NOUN+A3SG+P3SG+NOM$NOUN^DB+ADJ+ALMOST", self.parse13.parsesWithoutPrefixAndSuffix())
 
 
